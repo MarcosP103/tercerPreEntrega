@@ -4,7 +4,7 @@ const fs = require('fs').promises
 
 router.post('/carts', async (req, res) => {
     try{
-        const cartsData = await fs.readFile('../../manager/cartsData.json')
+        const cartsData = await fs.readFile('../manager/cartsData.json')
         let carts = JSON.parse(cartsData)
 
         const newCartId = generateId()

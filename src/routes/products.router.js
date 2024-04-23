@@ -3,8 +3,8 @@ const router = express.Router();
 const fs = require('fs').promises
 const { v4: uuidv4 } = require('uuid')
 
-const ProductManager = require("../../manager/productManager.js");
-const productManager = new ProductManager("../../manager/DB.json");
+const ProductManager = require("../manager/productManager.js");
+const productManager = new ProductManager("../manager/DB.json");
 
 function validateType(field, expectedType) {
   return typeof field === expectedType;
