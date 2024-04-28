@@ -31,11 +31,11 @@ function generateId() {
 
 router.get("/:cid", async (req, res) => {
     try{
-        const cartData = await fs.readFile('cartsData.json', 'utf8')
+        const cartsData = await fs.readFile('cartsData.json', 'utf8')
         const carts = JSON.parse(cartsData)
 
         const cartId = req.params.cid
-        const cart = carts.find(cart => cart.id === cartId)
+        const cart = carts.find(cart => cart.id == cartId)
 
         if (!cart) {
             return res.status(404).json({ error: 'Carrito no encontrado con ese Id.' })
@@ -54,7 +54,7 @@ router.post("/:cid/product/:pid", async(req, res) => {
         const carts = JSON.parse(cartsData)
 
         const cartId = req.params.cid
-        const cartIndex = carts.findIndex(cart => cart.id === cartId)
+        const cartIndex = carts.findIndex(cart => cart.id == cartId)
 
         if(cartIndex === -1) {
             return res.status(404).json({ error: 'Carrito no econtrado.' })
@@ -63,7 +63,7 @@ router.post("/:cid/product/:pid", async(req, res) => {
         const productId = req.params.pid
         const quantity = req.body.quantity || 1
 
-        const existProductIndex = carts[cartIndex].products.findIndex(product => product.id === productId)
+        const existProductIndex = carts[cartIndex].products.findIndex(product => product.id == productId)
 
         if (existProductIndex !== -1) {
             carts[cartIndex].products[existProductIndex].quantity += quantity

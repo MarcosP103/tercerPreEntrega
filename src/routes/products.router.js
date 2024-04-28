@@ -3,8 +3,8 @@ const router = express.Router();
 const fs = require('fs').promises
 const { v4: uuidv4 } = require('uuid')
 
-const ProductManager = require("../manager/productManager.js");
-const productManager = new ProductManager("../manager/DB.json");
+const manager = require("../manager/productManager.js");
+const productManager = new manager("../manager/DB.json");
 
 function validateType(field, expectedType) {
   return typeof field === expectedType;
@@ -14,7 +14,7 @@ function arrayThumb(arr) {
   return arr.every((item) => typeof item === "string");
 }
 
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const limit = req.query.limit;
     let products;
@@ -33,7 +33,7 @@ router.get("/products", async (req, res) => {
   }
 });
 
-router.get("/products/:pid", async (req, res) => {
+router.get("/:pid", async (req, res) => {
   try {
     const productId = parseInt(req.params.pid);
     const product = await productManager.getProductsById(productId);
@@ -47,9 +47,9 @@ router.get("/products/:pid", async (req, res) => {
   }
 });
 
-router.post("/products", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const productId = uuidv4
+    const productId = uuidv4()
 
     const {
       title,
@@ -117,33 +117,34 @@ router.post("/products", async (req, res) => {
   }
 });
 
-router.put("/products/:pid", async (req, res) => {
+router.put("/:pid", async (req, res) => {
   try {
     const productId = parseInt(req.params.pid);
-    if (!req.body && Object.keys(req.body).length === 0) {
+    if (!req.body && Object.keys(req.body).length == 0) {
       return res.status(400).json({ error: "Debe proporcionar los datos correctos" });
     }
 
-    const product = productManager.getProductsById(productId);
+    const product = await productManager.getProductsById(productId);
     if (!product) {
-      res.send(400).json({ error: "No se encontró ningún producto" });
+      res.status(400).json({ error: "No se encontró ningún producto" });
     }
 
     if (req.body.id && req.body.id !== productId) {
       return res.status(400).json({ error: "No se permite modificar el ID" });
     }
+
     Object.assign(product, req.body);
 
     await productManager.addFile();
 
-    res.json(product);
+    return res.json(product);
   } catch (error) {
     console.error("Error al actualizar el producto:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-router.delete("/products/:pid", async (req, res) => {
+router.delete("/:pid", async (req, res) => {
   try {
     const productId = parseInt(req.body.pid);
 
@@ -160,4 +161,5 @@ router.delete("/products/:pid", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
+
 module.exports = router;
