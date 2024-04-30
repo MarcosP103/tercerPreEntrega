@@ -1,18 +1,21 @@
 <div>
-    {{#if lenght}}
+    {{#if products.lenght}}
         <div>
             <h1>Productos:</h1>
             <ul>
                 {{#each products}}
                     <li>
-                        <strong class="info">Titulo:</strong>{{this.title}}, 
-                        <strong class="info">Descripcion:</strong>{{this.description}},
-                        <strong class="info">Codigo:</strong>{{this.code}}, 
-                        <strong class="info">Precio:</strong>${{this.price}},
-                        <strong class="info">Status:</strong>{{this.status}}, 
-                        <strong class="info">Stock: </strong>{{this.stock}},
-                        <strong class="info">Categoria:</strong>{{this.category}},
-                        <strong class="info">Thumbnail: </strong>{{#each this.thumbnail}}
+                        <strong class="infP">Titulo:</strong>{{this.title}}, 
+                        <strong class="infP">Descripcion:</strong>{{this.description}},
+                        <strong class="infP">Codigo:</strong>{{this.code}}, 
+                        <strong class="infP">Precio:</strong>${{this.price}},
+                        <strong class="infP">Status:</strong>{{this.status}}, 
+                        <strong class="infP">Stock: </strong>{{this.stock}},
+                        <strong class="infP">Categoria:</strong>{{this.category}},
+                        <strong class="infP">Thumbnail: </strong>
+                        {{#each this.thumbnail}}
+                            <img src="{{this}}" alt="Thumbnail">
+                        {{/each}}
                     </li>
                 {{/each}}
             </ul>
