@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const fs = require('fs').promises
+const path = require('path')
+
+const cartsDataPath = path.join(__dirname, 'manager', 'cartsData.json')
 
 router.post('/carts', async (req, res) => {
     try{
-        const cartsData = await fs.readFile('../manager/cartsData.json')
+        const cartsData = await fs.readFile(cartsDataPath)
         let carts = JSON.parse(cartsData)
 
         const newCartId = generateId()
@@ -16,7 +19,7 @@ router.post('/carts', async (req, res) => {
 
         carts.push(newCart)
 
-        await fs.writeFile('cartsData.json', JSON.stringify(carts, null, 2))
+        await fs.writeFile(cartsDataPath, JSON.stringify(carts, null, 2))
 
         res.status(201).json({ message: 'Carrito creado correctamente.', cart: newCart})
     } catch (error){
@@ -31,7 +34,7 @@ function generateId() {
 
 router.get("/:cid", async (req, res) => {
     try{
-        const cartsData = await fs.readFile('cartsData.json', 'utf8')
+        const cartsData = await fs.readFile(cartsDataPath)
         const carts = JSON.parse(cartsData)
 
         const cartId = req.params.cid
@@ -50,7 +53,7 @@ router.get("/:cid", async (req, res) => {
 
 router.post("/:cid/product/:pid", async(req, res) => {
     try {
-        const cartsData = await fs.readFile('cartsData.json', 'utf8')
+        const cartsData = await fs.readFile(cartsDataPath)
         const carts = JSON.parse(cartsData)
 
         const cartId = req.params.cid
@@ -71,7 +74,7 @@ router.post("/:cid/product/:pid", async(req, res) => {
             carts[cartIndex].products.push({ id: productId, quantity})
         }
 
-        await fs.writeFile('cartsData.json', JSON.stringify(carts, null, 2))
+        await fs.writeFile(cartsDataPath, JSON.stringify(carts, null, 2))
 
         res.status(201).json({ message: 'Producto agregado al carrito correctamente.' })    
     } catch (error) {

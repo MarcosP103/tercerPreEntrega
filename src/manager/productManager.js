@@ -44,8 +44,9 @@ class ProductManager {
       category,
       thumbnails
     };
+
     this.products.push(product);
-    this.addFile();
+    await this.addFile();
     console.log("Producto agregado correctamente");
   }
 
