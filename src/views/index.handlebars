@@ -1,0 +1,25 @@
+<div>
+    {{#if lenght}}
+        <div>
+            <h1>Productos:</h1>
+            <ul>
+                {{#each products}}
+                    <li>
+                        <strong class="info">Titulo:</strong>{{this.title}}, 
+                        <strong class="info">Descripcion:</strong>{{this.description}},
+                        <strong class="info">Codigo:</strong>{{this.code}}, 
+                        <strong class="info">Precio:</strong>${{this.price}},
+                        <strong class="info">Status:</strong>{{this.status}}, 
+                        <strong class="info">Stock: </strong>{{this.stock}},
+                        <strong class="info">Categoria:</strong>{{this.category}},
+                        <strong class="info">Thumbnail: </strong>{{#each this.thumbnail}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{else}}
+        <h1>No hay productos</h1>
+    {{/if}}
+</div>
+
+<script src="/js/index.js"></script>
