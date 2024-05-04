@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const fs = require('fs').promises
-const path = require('path')
+import express from 'express'
+import { promises as fs } from 'fs'
+import path from 'path'
 
+const router = express.Router()
 const cartsDataPath = path.join(__dirname, 'manager', 'cartsData.json')
 
 router.post('/carts', async (req, res) => {
@@ -83,4 +83,4 @@ router.post("/:cid/product/:pid", async(req, res) => {
     }
 })
 
-module.exports = router
+export default router;

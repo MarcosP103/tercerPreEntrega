@@ -1,8 +1,8 @@
-const fs = require("fs").promises;
+import { promises as fs } from 'fs'
 
 class ProductManager {
   constructor(path) {
-    this.productsFile = __dirname+path;
+    this.productsFile = __dirname + path;
     this.products = [];
     this.uploadProducts();
   }
@@ -120,4 +120,4 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager;
+export default ProductManager

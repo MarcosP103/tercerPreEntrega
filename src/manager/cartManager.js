@@ -1,8 +1,8 @@
-const fs = require("fs").promises
+import { promises as fs } from 'fs'
 
 class CartManager{
-    constructor(filePath){
-        this.path = filePath
+    constructor(path){
+        this.path = path
     }
 
     async createCart() {
@@ -15,3 +15,4 @@ class CartManager{
     }
 
 }
+

@@ -1,6 +1,6 @@
 ﻿# Carrito de compra
 
-Este proyecto implementa un sistema de gestión de carritos de compra utilizando Express y Node.js. Está configurado para escuchar el puerto 8080 y cuenta con dos grupos de rutas: **/products y /carts**. Permite al usuario crear, agregar productos y ver el contenido de los carritos de compra.
+Este proyecto implementa un sistema de gestión de carritos de compra utilizando Express, Node.js y WebSocket y Handlebars. Está configurado para escuchar el puerto 8080 y cuenta con dos grupos de rutas: **/products y /carts**. Permite al usuario crear, agregar productos y ver el contenido de los carritos de compra.
 Todo el proyecto trabaja con Promises y persistencia de información implementando FileSystem.
 
 # Instalación y creación de carpetas
@@ -11,12 +11,18 @@ Por otro lado se encuentra la carpeta 'src' con el archivo 'app.js' y la carpeta
 Para comenzar a crear el proyecto se procedio en primera instancia por ejecutar los comandos **npm install -y** y **npm install express**. 
 El primero instala las dependencias en el archivo 'package.json'y el segundo es para instalar el framework.
 Además se hizo uso de una librería uuid la cual crea números unicos, la cual se instaló de la siguiente forma **npm install uuid**.
+Para darle interaccion entre el navegador del usuario y el servidor se implementó WebSocket con **npm install socket.io**
+
+Debido a esta última tecnología las importaciones comenzaron a realizarse de forma distinta, pasando de 'require' a 'import'
 
 ## App.js
 
 1. Importación de módulos:
-- require ("express")
-- require ("path")
+- express
+- path
+- server
+- handlebars
+
 2. Creación de la aplicacion Express:
 - app = express ()
 3. Manejo de rutas con routers:
@@ -57,6 +63,8 @@ Además se asegura que el status sea por defecto TRUE con la constante 'defaultS
 - **POST**, la ruta raíz POST crea un nuevo carrito que cuenta unicamente con los campos id y products. El 'ID' se auto genera mediante la función 'generateId' la cual a traves de Math.random devuelve siempre un numero al azar. En el caso de 'products' se trata de un array con objetos que representan cada producto seleccionado.
 - Además nos encontramos con una ruta POST que agrega un producto al array 'products' del carrito seleccionado por su 'ID' y que tiene una variable 'quantity' que contiene el numero de ejemplares de dicho producto. En este endpoint se valida que 'product' solo contenga el ID del producto y que 'quantity' se sume en caso de ser necesario.
 - **GET**, esta ruta llamada por un 'ID' de carrito lista los productos correspondientes a ese carrito.
+
+
 
 
 

@@ -1,7 +1,7 @@
-const express = require ("express");
+import express from 'express'
+import { v4 as uuidv4 } from 'uuid'
+
 const router = express.Router();
-const fs = require('fs').promises
-const { v4: uuidv4 } = require('uuid')
 
 const manager = require("../manager/productManager.js");
 const productManager = new manager("../manager/DB.json");
@@ -162,4 +162,4 @@ router.delete("/:pid", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

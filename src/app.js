@@ -3,7 +3,6 @@ import { path, __dirname } from "./utils.js";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import ProductManager from "./manager/productManager.js";
-import products from "./manager/DB.json";
 import viewsRouter from "./routes/views.router.js";
 import prodsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
