@@ -64,7 +64,24 @@ Además se asegura que el status sea por defecto TRUE con la constante 'defaultS
 - Además nos encontramos con una ruta POST que agrega un producto al array 'products' del carrito seleccionado por su 'ID' y que tiene una variable 'quantity' que contiene el numero de ejemplares de dicho producto. En este endpoint se valida que 'product' solo contenga el ID del producto y que 'quantity' se sume en caso de ser necesario.
 - **GET**, esta ruta llamada por un 'ID' de carrito lista los productos correspondientes a ese carrito.
 
+Para poder realizar la vista en tiempo real se utilizan dentro de la carpeta 'views' plantillas handlebars donde se define la vista HTML .
 
+La plantilla de Handlebars define la estructura HTML de la pagina, se utilizan expresiones 'if', 'each', 'this', etcpara insertar datos dinamicos en la plantilla. A la vez se verifican si hay productos disponibles y los muestra en lista 'ul' o con un mensaje donde indica que no hay productos.
+Cada producto se muestra en lista 'li' donde se muestra el detalle de cada cosa.
+
+Por otro lado se incluye el formulario que precisa el usuario para ingresar los detalles de cada nuevo producto con su respectivo boton 'Subir producto'
+
+En index.js se establece una conexión WebSocket con el servidor, envía un mensaje al servidor y escucha eventos del servidor en el cliente. Esto permite una comunicación -bidireccional- en tiempo real entre el cliente y el servidor.
+
+## realTimeProducts.js
+Acá se maneja la lógica del cliente para enviar y recibir datos del servidor a traves de WebSocket, además, actualiza la interfaz de usuario en consecuencia con los datos recibidos del servidor.
+
+- Se comienza importando 'io' desde el módulo 'socket.io-client' para poder crear una instancia de cliente Socket.IO
+- 'document.addEventListener', acá se espera a que el documento HTML esté completamente cargado antes de ejecutar el código JS. Esto asegura que el script se ejecute solo cuando el DOM esté listo para ser manipulado.
+- Luego se crea una instancia de cliente Socket.IO llamando a la función 'io()' para establecer una conexíon con el servidor.
+- Se agrega un evento de clic al boton 'Enviar'('btnSend') para recopilar los datos del formulario y enviar al servidor a través de WebSocket utilizando el evento 'newProduct'.
+- A través de socket.on("products") se escucha el evento 'products' enviado desde el servidor. Cuando el servidor envía este evento a través de la conexión WebSocket, el callback proporcionado se ejecuta. El callback se encarga de actualizar la lista de productos en la interfaz de usuario con los datos recibidos desde el servidor.
+- 'resAdd' y 'resDel' estos códigos de escucha devuelven los mensajes correspondientes de producto agregado y producto eliminado a través de un elemento 'p'.
 
 
 
