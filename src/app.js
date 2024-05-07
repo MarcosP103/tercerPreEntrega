@@ -1,19 +1,25 @@
 import express from "express";
-import { path, __dirname } from "./utils.js";
+import { __dirname } from "./utils.js";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import ProductManager from "./manager/productManager.js";
 import viewsRouter from "./routes/views.router.js";
 import prodsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
+import path from 'path'
+
+const router = express.Router()
+
+router.engine('handlebars', handlebars({}))
+router.set('view engine', 'handlebars')
 
 const app = express();
 const PORT = 8080;
 const httpServer = app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
 );
-const socketServer = new Server(httpServer);
 
+const socketServer = new Server(httpServer);
 const productManager = new ProductManager();
 
 app.use(express.json());
@@ -84,3 +90,5 @@ socketServer.on("connection", (socket) => {
       );
   });
 });
+
+export default router
