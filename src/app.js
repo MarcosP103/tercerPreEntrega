@@ -1,5 +1,4 @@
 import express from "express";
-import { __dirname } from "./utils.js";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import ProductManager from "./manager/productManager.js";
@@ -7,12 +6,7 @@ import viewsRouter from "./routes/views.router.js";
 import prodsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import path from 'path'
-
-const router = express.Router()
-
-router.engine('handlebars', handlebars({}))
-router.set('view engine', 'handlebars')
-
+import  {__dirname}  from "./utils.js";
 const app = express();
 const PORT = 8080;
 const httpServer = app.listen(PORT, () =>
@@ -22,29 +16,31 @@ const httpServer = app.listen(PORT, () =>
 const socketServer = new Server(httpServer);
 const productManager = new ProductManager();
 
+// Set up handlebars engine
+app.use(express.static(__dirname + "/public"));
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
+app.set("views", "./src/views");
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../public")));
 
-app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
-app.set("view engine", "handlebars");
-app.use(express.static(__dirname + "/public"));
+// Routes
 app.use("/", viewsRouter);
-
 app.use("/api/products", prodsRouter);
 app.use("/api/carts", cartsRouter);
-
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
+// Socket.io
 socketServer.on("connection", (socket) => {
   console.log("Cliente conectado");
-
   productManager.uploadProducts().then((products) => {
     socket.emit("products", products);
   });
-
   socket.on("newProduct", (product) => {
     productManager
       .addProduct(
@@ -71,7 +67,6 @@ socketServer.on("connection", (socket) => {
         )
       );
   });
-
   socket.on("delProduct", (pid) => {
     productManager
       .delProduct(pid)
@@ -91,4 +86,4 @@ socketServer.on("connection", (socket) => {
   });
 });
 
-export default router
+export default app;

@@ -1,9 +1,8 @@
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
+import manager from '../manager/productManager.js';
 
 const router = express.Router();
-
-const manager = require("../manager/productManager.js");
 const productManager = new manager("../manager/DB.json");
 
 function validateType(field, expectedType) {
