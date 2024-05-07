@@ -9,7 +9,7 @@ const __dirname = dirname(__filename)
 
 const router = Router();
 
-router.engine("handlebars", handlebars({
+router.engine("handlebars", handlebars.create({
     layoutsDir: path.join(__dirname, "../views/layouts"), 
     defaultLayout: 'main', 
     extname: 'handlebars'
