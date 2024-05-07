@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs'
-import { __dirname } from '../utils';
+import { __dirname } from '../utils.js'
 
 class ProductManager {
   constructor(path) {
-    this.productsFile = path.join(__dirname + path);
+    this.productsFile = __dirname + path;
     this.products = [];
     this.uploadProducts();
   }

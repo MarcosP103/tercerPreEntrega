@@ -1,7 +1,7 @@
 import express from 'express'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { __dirname } from '../utils'
+import { __dirname } from '../utils.js'
 
 const router = express.Router()
 const cartsDataPath = path.join(__dirname, 'manager', 'cartsData.json')
