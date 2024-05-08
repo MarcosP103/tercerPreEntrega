@@ -3,7 +3,7 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import ProductManager from "./manager/productManager.js";
 import viewsRouter from "./routes/views.router.js";
-import prodsRouter from "./routes/products.router.js";
+import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import path from 'path'
 import  {__dirname}  from "./utils.js";
@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 // Routes
 app.use("/", viewsRouter);
-app.use("/api/products", prodsRouter);
+app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public", "index.html"));

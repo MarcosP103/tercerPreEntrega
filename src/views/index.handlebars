@@ -1,5 +1,5 @@
 <div>
-    {{#if products.lenght}}
+    {{#if products.length}}
         <div>
             <h1>Productos:</h1>
             <ul>
@@ -13,7 +13,7 @@
                         <strong class="infP">Stock: </strong>{{this.stock}},
                         <strong class="infP">Categoria:</strong>{{this.category}},
                         <strong class="infP">Thumbnail: </strong>
-                        {{#each this.thumbnail}}
+                        {{#each this.thumbnails}}
                             <img src="{{this}}" alt="Thumbnail">
                         {{/each}}
                     </li>
@@ -25,4 +25,4 @@
     {{/if}}
 </div>
 
-<script src="/js/index.js"></script>
+<script src="../public/js/index.js"></script>
