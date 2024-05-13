@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import handlebars from 'express-handlebars'
+import { __dirname, __filename } from '../utils.js';
 import { v4 as uuidv4 } from 'uuid'
 import manager from '../manager/productManager.js';
 
