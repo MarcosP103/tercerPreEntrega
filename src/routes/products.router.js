@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { __dirname, __filename } from '../utils.js';
+import { __dirname } from '../utils.js';
 import { v4 as uuidv4 } from 'uuid'
 import manager from '../manager/productManager.js';
 
