@@ -1,14 +1,10 @@
 import { Router } from 'express'
-import handlebars from 'express-handlebars'
 import { __dirname, __filename } from '../utils.js';
 import { v4 as uuidv4 } from 'uuid'
 import manager from '../manager/productManager.js';
 
 const router = Router();
 const productManager = new manager("../manager/DB.json");
-router.engine("handlebars", handlebars.engine());
-router.set("views", __dirname + "/../views");
-router.set("view engine", "handlebars");
 
 function validateType(field, expectedType) {
   return typeof field === expectedType;
