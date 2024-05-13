@@ -1,9 +1,13 @@
-import express from 'express'
+import { Router } from 'express'
+import handlebars from 'express-handlebars'
 import { v4 as uuidv4 } from 'uuid'
 import manager from '../manager/productManager.js';
 
-const router = express.Router();
+const router = Router();
 const productManager = new manager("../manager/DB.json");
+router.engine("handlebars", handlebars.engine());
+router.set("views", __dirname + "/../views");
+router.set("view engine", "handlebars");
 
 function validateType(field, expectedType) {
   return typeof field === expectedType;
@@ -13,9 +17,18 @@ function arrayThumb(arr) {
   return arr.every((item) => typeof item === "string");
 }
 
+router.get('/realTimeProducts', async (req, res) => {
+  try {
+    const products = await productManager.uploadProducts()
+    res.render('index', {products, length : products.length > 0 ? true : false})
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los productos' })
+  }
+})
+
 router.get("/", async (req, res) => {
   try {
-    const limit = req.query.limit;
+    const limit = parseInt(req.query.limit);
     let products;
 
     if (!isNaN(limit) && limit > 0) {

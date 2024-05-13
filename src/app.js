@@ -20,7 +20,7 @@ const productManager = new ProductManager();
 app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
-app.set("views", "./src/views");
+app.set("views", "views");
 
 // Middleware
 app.use(express.json());
@@ -32,11 +32,11 @@ app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
+  res.render("index", {products});
 });
 
 // Socket.io
-socketServer.on("connection", (socket) => {
+socketServer.on("connection", socket => {
   console.log("Cliente conectado");
   productManager.uploadProducts().then((products) => {
     socket.emit("products", products);
@@ -71,7 +71,7 @@ socketServer.on("connection", (socket) => {
     productManager
       .delProduct(pid)
       .then(() => {
-        return productManager.uploadProducts();
+        return productManager.delProduct();
       })
       .then((products) => {
         socket.emit("products", products);
