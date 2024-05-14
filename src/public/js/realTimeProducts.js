@@ -1,5 +1,5 @@
 const socket = io();
-const productsList = document.getElementById("productsList");
+const productList = document.getElementById("productList");
 const messageDiv = document.createElement("div");
 const btnSend = document.getElementById("btnSend");
 
@@ -24,8 +24,8 @@ btnSend.addEventListener("click", () => {
   });
 });
 
-socket.on("products", (products) => {
-  productsList.innerHTML = ``;
+socket.on("products", products => {
+  productList.innerHTML = ``;
   products.forEach((product) => {
     const div = document.createElement("div");
     const p = document.createElement("p");
@@ -47,7 +47,7 @@ socket.on("products", (products) => {
 
     div.appendChild(p);
     div.appendChild(btnDel);
-    productsList.appendChild(div);
+    productList.appendChild(div);
   });
 });
 
@@ -55,12 +55,12 @@ socket.on("resAdd", (message) => {
   const p = document.createElement("p");
   p.textContent = message;
   messageDiv.appendChild(p);
-  productsList.appendChild(messageDiv);
+  productList.appendChild(messageDiv);
 });
 
 socket.on("resDel", (message) => {
   const p = document.createElement("p");
   p.textContent = message;
   messageDiv.appendChild(p);
-  productsList.appendChild(messageDiv);
+  productList.appendChild(messageDiv);
 });

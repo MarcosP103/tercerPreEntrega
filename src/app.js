@@ -20,7 +20,7 @@ const productManager = new ProductManager();
 app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
-app.set("views", "views");
+app.set("views", __dirname + "/views");
 
 // Middleware
 app.use(express.json());

@@ -23,7 +23,7 @@ class ProductManager {
   }
 
   async addProduct(title, description, code, price, status, stock, category, thumbnails) {
-    if (!title && !description && !code && !price && !status && !stock && !category && !thumbnails) {
+    if (!title || !description || !code || !price || !status || !stock || !category || !thumbnails) {
       console.log("Debe ingresar todos los campos");
       return;
     }
@@ -105,8 +105,8 @@ class ProductManager {
   }
 
   async delProduct(id) {
-    const indexProd = this.products.findIndex((product) => product.id === id);
-    if (indexProd === -1) {
+    const indexProd = this.products.findIndex((product) => product.id == id);
+    if (indexProd == -1) {
       console.error("No se encontró el producto por ID", id);
       return;
     }
