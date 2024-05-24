@@ -3,9 +3,11 @@ import { __dirname } from '../utils.js';
 import { v4 as uuidv4 } from 'uuid'
 import manager from '../dao/manager/productManager.js'
 import productModel from '../dao/models/products.model.js';
+import ProductManagerMongoose from '../dao/managerMongo/productManagerMongo.js';
 
 const router = Router();
 const productManager = new manager("../dao/manager/DB.json");
+const productManagerM = new ProductManagerMongoose
 
 function validateType(field, expectedType) {
   return typeof field === expectedType;
@@ -246,5 +248,82 @@ router.get("/", async(req, res) => {
     res.status(500).json({ error: "Error del servidor"})
   }
 })
+
+
+router.get("/", async (req, res) => {
+  try{
+    const limit = parseInt(req.query.limit)
+    let products
+
+    if(!isNaN(limit) && limit > 0) {
+      products = await productManagerM.getProducts(limit)
+    } else if (!isNaN(limit) && limit <= 0) {
+      return res.status(400).send("La cantidad debe ser mayor a 0")
+    } else {
+      products = await productManagerM.getProducts()
+    }
+
+    res.json(products)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Error al obtener los productos" })
+  }
+})
+
+router.get("/:pid", async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const product = await productManagerM.getProductsById(id)
+    if(!product) {
+      return res.status(404).json({ message: "Producto no encontrado"})
+    }
+    res.json(product)
+  } catch(error) {
+    console.error(error)
+    res.status(500).json({ error: "Error al obtener el producto"})
+  }
+})
+
+router.post("/", async (req, res) => {
+  const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+
+  try {
+    await productManagerM.addProduct(title, description, code, price, status, stock, category, thumbnails)
+    res.status(201).json({ message: "Producto agregado correctamente" })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Error al agregar el producto"})
+  }
+})
+
+router.put("/:pid", async (req, res) => {
+  const { id }= req.params
+  const productMod = req.body
+
+  try {
+    const updatedProduct = await productManagerM.modProduct(id, productMod)
+    if(!updatedProduct) {
+      return res.status(404).json({ message: "Producto no encontrado" })
+    }
+    res.json({ message: "Producto modificado correctamente", product: updatedProduct })
+  } catch(error) {
+    console.error(error)
+    res.status(500).json({ error: "Error al modificar el producto" })
+  }
+})
+
+router.delete("/:pid", async (req, res) => {
+  const { id } = req.params
+
+  try {
+    await productManagerM.delProduct(id)
+    res.json({ message: "Producto eliminado correctamente"})
+  } catch (error){
+    console.error(error)
+    res.status(500).json({ error: "Error al eliminar el producto" })
+  }
+})
+
 
 export default router;
