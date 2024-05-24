@@ -1,14 +1,21 @@
 import express from "express";
-import handlebars from "express-handlebars";
 import { Server } from "socket.io";
-import ProductManager from "./manager/productManager.js";
+import handlebars from "express-handlebars";
+import dotenv from "dotenv"
+import ProductManager from "./dao/manager/productManager.js";
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import path from 'path'
 import  {__dirname}  from "./utils.js";
+
+//Cargar variables de entorno y conectar a MongoDB
+dotenv.config()
+connectDB()
+
 const app = express();
 const PORT = 8080;
+
 const httpServer = app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
 );
@@ -36,6 +43,8 @@ app.get("/", (req, res) => {
 });
 
 // Socket.io
+let messages = []
+
 socketServer.on("connection", socket => {
   console.log("Cliente conectado");
   productManager.uploadProducts().then((products) => {
@@ -84,6 +93,10 @@ socketServer.on("connection", socket => {
         )
       );
   });
+  socket.on("message", data => {
+    messages.push(data)
+    socketServer.emit("messageLogs", messages)
+  })
 });
 
 export default app;
