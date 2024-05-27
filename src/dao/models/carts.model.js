@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
 
 //crear coleccion
-const cartsCollection = "Carrito";
+const cartsCollection = "carts";
 
 const cartsSchema = new mongoose.Schema({
-  id: { type: Number, required: true, max: 100, index: true },
   products: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: productCollection,
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+      quantity: { type: Number, required: true, min: 1 },
       default: [],
     },
   ],
