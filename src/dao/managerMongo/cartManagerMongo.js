@@ -85,13 +85,12 @@ class CartManagerMongoose {
             }
 
             const productInCart = cart.products.find((item) => item.productId.equals(productId))
-            if (productInCart) {
-                productInCart.quantity = quantity
-            } else {
+            if (!productInCart) {
                 console.error("Producto no encontrado en el carrito: ", productId)
                 return null
             }
 
+            productInCart.quantity = quantity
             await cart.save()
             console.log("Cantidad del producto actualizada correctamente")
             return cart

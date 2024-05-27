@@ -2,7 +2,10 @@
 <div>
     {{#each docs}}
     <div>
-        <p>Titulo: {{this.title}} &nbsp; Precio: {{this.price}}</p>
+        <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px;height: auto;">
+        <h1><a href="/products/{{this._id}}">{{this.title}}</a></h1>
+        <p>{{this.category}}</p>
+        <h2>{{this.price}}</h2>
     </div>
     <br/>
     {{/each}}

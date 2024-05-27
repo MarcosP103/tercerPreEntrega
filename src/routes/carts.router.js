@@ -174,12 +174,12 @@ router.get("/:cid", async (req, res) => {
   const { cid } = req.params;
 
   try {
-    const cart = await cartManager.getCartById(cid);
+    const cart = await cartsModel.findById(cid).populate('products.productId').lean()
     if (!cart) {
       return res.status(404).json({ error: "Carrito no encontrado" });
     }
 
-    res.json(cart);
+    res.render("cartDetail", { cart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al obtener el carrito " });

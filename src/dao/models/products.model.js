@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
   status: { type: Boolean, required: true },
   stock: { type: Number, required: true, min: 1 },
   category: { type: String, required: true, max: 30, index: true },
-  thumbnail: { type: String, required: true },
+  thumbnails: { type: String, required: true },
   default: [],
 });
 
