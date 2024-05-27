@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import dotenv from "dotenv"
+import connectDB from "./config/db.js";
 import ProductManager from "./dao/manager/productManager.js";
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
