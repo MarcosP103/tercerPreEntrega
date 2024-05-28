@@ -11,8 +11,8 @@ import path from 'path'
 import  {__dirname}  from "./utils.js";
 
 //Cargar variables de entorno y conectar a MongoDB
-dotenv.config()
 console.log(process.env.MONGO_URL)
+dotenv.config()
 connectDB()
 
 const app = express();

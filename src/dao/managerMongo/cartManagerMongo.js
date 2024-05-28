@@ -48,7 +48,7 @@ class CartManagerMongoose {
         try {
             const cart = await cartModel.findById(cartId).populate("products.productId").lean()
             if (!cart) {
-                console.error("Carrito no encontrado por ID: ", error)
+                console.error("Carrito no encontrado por ID: ", cartId)
                 return null
             }
             return cart
