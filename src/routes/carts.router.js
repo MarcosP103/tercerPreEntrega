@@ -1,99 +1,9 @@
 import express from "express";
-import { promises as fs } from "fs";
-import path from "path";
-import { __dirname } from "../utils.js";
 import CartManagerMongoose from "../dao/managerMongo/cartManagerMongo.js";
 import cartsModel from "../dao/models/carts.model.js";
 
 const router = express.Router();
-const cartsDataPath = path.join(__dirname, "manager", "cartsData.json");
 const cartManager = new CartManagerMongoose();
-
-router.post("/carts", async (req, res) => {
-  try {
-    const cartsData = await fs.readFile(cartsDataPath);
-    let carts = JSON.parse(cartsData);
-
-    const newCartId = generateId();
-
-    const newCart = {
-      id: newCartId,
-      products: req.body.products,
-    };
-
-    carts.push(newCart);
-
-    await fs.writeFile(cartsDataPath, JSON.stringify(carts, null, 2));
-
-    res
-      .status(201)
-      .json({ message: "Carrito creado correctamente.", cart: newCart });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: "Error al crear el carrito." });
-  }
-});
-
-function generateId() {
-  return Math.random().toString(36).substring(2, 11);
-}
-
-router.get("/:cid", async (req, res) => {
-  try {
-    const cartsData = await fs.readFile(cartsDataPath);
-    const carts = JSON.parse(cartsData);
-
-    const cartId = req.params.cid;
-    const cart = carts.find((cart) => cart.id == cartId);
-
-    if (!cart) {
-      return res
-        .status(404)
-        .json({ error: "Carrito no encontrado con ese Id." });
-    }
-
-    res.status(200).json({ products: cart.products });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error en el servidor" });
-  }
-});
-
-router.post("/:cid/product/:pid", async (req, res) => {
-  try {
-    const cartsData = await fs.readFile(cartsDataPath);
-    const carts = JSON.parse(cartsData);
-
-    const cartId = req.params.cid;
-    const cartIndex = carts.findIndex((cart) => cart.id == cartId);
-
-    if (cartIndex === -1) {
-      return res.status(404).json({ error: "Carrito no econtrado." });
-    }
-
-    const productId = req.params.pid;
-    const quantity = req.body.quantity || 1;
-
-    const existProductIndex = carts[cartIndex].products.findIndex(
-      (product) => product.id == productId
-    );
-
-    if (existProductIndex !== -1) {
-      carts[cartIndex].products[existProductIndex].quantity += quantity;
-    } else {
-      carts[cartIndex].products.push({ id: productId, quantity });
-    }
-
-    await fs.writeFile(cartsDataPath, JSON.stringify(carts, null, 2));
-
-    res
-      .status(201)
-      .json({ message: "Producto agregado al carrito correctamente." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al agregar el producto al carrito." });
-  }
-});
 
 //MongoDB
 router.get("/", async (req, res) => {
