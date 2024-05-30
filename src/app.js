@@ -4,7 +4,7 @@ import handlebars from "express-handlebars";
 import dotenv from "dotenv"
 import connectDB from "./config/db.js";
 import ProductManager from "./dao/manager/productManager.js";
-import viewsRouter from "./routes/views.router.js";
+import indexRouter from "./routes/index.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import path from 'path'
@@ -37,12 +37,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../public")));
 
 // Routes
-app.use("/", viewsRouter);
+app.use("/", indexRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.get("/", (req, res) => {
-  res.render("index", {products});
-});
 
 // Socket.io
 let messages = []
