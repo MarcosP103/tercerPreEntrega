@@ -1,12 +1,18 @@
 import {Router} from "express"
+import productModel from "../dao/models/products.model.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        res.render('index');
+        //{ products: result.docs, prevLink: prevLink, nextLink: nextLink }
+        const products = await productModel.find().lean();
+        res.render('products', { 
+            products,
+            userName: req.session.user ? req.session.user.first_name : 'Invitado'
+        });
     } catch (error) {
-        console.error("No se pudo mostrar la pagina", error);
+        res.status(500).send("Error al obtener los productos")
     }
 })
 

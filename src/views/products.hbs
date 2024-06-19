@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Bienvenido, {{userName}}</h1>
+
+    <h1>Lista de Productos</h1>
+    {{#if products.length}}
+        <div>
+            {{#each products}}
+            <div>
+                <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
+                <h2>{{this.title}} - ${{this.price}}</h2>
+                <p>{{this.category}}</p>
+                <h2>{{this.price}}</h2>
+            </div>
+            <br/>
+            {{/each}}
+        </div>
+    {{else}}
+        <h1>No hay productos</h1>
+    {{/if}}
+
+    <form action="/api/sessions/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    {{#if totalPages}}
+        <div>
+            {{#each docs}}
+            <div>
+                <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
+            </div>
+            <br/>
+            {{/each}}
+        </div>
+        <br />
+        <div>
+            {{#if prevLink}}
+            <a href="{{prevLink}}">
+                << Anterior
+            </a>
+            {{/if}}
+            &nbsp;
+            {{this.page}}
+            &nbsp;
+            {{#if nextLink}}
+            <a href="{{nextLink}}">
+                Siguiente >>
+            </a>
+            {{/if}}
+        </div>
+    {{/if}}
+</body>
+</html>
