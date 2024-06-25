@@ -1,10 +1,12 @@
 import { Router } from "express";
+import passport from "passport";
 import userModel from "../../dao/models/user.model.js";
 import cartsModel from "../../dao/models/carts.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
-import passport from "passport";
+import initializePassport from "../../config/passport.config.js";
 
 const router = Router();
+initializePassport()
 
 // router.post('/register', async (req, res) => {
 //     const { first_name, last_name, email, age, password } = req.body;
@@ -23,9 +25,7 @@ const router = Router();
 //     }
 // });
 
-router.post(
-  "/register",
-  passport.authenticate("register", { failureRedirect: "failregister" }),
+router.post("/register", passport.authenticate("register", { failureRedirect: "/failregister" }),
   async (req, res) => {
     try {
       const newCart = new cartsModel();
@@ -45,7 +45,7 @@ router.post(
 
 router.get("/failregister", async (req, res) => {
   console.log("Estrategia fallida");
-  res.send({ error: "Falló" });
+  res.send({ error: "Fallo" });
 });
 
 // router.post('/login', async (req, res) => {
@@ -73,11 +73,10 @@ router.get("/failregister", async (req, res) => {
 //     }
 // });
 
-router.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), async (req, res) => {
+router.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), 
+async (req, res) => {
     if (!req.user)
-      return res
-        .status(400)
-        .send({ status: "error", error: "Datos incompletos" });
+      return res.status(400).send({ status: "error", error: "Datos incompletos" });
     try {
       req.session.user = {
         first_name: req.user.first_name,
@@ -87,7 +86,7 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "faillog
         cartId: req.user.cartId
       };
       console.log(req.session.user);
-      res.redirect("/api/index");
+      res.redirect("/");
     } catch (err) {
       res.status(500).send("Error al iniciar sesión");
     }
@@ -114,9 +113,7 @@ router.get("/restorePassword", (req, res) => {
 router.post("/restorePassword", async (req, res) => {
   const { email, newPassword } = req.body;
   if (!email || !newPassword)
-    return res
-      .status(400)
-      .send({ status: "error", error: "Datos incompletos" });
+    return res.status(400).send({ status: "error", error: "Datos incompletos" });
 
   try {
     const user = await userModel.findOne({ email });
@@ -130,19 +127,51 @@ router.post("/restorePassword", async (req, res) => {
   }
 });
 
-router.get(
-  "/github",
-  passport.authenticate("github", { scope: "user.email" }),
+router.get("/github", passport.authenticate("github", { scope: ["user.email"]}),
   async (req, res) => {}
 );
 
-router.get(
-  "/githubcallback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
-    req.session.user = req.user;
-    res.redirect("/");
+    if (!req.user) { 
+      return res.redirect("/editprofile");
+    } else {
+      req.session.user = req.user
+      res.redirect("/")
+    }
+});
+
+router.get("/editprofile", (req, res) => {
+  res.render("editprofile", { user: req.user });
+});
+
+router.post("/editprofile", async (req, res) => {
+  const { first_name, last_name, email, age, password } = req.body;
+
+  if (!first_name || !last_name || !email || !age || !password) {
+    return res.status(400).send("Todos los campos son requeridos");
   }
-);
+
+  try {
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send("El email ya está registrado");
+    }
+
+    const newUser = new userModel({
+      first_name,
+      last_name,
+      email,
+      age,
+      password: createHash(password)
+    });
+    await newUser.save();
+    req.session.user = newUser;
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).send("Error al completar el perfil");
+  }
+});
+
 
 export default router;
