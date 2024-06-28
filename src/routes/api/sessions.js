@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import userModel from "../../dao/models/user.model.js";
+import userService from "../../dao/models/user.model.js";
 import cartsModel from "../../dao/models/carts.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import initializePassport from "../../config/passport.config.js";
@@ -31,7 +31,7 @@ router.post("/register", passport.authenticate("register", { failureRedirect: "f
       const newCart = new cartsModel();
       await newCart.save();
 
-      const user = await userModel.findById(req.user._id);
+      const user = await userService.findById(req.user._id);
       user.cartId = newCart._id;
       await user.save();
 
@@ -114,7 +114,7 @@ router.post("/restorePassword", async (req, res) => {
     return res.status(400).send({ status: "error", error: "Datos incompletos" });
 
   try {
-    const user = await userModel.findOne({ email });
+    const user = await userService.findOne({ email });
     if (!user) return res.status(400).send("Usuario no encontrado");
 
     user.password = createHash(newPassword);
@@ -137,7 +137,7 @@ router.get("/githubcallback", passport.authenticate("github", { failureRedirect:
       res.redirect("/")
   
 });
-/* 
+
 router.get("/editprofile", (req, res) => {
   res.render("editprofile", { user: req.user });
 });
@@ -150,12 +150,12 @@ router.post("/editprofile", async (req, res) => {
   }
 
   try {
-    const existingUser = await userModel.findOne({ email });
+    const existingUser = await userService.findOne({ email });
     if (existingUser) {
       return res.status(400).send("El email ya está registrado");
     }
 
-    const newUser = new userModel({
+    const newUser = new userService({
       first_name,
       last_name,
       email,
@@ -168,7 +168,6 @@ router.post("/editprofile", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error al completar el perfil");
   }
-}); */
-
+});
 
 export default router;
