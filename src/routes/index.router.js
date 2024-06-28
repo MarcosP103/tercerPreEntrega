@@ -5,7 +5,6 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        //{ products: result.docs, prevLink: prevLink, nextLink: nextLink }
         const products = await productModel.find().lean();
         res.render('products', { 
             products,

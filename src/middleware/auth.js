@@ -2,17 +2,15 @@
 export const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
         return next();
-    } else {
-        res.redirect('/login');
     }
+    res.redirect('/login');
 };
 
 export const isNotAuthenticated = (req, res, next) => {
     if (!req.session.user) {
         return next();
-    } else {
-        res.redirect('/profile');
-    }
+    } 
+    res.redirect('/profile');
 };
 
 export const isAdmin = (req, res, next) => {

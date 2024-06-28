@@ -127,20 +127,19 @@ router.post("/restorePassword", async (req, res) => {
   }
 });
 
-router.get("/github", passport.authenticate("github", { scope: ["user.email"]}),
-  async (req, res) => {}
+router.get("/github", passport.authenticate("github", { scope: ["user:email"]}),
+  (req, res) => {}
 );
 
 router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
     if (!req.user) { 
-      return res.redirect("/editprofile");
-    } else {
-      req.session.user = req.user
+      return res.redirect("/");
+    } 
       res.redirect("/")
-    }
+  
 });
-
+/* 
 router.get("/editprofile", (req, res) => {
   res.render("editprofile", { user: req.user });
 });
@@ -171,7 +170,7 @@ router.post("/editprofile", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error al completar el perfil");
   }
-});
+}); */
 
 
 export default router;

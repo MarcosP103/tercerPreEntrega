@@ -71,11 +71,11 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routes
-app.use('/api/sessions', sessionsRouter);
 app.use("/", indexRouter);
+app.use("/", viewsRouter)
+app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/", viewsRouter)
 
 app.get('/', (req, res) => {
   if(req.session.views) {
