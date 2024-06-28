@@ -48,37 +48,40 @@ const initializePassport = () => {
     )
   );
 
-  passport.use("register", new LocalStrategy(
-      { passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
+  passport.use("register",new LocalStrategy(
+      { passReqToCallback: true, usernameField: "email" },
+      async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
         try {
-
           if (!first_name || !last_name || !email || !age || !password) {
             return done(null, false, {
               message: "Todos los campos son requeridos",
             });
           }
-
-          const existingUser = await userService.findOne({ email: username });
+  
+          let existingUser = await userService.findOne({ email: username });
           if (existingUser) {
             return done(null, false, { message: "El email ya existe" });
           }
-
-          const newUser = new userService({
+  
+          const newUser = {
             first_name,
             last_name,
             email,
             age,
             password: createHash(password),
-          });
-          await newUser.save();
-          return done(null, newUser);
+          };
+  
+          let result = await userService.create(newUser);
+  
+          return done(null, result);
         } catch (error) {
-          return done("Error al obtener el usuario" + error);
+          return done("Error al registrar el usuario: " + error);
         }
       }
     )
   );
+  
   
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -104,6 +107,5 @@ passport.use("login", new LocalStrategy({ usernameField: "email" }, async (usern
       }
     )
   );
-
 
 export default initializePassport;

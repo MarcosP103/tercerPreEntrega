@@ -25,7 +25,7 @@ initializePassport()
 //     }
 // });
 
-router.post("/register", passport.authenticate("register", { failureRedirect: "/failregister" }),
+router.post("/register", passport.authenticate("register", { failureRedirect: "failregister" }),
   async (req, res) => {
     try {
       const newCart = new cartsModel();
@@ -73,20 +73,18 @@ router.get("/failregister", async (req, res) => {
 //     }
 // });
 
-router.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), 
-async (req, res) => {
-    if (!req.user)
-      return res.status(400).send({ status: "error", error: "Datos incompletos" });
+router.post("/login", passport.authenticate("login", { failureRedirect: "/faillogin" }), async (req, res) => {
+    if (!req.user) return res.status(400).send({ status: "error", error: "Datos incompletos" });
     try {
       req.session.user = {
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         email: req.user.email,
         age: req.user.age,
-        cartId: req.user.cartId
+        cartId: req.user.cartId,
       };
       console.log(req.session.user);
-      res.redirect("/");
+      res.redirect("/api/products");
     } catch (err) {
       res.status(500).send("Error al iniciar sesión");
     }
