@@ -24,7 +24,7 @@ class ProductManagerMongoose {
                 return await productModel.find().lean()
             }
         } catch(error) {
-            console.error("Error al obtener los productots: ", error)
+            console.error("Error al obtener los productos: ", error)
             throw error
         }
 
@@ -62,9 +62,9 @@ class ProductManagerMongoose {
 
     async getProductsById(id) {
         try {
-            const product = await productModel.findById(id).lena()
+            const product = await productModel.findById(id).lean()
             if (!product) {
-                console.log ("No se encontró el prudcto segun el ID indicado")
+                console.log ("No se encontró el producto segun el ID indicado")
                 return null
             }
             return product

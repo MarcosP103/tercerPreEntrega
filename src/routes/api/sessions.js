@@ -28,7 +28,7 @@ initializePassport()
 router.post("/register", passport.authenticate("register", { failureRedirect: "failregister" }),
   async (req, res) => {
     try {
-      const newCart = new cartsModel.create({});
+      const newCart = await cartsModel.create({ products: [] });
 
       const user = await userService.findById(req.user._id);
       user.cartId = newCart._id;
