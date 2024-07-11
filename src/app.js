@@ -15,7 +15,8 @@ import passport from 'passport'
 import initializePassport from './config/passport.config.js'
 import path from 'path'
 import  {__dirname}  from "./utils.js";
-import configureSocket from "./services/socket.js";
+import configureSocket from "./services/socket.service.js";
+import mailRouter from "./routes/api/mail.router.js"
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -74,6 +75,7 @@ app.use("/", viewsRouter)
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/mail", mailRouter)
 
 app.get('/', (req, res) => {
   if(req.session.views) {
