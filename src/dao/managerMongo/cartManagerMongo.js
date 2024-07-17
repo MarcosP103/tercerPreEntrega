@@ -1,5 +1,8 @@
 import cartModel from '../models/carts.model.js'
 import productModel from '../models/products.model.js'
+import userModel from '../models/user.model.js'
+import { sendProductAdded } from '../../services/mail.service.js'
+
 
 class CartManagerMongoose {
     async createCart() {
@@ -37,6 +40,18 @@ class CartManagerMongoose {
 
             await cart.save()
             console.log("Producto agregado al carrito correctamente")
+
+            const user = await userModel.findOne({ cartId: cart._id })
+
+            if (user) {
+                await sendProductAdded(user.email, {
+                    title: product.title,
+                    description: product.description,
+                    price: product.price,
+                    quantity: quantity
+                })
+            }
+            
             return cart
         } catch (error) {
             console.error("Error al agregar el producto al carrito: ", error)

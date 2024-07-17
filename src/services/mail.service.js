@@ -6,27 +6,25 @@ const transport = nodemailer.createTransport({
     service: "gmail",
     port: 587,
     auth: {
-        user: "",
-        pass: ""
+        user: "mperezro103@gmail.com",
+        pass: "eoar yqrs pjkt bzss"
     }
 });
 
-export const sendTestEmail = async () => {
+export const sendProductAdded = async (userEmail, product) => {
     let result = await transport.sendMail({
-        from: "",
-        to: "",
-        subject: "Prueba de funcionamiento",
+        from: "mperezro103@gmail.com",
+        to: userEmail,
+        subject: "Producto agregado al carrito",
         html: `
         <div>
-            <h1>Correo de prueba -- body</h1>
-            <img src="cid:pierre"/>
+            <h1>Se ha agregado un nuevo producto a tu carrito</h1>
+            <p>Producto: ${product.title}</p>
+            <p>Descripcion: ${product.description}</p>
+            <p>Precio: ${product.price}</p>
+            <p>Cantidad: ${product.quantity}</p>
         </div>
-        `,
-        attachments: [{
-            filename: "pierre.jpg",
-            path: path.join(__dirname, '../public/pierre.jpg'), // Asegúrate de que la ruta del archivo sea correcta
-            cid: "pierre"
-        }]
+        `
     });
     return result;
 };

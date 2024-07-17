@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs"
 import { createHash } from "../../utils.js";
+import cartsModel from "./carts.model.js";
 
 //crear coleccion
 const userCollection = "user";
@@ -12,6 +14,15 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
   role: { type: String, enum: ['admin', 'user'], default: 'user'}
+});
+
+userSchema.pre("save", async function(next) {
+  if (this.isNew) {
+    const newCart = new cartsModel({ user: this._id, products: [] });
+    await newCart.save();
+    this.cartId = newCart._id;
+  }
+  next();
 });
 
 userSchema.pre("save", function (next) {

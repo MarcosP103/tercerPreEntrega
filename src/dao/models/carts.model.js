@@ -4,11 +4,11 @@ import mongoose from "mongoose";
 const cartsCollection = "carts";
 
 const cartsSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   products: [
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
-      quantity: { type: Number, required: true, min: 1 },
-      default: [],
+      quantity: { type: Number, required: true, min: 1 }
     },
   ],
 });
