@@ -1,0 +1,51 @@
+<div>
+    <h1>Agregar nuevo producto</h1>
+    <form method="POST" action="/api/products">
+        <div class="form-group">
+            <label for="title">Título del Producto</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        <div class="form-control" >
+            <label for="category">Categoría</label>
+            <select id="category" name="category" required>
+                <option value="" selected disabled>Seleccione una categoría</option>
+                <option value="casillas-camas">Casillas-Camas</option>
+                <option value="arnes-collares-correas">Arnes-Collares-Correas</option>
+                <option value="bebederos-comederos">Bebederos-Comederos</option>
+            </select>
+        </divclass=>
+        <div class="form-group">
+            <label for="price">Precio</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="thumbnails">Imagen ({{thumbnails}})</label>
+            <input type="url" class="form-control" id="thumbnails" name="thumbnails" required>
+        </div>
+        <div class="form-group">
+            <label for="code">Código del Producto</label>
+            <input type="text" class="form-control" id="code" name="code" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock</label>
+            <input type="number" class="form-control" id="stock" name="stock" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Estado</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+        </div>
+        <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{product._id}}');" style="margin-top: 20px;">
+            <label for="cartQuantity">Cantidad a agregar al carrito:</label>
+            <input type="number" id="cartQuantity" name="cartQuantity" min="1" required>
+            <button type="submit">Agregar al carrito</button>
+        </form>
+
+    </form>
+</div>

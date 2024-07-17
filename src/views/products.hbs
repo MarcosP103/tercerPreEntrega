@@ -17,6 +17,8 @@
                 <h2>{{this.title}} - ${{this.price}}</h2>
                 <p>{{this.category}}</p>
                 <h2>{{this.price}}</h2>
+                <a href="/api/products/get/{{products._id}}">Ver más</a>
+                <button onclick="addToCart('{{products._id}}')">Agregar al carrito</button>
             </div>
             <br/>
             {{/each}}

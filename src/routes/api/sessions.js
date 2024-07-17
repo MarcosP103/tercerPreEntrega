@@ -1,4 +1,5 @@
 import { Router } from "express";
+import passport from "passport";
 import initializePassport from "../../config/passport.config.js";
 import {
   handleRegister,

@@ -7,12 +7,14 @@
     <p>{{product.description}}</p>
     <p>Categoría: {{product.category}}</p>
     <p>Stock: {{product.stock}}</p>
-    <h2>Precio: {{product.price}}</h2>
+    <h2>Precio: ${{product.price}}</h2>
 
-    <form action="/api/carts/{{cartId}}/products/{{product._id}}" method="post">
-        <label for="quantity">Cantidad:</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="{{product.stock}}" required>
+    <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{product._id}}');">
+        <label for="cartQuantity">Cantidad:</label>
+        <input type="number" id="cartQuantity" name="cartQuantity" min="1" max="{{product.stock}}" required>
         <button type="submit">Agregar al carrito</button>
     </form>
+
     <a href="/api/products">Volver a productos</a>
-</body>
+
+    <script src="../public/js/addProduct.js"></script>
