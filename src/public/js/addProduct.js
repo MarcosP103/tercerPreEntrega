@@ -1,9 +1,13 @@
 async function addToCart(cid, pid) {
-    const url = `http://localhost:8080/api/carts/post/${cid}/product/${pid}`;
+    const url = `http://localhost:8080/api/cart/${cid}/products/${pid}`;
 
     try {
         const response = await fetch(url, {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quantity: 1 })
         });
 
         if (response.ok) {

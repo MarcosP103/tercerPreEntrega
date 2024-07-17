@@ -31,12 +31,12 @@ export const getProducts = async (limit, page, sort, query) => {
   return await productModel.paginate(filter, options);
 };
 
-export const getProductById = async (productId) => {
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
+export const getProductById = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('ID inválido');
   }
 
-  const objectId = new mongoose.Types.ObjectId(productId);
+  const objectId = new mongoose.Types.ObjectId(id);
   return await productModel.findById(objectId);
 };
 

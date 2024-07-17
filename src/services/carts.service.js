@@ -4,22 +4,22 @@ import cartsModel from "../dao/models/carts.model.js";
 const cartManager = new CartManagerMongoose();
 
 export const createCart = async () => {
-  try {
-    return await cartManager.createCart();
-  } catch (error) {
-    throw new Error("Error al crear el carrito");
-  }
+    try {
+        return await cartManager.createCart();
+    } catch (error) {
+        throw new Error("Error al crear el carrito");
+    }
 };
 
 export const addProductToCart = async (cid, pid, quantity) => {
-  if (!quantity || quantity <= 0) {
-    throw new Error("Cantidad inválida");
-  }
-  try {
-    return await cartManager.addProductToCart(cid, pid, quantity);
-  } catch (error) {
-    throw new Error("Error al agregar el producto al carrito");
-  }
+    if (!quantity || quantity <= 0) {
+        throw new Error("Cantidad inválida");
+    }
+    try {
+        return await cartManager.addProductToCart(cid, pid, quantity);
+    } catch (error) {
+        throw new Error("Error al agregar el producto al carrito");
+    }
 };
 
 export const getCartById = async (cid) => {

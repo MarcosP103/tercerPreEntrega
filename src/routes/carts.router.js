@@ -1,12 +1,12 @@
 import express from "express";
 import {
-  handleCreateCart,
-  handleAddProductToCart,
-  handleGetCartById,
-  handleUpdateCart,
-  handleUpdateProductQuantity,
-  handleRemoveProductFromCart,
-  handleClearCart,
+    handleCreateCart,
+    handleAddProductToCart,
+    handleGetCartById,
+    handleUpdateCart,
+    handleUpdateProductQuantity,
+    handleRemoveProductFromCart,
+    handleClearCart,
 } from "../controllers/carts.controller.js";
 
 const router = express.Router();
@@ -26,3 +26,4 @@ router.delete("/:cid/products/:pid", handleRemoveProductFromCart);
 router.delete("/:cid", handleClearCart);
 
 export default router;
+
