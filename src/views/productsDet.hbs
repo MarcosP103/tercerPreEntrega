@@ -1,4 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{product.title}}</title>
 </head>
 <body>
@@ -9,7 +13,7 @@
     <p>Stock: {{product.stock}}</p>
     <h2>Precio: ${{product.price}}</h2>
 
-    <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{product._id}}');">
+    <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{cartId}}', '{{product._id}}')">
         <label for="cartQuantity">Cantidad:</label>
         <input type="number" id="cartQuantity" name="cartQuantity" min="1" max="{{product.stock}}" required>
         <button type="submit">Agregar al carrito</button>
@@ -17,4 +21,6 @@
 
     <a href="/api/products">Volver a productos</a>
 
-    <script src="../public/js/addProduct.js"></script>
+    <script src="/js/addProduct.js"></script>
+</body>
+</html>

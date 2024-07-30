@@ -17,7 +17,7 @@ export const handleRegister = async (req, res, next) => {
     }
     try {
       const newUser = await registerUser(user);
-      req.session.user = {
+      req.user = {
         first_name: newUser.first_name,
         last_name: newUser.last_name,
         email: newUser.email,
@@ -42,7 +42,7 @@ export const handleLogin = async (req, res, next) => {
     }
     try {
       const foundUser = await findUserById(user._id);
-      req.session.user = {
+      req.user = {
         first_name: foundUser.first_name,
         last_name: foundUser.last_name,
         email: foundUser.email,
@@ -117,7 +117,7 @@ export const handleEditProfile = async (req, res) => {
     }
 
     const newUser = await createUser({ first_name, last_name, email, age, password });
-    req.session.user = newUser;
+    req.user = newUser;
     res.redirect("/");
   } catch (error) {
     res.status(500).send("Error al completar el perfil");

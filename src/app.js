@@ -17,6 +17,7 @@ import path from 'path'
 import  {__dirname}  from "./utils.js";
 import configureSocket from "./services/socket.service.js";
 import mailRouter from "./routes/api/mail.router.js"
+import loggerRoutes from "./routes/api/loggerW.routes.js";
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -65,6 +66,11 @@ app.use(passport.session())
 app.engine('hbs', engine({
   extname: '.hbs',
   defaultLayout: 'main',
+  helpers: {
+    eq: function (a, b) {
+      return a === b
+    }
+  }
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -74,8 +80,9 @@ app.use("/", indexRouter);
 app.use("/", viewsRouter)
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
+app.use("/", cartsRouter);
 app.use("/api/mail", mailRouter)
+app.use("/api/loggertest", loggerRoutes)
 
 app.get('/', (req, res) => {
   if(req.session.views) {

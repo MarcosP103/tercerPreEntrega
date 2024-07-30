@@ -11,10 +11,15 @@ import {
 const router = Router();
 
 router.get('/realTimeProducts', handleGetRealTimeProducts);
+
 router.get('/', handleGetProducts);
+
 router.get('/:pid', handleGetProductById);
+
 router.post('/', handleAddProduct);
+
 router.put('/:pid', handleUpdateProduct);
+
 router.delete('/:pid', handleDeleteProduct);
 
 export default router;

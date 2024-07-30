@@ -11,7 +11,11 @@
             <img src="{{this.productId.thumbnails}}" alt="{{this.productId.title}}" style="width:100px;height:auto;">
             <p>Descripcion: {{this.productId.description}}</p>
             <p>Precio: {{this.productId.price}}</p>
-            <p>Cantidad: {{this.quantity}}</p>
+            <form action="/api/carts/{{../cart._id}}/products/{{this.productId._id}}" method="POST">
+                <label for="quantity">Cantidad:</label>
+                <input type="number" name="quantity" value="{{this.quantity}}" min="1">
+                <button type="submit">Actualizar</button>
+            </form>
         </li>
         {{/each}}
     </ul>

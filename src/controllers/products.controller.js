@@ -6,6 +6,7 @@ import {
     updateProduct,
     deleteProduct
   } from '../services/products.service.js';
+  import userService from '../dao/models/user.model.js';
   
   export const handleGetRealTimeProducts = async (req, res) => {
     try {
@@ -46,23 +47,34 @@ import {
   export const handleGetProductById = async (req, res) => {
     try {
       const pId = req.params.pid;
+      const userId = req.user ? req.user._id : null;
+      
       const product = await getProductById(pId);
   
       if (!product) {
         return res.status(404).send({ status: "error", error: "Producto no encontrado" });
       }
+
+      let cartId = null
+      if (userId) {
+        const user = await userService.findOne({_id: userId })
+        cartId = user ? user.cartId : null
+      }
   
-      res.render('productsDet', {
-        id: product._id,
-        title: product.title,
-        description: product.description,
-        code: product.code,
-        price: product.price,
-        status: product.status,
-        stock: product.stock,
-        category: product.category,
-        thumbnails: product.thumbnails
-      });
+      es.render('productsDet', {
+        product: {
+            _id: product._id,
+            title: product.title,
+            description: product.description,
+            code: product.code,
+            price: product.price,
+            status: product.status,
+            stock: product.stock,
+            category: product.category,
+            thumbnails: product.thumbnails
+        },
+        cartId
+    });
     } catch (error) {
       console.error("No se pudo obtener el producto por ID", error);
       res.status(500).send({ status: "error", error: "Error interno del servidor" });

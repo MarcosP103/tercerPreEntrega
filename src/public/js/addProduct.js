@@ -1,5 +1,5 @@
 async function addToCart(cid, pid) {
-    const url = `http://localhost:8080/api/cart/${cid}/products/${pid}`;
+    const url = `http://localhost:8080/api/carts/${cid}/products/${pid}`;
 
     try {
         const response = await fetch(url, {
@@ -22,3 +22,4 @@ async function addToCart(cid, pid) {
         alert('Hubo un error al agregar el producto al carrito');
     }
 }
+

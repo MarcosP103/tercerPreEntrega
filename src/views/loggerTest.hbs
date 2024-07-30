@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logger Test</title>
+</head>
+<body>
+    <h1>Logger Test</h1>
+    <form action="/api/loggertest" method="post">
+        <label for="logType">Selecciona el tipo de log:</label>
+        <select name="logType" id="logType">
+            {{#if (eq environment 'production')}}
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+                <option value="fatal">Fatal</option>
+            {{else}}
+                <option value="debug">Debug</option>
+                <option value="http">Http</option>
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+                <option value="fatal">Fatal</option>
+            {{/if}}
+        </select>
+        <input type="hidden" name="environment" value="{{environment}}">
+        <button type="submit">Generar Log</button>
+    </form>
+</body>
+</html>

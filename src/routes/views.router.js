@@ -5,13 +5,13 @@ import productModel from "../dao/models/products.model.js";
 const router = Router();
 
 router.get("/realTimeProducts", (req, res) => {
-  res.render("realTimeProducts", {});
+  res.render("realTimeProducts", { products: [] });
 
 });
 
 router.get('/admin', isAdmin, (req, res) => {
-  res.send('Pagina de administrador: solo accesible para administradores')
-})
+  res.render('admin', { message: 'Página de administración: solo accesible para administradores' });
+});
 
 router.get('/login', isNotAuthenticated, (req, res) => {
   res.render('login');
@@ -22,7 +22,12 @@ router.get('/register', isNotAuthenticated, (req, res) => {
 });
 
 router.get('/profile', isAuthenticated, (req, res) => {
-  res.render('profile', { user: req.session.user });
+  res.render('profile', { user: req.user });
+});
+
+router.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: 'Error interno del servidor' });
 });
 
 // router.get("/products", async (req, res) => {

@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
         const products = await productModel.find().lean();
         res.render('products', { 
             products,
-            userName: req.session.user ? req.session.user.first_name : 'Invitado'
+            userName: req.user ? req.user.first_name : 'Invitado'
         });
     } catch (error) {
         res.status(500).send("Error al obtener los productos")

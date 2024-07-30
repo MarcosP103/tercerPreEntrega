@@ -34,7 +34,7 @@ import {
   
     try {
       const cart = await getCartById(cid);
-      res.render("cartDetail", { cart });
+      res.render("cartDet", { cart });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

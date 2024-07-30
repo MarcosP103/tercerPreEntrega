@@ -7,11 +7,11 @@ import cartsModel from "./carts.model.js";
 const userCollection = "user";
 
 const userSchema = new mongoose.Schema({
-  first_name: { type: String, required: true, max: 50 },
-  last_name: { type: String, required: true, max: 50 },
-  email: { type: String, required: true, unique: true, index: true },
-  age: { type: Number, required: true, min: 1 },
-  password: { type: String, required: true },
+  first_name: { type: String, max: 50 },
+  last_name: { type: String, max: 50 },
+  email: { type: String, unique: true, index: true },
+  age: { type: Number, min: 1 },
+  password: { type: String } ,
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
   role: { type: String, enum: ['admin', 'user'], default: 'user'}
 });
