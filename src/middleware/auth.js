@@ -13,11 +13,11 @@ export const isNotAuthenticated = (req, res, next) => {
     res.redirect('/profile');
 };
 
-export const isAdmin = (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {
+export const isPremium = (req, res, next) => {
+    if (req.user && req.user.role === 'premium') {
         return next()
     } else {
-        res.status(403).send('Acceso denegado: solo los administradores pueden acceder a esta pagina')
+        res.status(403).send('Acceso denegado: solo los usuario premium pueden acceder a esta pagina')
     }
 }
 

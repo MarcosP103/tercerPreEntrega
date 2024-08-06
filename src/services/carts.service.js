@@ -1,7 +1,11 @@
 import CartManagerMongoose from "../dao/managerMongo/cartManagerMongo.js";
 import cartsModel from "../dao/models/carts.model.js";
+import productModel from "../dao/models/products.model.js";
+import TicketService from "./ticket.service.js";
+import { v4 as uuidv4 } from "uuid"
 
 const cartManager = new CartManagerMongoose();
+const ticketService = new TicketService()
 
 export const createCart = async () => {
     try {
@@ -67,3 +71,40 @@ export const clearCart = async (cid) => {
     throw new Error("Error al vaciar el carrito");
   }
 };
+
+export const purchaseCart = async (cid) => {
+  const cart = await getCartById(cid)
+  if (!cart) {
+    throw new Error("Carrito no encontrado.")
+  }
+
+  const productsToPurchase = cart.products
+  const productsNotProcessed = []
+  let totalAmount = 0
+
+  for (let item of productsToPurchase) {
+    const product = await productModel.findById(item.productId)
+
+    if(product.stock >= item.quantity) {
+      product.stock -= item.quantity
+      await product.save()
+      totalAmount += product.price * item.quantity
+    } else {
+      productsNotProcessed.push(item.productId)
+    }
+  }
+
+  if (totalAmount > 0) {
+    await ticketService.createTicket({
+      code: uuidv4().replace(/-/g, ''),
+      amount: totalAmount,
+      purchaser: cart.user.email,
+      products: cart.products.filter(item => !productsNotProcessed.includes(item.productId))
+    })
+  }
+
+  cart.products = cart.products.filter(item => productsNotProcessed.includes(item.productId))
+  await updateCart(cid, cart.products)
+
+  return productsNotProcessed
+}

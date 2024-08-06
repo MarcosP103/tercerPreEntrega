@@ -3,17 +3,17 @@ import path from 'path';
 import { __dirname } from '../utils.js';
 
 const transport = nodemailer.createTransport({
-    service: "gmail",
+    service: process.env.EMAIL_SERVICE,
     port: 587,
     auth: {
-        user: "mperezro103@gmail.com",
-        pass: "eoar yqrs pjkt bzss"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
-});
+});  
 
 export const sendProductAdded = async (userEmail, product) => {
     let result = await transport.sendMail({
-        from: "mperezro103@gmail.com",
+        from: process.env.EMAIL_USER,
         to: userEmail,
         subject: "Producto agregado al carrito",
         html: `

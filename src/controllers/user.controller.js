@@ -4,10 +4,12 @@ import {
   findUserById,
   findUserByEmail,
   updateUserPassword,
-  createUser,
+  requestPasswordReset,
+  resetPassword, 
+  validateResetToken
 } from "../services/user.service.js";
 
-export const handleRegister = async (req, res, next) => {
+export const register = async (req, res, next) => {
   passport.authenticate("register", async (err, user, info) => {
     if (err) {
       return next(err);
@@ -32,7 +34,7 @@ export const handleRegister = async (req, res, next) => {
   })(req, res, next);
 };
 
-export const handleLogin = async (req, res, next) => {
+export const login = async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     if (err) {
       return next(err);
@@ -57,15 +59,15 @@ export const handleLogin = async (req, res, next) => {
   })(req, res, next);
 };
 
-export const handleFailRegister = (req, res) => {
+export const failRegister = (req, res) => {
   res.send({ error: "Fallo" });
 };
 
-export const handleFailLogin = (req, res) => {
+export const failLogin = (req, res) => {
   res.send({ error: "Login fallido" });
 };
 
-export const handleLogout = (req, res) => {
+export const logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).send("Error al cerrar sesión");
@@ -74,7 +76,7 @@ export const handleLogout = (req, res) => {
   });
 };
 
-export const handleRestorePassword = async (req, res) => {
+export const restorePassword = async (req, res) => {
   const { email, newPassword } = req.body;
   if (!email || !newPassword)
     return res.status(400).send({ status: "error", error: "Datos incompletos" });
@@ -90,36 +92,96 @@ export const handleRestorePassword = async (req, res) => {
   }
 };
 
-export const handleGithubAuth = (req, res) => {};
+export const githubAuth = (req, res) => {};
 
-export const handleGithubCallback = (req, res) => {
+export const githubCallback = (req, res) => {
   if (!req.user) {
     return res.redirect("/");
   }
   res.redirect("/");
 };
 
-export const handleEditProfileView = (req, res) => {
-  res.render("editprofile", { user: req.user });
-};
+export const editProfile = async (req, res) => {
+  const { first_name, last_name, email, age, currentPassword, newPassword } = req.body;
 
-export const handleEditProfile = async (req, res) => {
-  const { first_name, last_name, email, age, password } = req.body;
-
-  if (!first_name || !last_name || !email || !age || !password) {
-    return res.status(400).send("Todos los campos son requeridos");
+  if (!first_name || !last_name || !email || !age) {
+    return res.status(400).send("Todos los campos excepto la contraseña son requeridos.");
   }
 
   try {
-    const existingUser = await findUserByEmail(email);
-    if (existingUser) {
-      return res.status(400).send("El email ya está registrado");
+    const user = req.user;
+
+    if (!user) {
+      return res.status(404).send("Usuario no encontrado");
+    }
+    if (email !== user.email) {
+      const existingUser = await findUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).send("El email ya está registrado");
+      }
     }
 
-    const newUser = await createUser({ first_name, last_name, email, age, password });
-    req.user = newUser;
+    user.first_name = first_name;
+    user.last_name = last_name;
+    user.email = email;
+    user.age = age;
+
+    if (newPassword) {
+      if (!currentPassword || !isValidPassword(user, currentPassword)) {
+        return res.status(400).send("Contraseña actual incorrecta");
+      }
+      user.password = createHash(newPassword);
+    }
+
+    await user.save();
+    req.user = user;
+
     res.redirect("/");
   } catch (error) {
-    res.status(500).send("Error al completar el perfil");
+    res.status(500).send(`Error al completar el perfil: ${error.message}`);
   }
 };
+
+export const reqPassReset = async (req, res) => {
+  const { email } = req.body
+
+  try {
+    await requestPasswordReset(email)
+    res.status(200).send("Se ha enviado un correo para restablecer tu contraseña.")
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+}
+
+export const resPassword = async (req, res) => {
+  const { token } = req.params
+  const { password, confirmPassword} = req.body
+
+  if(password !== confirmPassword) {
+    return res.status(400).send("Las contraseñas deben conincidir.")
+  }
+
+  try {
+    await resetPassword(token, password)
+    res.status(200).send("Tu contraseña ha sido actualizada.")
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+}
+
+export const renderPasswordResetForm = async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    const isValid = await validateResetToken(token);
+    if (!isValid) {
+      return res.status(400).send({ status: "error", error: "Enlace de restablecimiento inválido o expirado" });
+    }
+
+    res.render("resetPassword", { token });
+  } catch (error) {
+    console.error("Error validando el token de restablecimiento:", error);
+    res.status(500).send({ status: "error", error: "Error interno del servidor" });
+  }
+};
+

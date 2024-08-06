@@ -13,7 +13,9 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, min: 1 },
   password: { type: String } ,
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
-  role: { type: String, enum: ['admin', 'user'], default: 'user'}
+  role: { type: String, enum: ['premium', 'user'], default: 'user'},
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 userSchema.pre("save", async function(next) {

@@ -2,36 +2,36 @@ import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
 import userService from "../dao/models/user.model.js";
+import cartsModel from "../dao/models/carts.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
-  passport.use(
-    "github",
-    new GitHubStrategy(
-      {
+  passport.use("github", new GitHubStrategy({
         clientID: "Iv23liSYHTwwlrcbPS9c",
         clientSecret: "8ed53d3b958654e51a1a38e29199f257400ce30f",
         callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile);
-
           const email = profile._json.email || `${profile.username}@github.com`;
           let user = await userService.findOne({ email });
 
           if (!user) {
             const firstName = profile._json.name || profile.username;
-            const role = email.includes("@admin") ? "admin" : "user";
+            const role = email.includes("@premium") ? "premium" : "user";
+
+            const newCart = new cartsModel({ products: [] })
+            await newCart.save()
 
             let newUser = {
               first_name: firstName,
               last_name: "",
-              age: 30,
+              age: null,
               email: email,
-              password: createHash(password),
+              password: "",
+              cartId: newCart._id,
               role: role,
             };
 
@@ -57,8 +57,8 @@ const initializePassport = () => {
             console.log("El usuario ya existe");
             return done(null, false, { message: "El usuario ya existe" });
           }
-          const role = username.includes("@admin") ? "admin" : "user";
-
+          const role = username.includes("@premium") ? "premium" : "user";
+  
           const newUser = {
             first_name,
             last_name,
@@ -67,7 +67,7 @@ const initializePassport = () => {
             password: createHash(password),
             role: role,
           };
-
+  
           let result = await userService.create(newUser);
           return done(null, result);
         } catch (error) {
@@ -95,7 +95,7 @@ const initializePassport = () => {
             return done(null, user);
           }
 
-          if (!isValidPassword(user, password)) return done(null, false);
+          if (!isValidPassword(user, password)) return done(null, false, { message: "Contraseña incorrecta" });
 
           return done(null, user);
         } catch (error) {

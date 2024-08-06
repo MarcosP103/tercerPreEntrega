@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAdmin, isAuthenticated, isNotAuthenticated } from '../middleware/auth.js';
+import { isPremium, isAuthenticated, isNotAuthenticated } from '../middleware/auth.js';
 import productModel from "../dao/models/products.model.js";
 
 const router = Router();
@@ -9,8 +9,8 @@ router.get("/realTimeProducts", (req, res) => {
 
 });
 
-router.get('/admin', isAdmin, (req, res) => {
-  res.render('admin', { message: 'Página de administración: solo accesible para administradores' });
+router.get('/premium', isPremium, (req, res) => {
+  res.render('premium', { message: 'Página de administración: solo accesible para usuario premium' });
 });
 
 router.get('/login', isNotAuthenticated, (req, res) => {

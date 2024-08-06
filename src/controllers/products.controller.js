@@ -8,7 +8,7 @@ import {
   } from '../services/products.service.js';
   import userService from '../dao/models/user.model.js';
   
-  export const handleGetRealTimeProducts = async (req, res) => {
+  export const GetRealTimeProducts = async (req, res) => {
     try {
       const products = await getRealTimeProducts();
       res.render('index', { products, length: products.length > 0 });
@@ -17,7 +17,7 @@ import {
     }
   };
   
-  export const handleGetProducts = async (req, res) => {
+  export const GetProducts = async (req, res) => {
     try {
       const { limit, page, sort, query } = req.query;
       const result = await getProducts(limit, page, sort, query);
@@ -44,7 +44,7 @@ import {
     }
   };
   
-  export const handleGetProductById = async (req, res) => {
+  export const GetProductById = async (req, res) => {
     try {
       const pId = req.params.pid;
       const userId = req.user ? req.user._id : null;
@@ -54,34 +54,35 @@ import {
       if (!product) {
         return res.status(404).send({ status: "error", error: "Producto no encontrado" });
       }
-
-      let cartId = null
+  
+      let cartId = null;
       if (userId) {
-        const user = await userService.findOne({_id: userId })
-        cartId = user ? user.cartId : null
+        const user = await userService.findOne({ _id: userId });
+        cartId = user ? user.cartId : null;
       }
   
-      es.render('productsDet', {
+      res.render('productsDet', {
         product: {
-            _id: product._id,
-            title: product.title,
-            description: product.description,
-            code: product.code,
-            price: product.price,
-            status: product.status,
-            stock: product.stock,
-            category: product.category,
-            thumbnails: product.thumbnails
+          _id: product._id,
+          title: product.title,
+          description: product.description,
+          code: product.code,
+          price: product.price,
+          status: product.status,
+          stock: product.stock,
+          category: product.category,
+          thumbnails: product.thumbnails
         },
         cartId
-    });
+      });
     } catch (error) {
       console.error("No se pudo obtener el producto por ID", error);
       res.status(500).send({ status: "error", error: "Error interno del servidor" });
     }
   };
   
-  export const handleAddProduct = async (req, res) => {
+  
+  export const AddProduct = async (req, res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
   
     try {
@@ -93,7 +94,7 @@ import {
     }
   };
   
-  export const handleUpdateProduct = async (req, res) => {
+  export const UpdateProduct = async (req, res) => {
     const { id } = req.params;
     const productMod = req.body;
   
@@ -109,7 +110,7 @@ import {
     }
   };
   
-  export const handleDeleteProduct = async (req, res) => {
+  export const DeleteProduct = async (req, res) => {
     const { id } = req.params;
   
     try {

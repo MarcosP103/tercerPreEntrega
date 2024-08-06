@@ -8,7 +8,7 @@ import {
     clearCart,
   } from "../services/carts.service.js";
   
-  export const handleCreateCart = async (req, res) => {
+  export const CreateCart = async (req, res) => {
     try {
       const newCart = await createCart();
       res.status(201).json(newCart);
@@ -17,7 +17,7 @@ import {
     }
   };
   
-  export const handleAddProductToCart = async (req, res) => {
+  export const AddProductToCart = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
   
@@ -29,7 +29,7 @@ import {
     }
   };
   
-  export const handleGetCartById = async (req, res) => {
+  export const GetCartById = async (req, res) => {
     const { cid } = req.params;
   
     try {
@@ -40,7 +40,7 @@ import {
     }
   };
   
-  export const handleUpdateCart = async (req, res) => {
+  export const UpdateCart = async (req, res) => {
     const { cid } = req.params;
     const { products } = req.body;
   
@@ -52,7 +52,7 @@ import {
     }
   };
   
-  export const handleUpdateProductQuantity = async (req, res) => {
+  export const UpdateProductQuantity = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
   
@@ -64,7 +64,7 @@ import {
     }
   };
   
-  export const handleRemoveProductFromCart = async (req, res) => {
+  export const RemoveProductFromCart = async (req, res) => {
     const { cid, pid } = req.params;
   
     try {
@@ -75,7 +75,7 @@ import {
     }
   };
   
-  export const handleClearCart = async (req, res) => {
+  export const ClearCart = async (req, res) => {
     const { cid } = req.params;
   
     try {

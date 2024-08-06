@@ -1,25 +1,25 @@
 import { Router } from 'express';
 import {
-  handleGetRealTimeProducts,
-  handleGetProducts,
-  handleGetProductById,
-  handleAddProduct,
-  handleUpdateProduct,
-  handleDeleteProduct
+  GetRealTimeProducts,
+  GetProducts,
+  GetProductById,
+  AddProduct,
+  UpdateProduct,
+  DeleteProduct
 } from '../controllers/products.controller.js';
 
 const router = Router();
 
-router.get('/realTimeProducts', handleGetRealTimeProducts);
+router.get('/realTimeProducts', GetRealTimeProducts);
 
-router.get('/', handleGetProducts);
+router.get('/', GetProducts);
 
-router.get('/:pid', handleGetProductById);
+router.get('/:pid', GetProductById);
 
-router.post('/', handleAddProduct);
+router.post('/', AddProduct);
 
-router.put('/:pid', handleUpdateProduct);
+router.put('/:pid', UpdateProduct);
 
-router.delete('/:pid', handleDeleteProduct);
+router.delete('/:pid', DeleteProduct);
 
 export default router;

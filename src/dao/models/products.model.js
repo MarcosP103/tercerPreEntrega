@@ -10,10 +10,16 @@ const productSchema = new mongoose.Schema({
   code: { type: Number, required: true, min: 1, index: true },
   price: { type: Number, required: true, min: 1, index: true },
   status: { type: Boolean, required: true },
-  stock: { type: Number, required: true, min: 1 },
+  stock: { type: Number, required: true },
   category: { type: String, required: true, max: 30, index: true },
   thumbnails: { type: String, required: true },
-  default: [],
+  owner: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  }
+}, {
+  timestamps: true 
 });
 
 productSchema.plugin(mongoosePaginate);

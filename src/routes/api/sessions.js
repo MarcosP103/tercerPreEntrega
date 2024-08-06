@@ -2,36 +2,48 @@ import { Router } from "express";
 import passport from "passport";
 import initializePassport from "../../config/passport.config.js";
 import {
-  handleRegister,
-  handleFailRegister,
-  handleLogin,
-  handleFailLogin,
-  handleLogout,
-  handleRestorePassword,
-  handleGithubAuth,
-  handleGithubCallback,
-  handleEditProfileView,
-  handleEditProfile,
+  register,
+  failRegister,
+  login,
+  failLogin,
+  logout,
+  restorePassword,
+  githubAuth,
+  githubCallback,
+  editProfile,
+  reqPassReset,
+  resPassword,
+  renderPasswordResetForm
 } from "../../controllers/user.controller.js";
 
 const router = Router();
 initializePassport();
 
-router.post("/register", handleRegister);
-router.get("/failregister", handleFailRegister);
-router.post("/login", handleLogin);
-router.get("/faillogin", handleFailLogin);
+// Registro y Login
+router.post("/register", register);
+router.get("/failregister", failRegister);
+router.post("/login", login);
+router.get("/faillogin", failLogin);
 
-router.post("/logout", handleLogout);
+// Logout
+router.post("/logout", logout);
 
-router.get("/restorePassword", (req, res) => {
-  res.render("resPass");});
-router.post("/restorePassword", handleRestorePassword);
+// Restablecimiento de Contraseña
+router.get("/restorePassword", (req, res) => res.render("resPass"));
+router.post("/restorePassword", restorePassword);
 
-router.get("/github", passport.authenticate("github", { scope: ["user:email"] }), handleGithubAuth);
-router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), handleGithubCallback);
+router.get("/requestpasswordreset", (req, res) => res.render('requestPasswordReset'));
+router.post("/requestpasswordreset", reqPassReset);
 
-router.get("/editprofile", handleEditProfileView);
-router.post("/editprofile", handleEditProfile);
+router.get("/resetpassword/:token", renderPasswordResetForm);
+router.post("/resetpassword/:token", resPassword);
+
+// Autenticación con GitHub
+router.get("/github", passport.authenticate("github", { scope: ["user:email"] }), githubAuth);
+router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), githubCallback);
+
+// Edición de perfil
+router.get("/editprofile", (req, res) => res.render("editProfile"));
+router.post("/editprofile", editProfile);
 
 export default router;
