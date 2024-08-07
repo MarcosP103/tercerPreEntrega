@@ -29,10 +29,10 @@ router.get("/faillogin", failLogin);
 router.post("/logout", logout);
 
 // Restablecimiento de Contraseña
-router.get("/restorePassword", (req, res) => res.render("resPass"));
+router.get("/restorePassword", (req, res) => res.render("resetPass"));
 router.post("/restorePassword", restorePassword);
 
-router.get("/requestpasswordreset", (req, res) => res.render('requestPasswordReset'));
+router.get("/requestpasswordreset", (req, res) => res.render('reqPassRes'));
 router.post("/requestpasswordreset", reqPassReset);
 
 router.get("/resetpassword/:token", renderPasswordResetForm);

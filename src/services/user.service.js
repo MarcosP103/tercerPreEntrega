@@ -58,7 +58,7 @@ export const requestPasswordReset = async (email) => {
     to: user.email,
     from: process.env.EMAIL_USER,
     subject: "Restablecimiento de contraseña",
-    text: "Estas recibiendo este correo porque tu(u otra persona) has solicitado el restablecimiento de la contraseña de tu cuenta.\n\nHaga clic en el siguiente enlace o peguelo en su navegador para completar el proceso dentro de una hora despues de rebiirlo: \n\n${resetLink}\n\nSi no solicitó este cambio, ignore este correo electrónico y su contraseña permanecerá sin cambios.\n",
+    text: `Estas recibiendo este correo porque tu(u otra persona) has solicitado el restablecimiento de la contraseña de tu cuenta.\n\nHaga clic en el siguiente enlace o peguelo en su navegador para completar el proceso dentro de una hora despues de rebiirlo: \n\n${resetLink}\n\nSi no solicitó este cambio, ignore este correo electrónico y su contraseña permanecerá sin cambios.\n`,
   };
 
   await transporter.sendMail(mailOptions)

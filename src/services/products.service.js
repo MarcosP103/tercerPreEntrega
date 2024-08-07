@@ -31,6 +31,7 @@ export const getProducts = async (limit, page, sort, query) => {
   return await productModel.paginate(filter, options);
 };
 
+
 export const getProductById = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('ID inválido');

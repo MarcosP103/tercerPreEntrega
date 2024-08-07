@@ -18,6 +18,7 @@ import  {__dirname}  from "./utils.js";
 import configureSocket from "./services/socket.service.js";
 import mailRouter from "./routes/api/mail.router.js"
 import loggerRoutes from "./routes/api/loggerW.routes.js";
+import chatRouter from "./routes/chat.router.js"
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -30,11 +31,6 @@ connectDB()
 const app = express();
 const PORT = process.env.PORT
 
-const httpServer = app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
-
-configureSocket(httpServer)
 
 // Middleware
 app.use(cookieParser())
@@ -83,16 +79,23 @@ app.use("/api/products", productsRouter);
 app.use("/", cartsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/api/loggertest", loggerRoutes)
+app.use("/chat", chatRouter)
 
 app.get('/', (req, res) => {
   if(req.session.views) {
-      req.session.views++
-      res.send(`<p>Visitas: ${req.session.views}</p>`)
+    req.session.views++
+    res.send(`<p>Visitas: ${req.session.views}</p>`)
   } else {
-      req.session.views = 1
-      res.send('Bienvenido, contaremos tus visitas')
+    req.session.views = 1
+    res.send('Bienvenido, contaremos tus visitas')
   }
   console.log("Session", req.session)
 })
+
+const httpServer = app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);
+
+configureSocket(httpServer)
 
 export default app;

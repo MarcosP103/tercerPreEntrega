@@ -147,7 +147,7 @@ export const reqPassReset = async (req, res) => {
 
   try {
     await requestPasswordReset(email)
-    res.status(200).send("Se ha enviado un correo para restablecer tu contraseña.")
+    res.status(200).send("Se ha enviado un correo para restablecer tu contraseña. Puede encontrarse en la carpeta Spam.")
   } catch (error) {
     res.status(500).send(error.message)
   }

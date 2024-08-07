@@ -1,9 +1,9 @@
 const socket = io();
 
-socket.emit("message", "Comunicación desde Web Socket");
+/* socket.emit("message", "Comunicación desde Web Socket");
 socket.on("ind", (data) => {
   console.log(data);
-});
+}); */
 
 //Chat
 
@@ -25,6 +25,7 @@ Swal.fire({
 
 const sendMessage = () => {
   if (chatBox.value.trim().length > 0) {
+    console.log("Enviando mensaje:", { user: user, message: chatBox.value });
     socket.emit("message", { user: user, message: chatBox.value });
     chatBox.value = "";
   }
@@ -39,10 +40,11 @@ chatBox.addEventListener("keyup", (evt) => {
 sendBtn.addEventListener("click", sendMessage);
 
 socket.on("messageLogs", (data) => {
+  console.log("Recibiendo mensajes:", data);
   let log = document.getElementById("messageLogs");
   let messages = "";
   data.forEach((message) => {
-    messages = messages + `${message.user} dice: ${message.messages}</br>`;
+    messages += `${message.user} dice: ${message.message}</br>`;
   });
   log.innerHTML = messages;
 });

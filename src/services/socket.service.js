@@ -7,7 +7,7 @@ let messages = [];
 export default function configureSocket(httpServer) {
   const socketServer = new Server(httpServer);
 
-  socketServer.on("connection", socket => {
+  socketServer.on("connection", (socket) => {
     console.log("Cliente conectado");
 
     productManager.uploadProducts().then((products) => {
@@ -59,7 +59,7 @@ export default function configureSocket(httpServer) {
         );
     });
 
-    socket.on("message", data => {
+    socket.on("message", (data) => {
       messages.push(data);
       socketServer.emit("messageLogs", messages);
     });
