@@ -1,5 +1,6 @@
 async function addToCart(cid, pid) {
     const url = `http://localhost:8080/api/carts/${cid}/products/${pid}`;
+    console.log(`Adding to cart: ${cid}, product: ${pid}`); 
 
     try {
         const response = await fetch(url, {

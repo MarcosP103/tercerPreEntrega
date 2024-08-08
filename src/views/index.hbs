@@ -1,58 +1,112 @@
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header bg-primary text-black text-center">
-            <h2>¡Bienvenido a tu PetShop favorito!</h2>
-        </div>
-        <div class="card-body text-center">
-            <h5 class="card-title">Un lugar donde encontraras todo lo que buscas</h5>
-            <p class="card-text">
-                Estamos ansiosos por ayudarte a encontrar todo lo que necesite tu mascota.
-            </p>
-            <p class="card-text">
-                Buscanos en las redes para estar al tanto de todo.
-            </p>
-            <p class="styled-box">
-                Cualquier duda que tengas, estamos a las ordenes.
-            </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+<body>
+    {{#if user}}
+    <h3 class="text-center">
+        Bienvenido, <strong>{{userName}}</strong>
+    </h3>
+    {{else}}
+    <h3>
+        <br>Inicia sesión para poder comprar
+        <br><a href="/login" class="btn btn-info">Iniciar</a>
+    </h3>
+    {{/if}}
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-primary text-black text-center">
+                <h2>¡Bienvenido a tu PetShop favorito!</h2>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title">Un lugar donde encontraras todo lo que buscas</h5>
+                <p class="card-text">
+                    Estamos ansiosos por ayudarte a encontrar todo lo que necesite tu mascota.
+                </p>
+                <p class="card-text">
+                    Buscanos en las redes para estar al tanto de todo.
+                </p>
+                <p class="styled-box">
+                    Cualquier duda que tengas, estamos a las ordenes.
+                </p>
+            </div>
         </div>
     </div>
-</div>
 
-<div>
-    {{#if products.length}}
+    <div>
+        {{#if products.length}}
         <div>
             <h1>Productos:</h1>
             <ul>
                 {{#each products}}
-                    <li>
-                        <strong class="infP">Titulo:</strong> {{this.title}}, 
-                        <strong class="infP">Descripcion:</strong> {{this.description}},
-                        <strong class="infP">Codigo:</strong> {{this.code}}, 
-                        <strong class="infP">Precio:</strong> ${{this.price}},
-                        <strong class="infP">Status:</strong> {{this.status}}, 
-                        <strong class="infP">Stock:</strong> {{this.stock}},
-                        <strong class="infP">Categoria:</strong> {{this.category}},
-                        <strong class="infP">Thumbnail:</strong>
-                        {{#each this.thumbnails}}
-                            <img src="{{this}}" alt="Thumbnail">
-                        {{/each}}
-                    </li>
+                <li>
+                    <strong class="infP">Titulo:</strong> {{this.title}},
+                    <strong class="infP">Descripcion:</strong> {{this.description}},
+                    <strong class="infP">Codigo:</strong> {{this.code}},
+                    <strong class="infP">Precio:</strong> ${{this.price}},
+                    <strong class="infP">Status:</strong> {{this.status}},
+                    <strong class="infP">Stock:</strong> {{this.stock}},
+                    <strong class="infP">Categoria:</strong> {{this.category}},
+                    <strong class="infP">Thumbnail:</strong>
+                    {{#each this.thumbnails}}
+                    <img src="{{this}}" alt="Thumbnail">
+                    {{/each}}
+                </li>
                 {{/each}}
             </ul>
         </div>
-    {{else}}
+        {{else}}
         <h1>No hay productos</h1>
-    {{/if}}
-</div>
+        {{/if}}
+    </div>
 
-<h2>Bienvenido al Chat!</h2>
-<div>
-    <input id="chatBox">
-    <button id="sendBtn">Enviar</button>
-</div>
-<div>
-    <p id="messageLogs"></p>
-</div>
+    <h2>Bienvenido al Chat!</h2>
+    <div>
+        <input id="chatBox">
+        <button id="sendBtn">Enviar</button>
+    </div>
+    <div>
+        <p id="messageLogs"></p>
+    </div>
+
+    <br>
+    <form action="/api/sessions/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    <br>    
+    
+    {{#if totalPages}}
+        <div>
+            {{#each docs}}
+            <div>
+                <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
+            </div>
+            <br/>
+            {{/each}}
+        </div>
+        <br />
+        <div>
+            {{#if prevLink}}
+            <a href="{{prevLink}}">
+                << Anterior
+            </a>
+            {{/if}}
+            &nbsp;
+            {{this.page}}
+            &nbsp;
+            {{#if nextLink}}
+            <a href="{{nextLink}}">
+                Siguiente >>
+            </a>
+            {{/if}}
+        </div>
+    {{/if}}
+
+</body>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>

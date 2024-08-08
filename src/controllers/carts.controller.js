@@ -8,7 +8,7 @@ import {
     clearCart,
   } from "../services/carts.service.js";
   
-  export const CreateCart = async (req, res) => {
+  export const createCartF = async (req, res) => {
     try {
       const newCart = await createCart();
       res.status(201).json(newCart);
@@ -17,30 +17,34 @@ import {
     }
   };
   
-  export const AddProductToCart = async (req, res) => {
+  export const addProductToCartF = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-  
+
+    console.log('CID:', cid);
+    console.log('PID:', pid);
+    console.log('Quantity:', quantity);
+
     try {
-      const updatedCart = await addProductToCart(cid, pid, quantity);
-      res.json(updatedCart);
+        const updatedCart = await addProductToCart(cid, pid, quantity);
+        res.json(updatedCart);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
   };
   
-  export const GetCartById = async (req, res) => {
+  export const getCartByIdF = async (req, res) => {
     const { cid } = req.params;
   
     try {
-      const cart = await getCartById(cid);
+      const cart = await getCartById(cid).lean()
       res.render("cartDet", { cart });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   };
   
-  export const UpdateCart = async (req, res) => {
+  export const updateCartF = async (req, res) => {
     const { cid } = req.params;
     const { products } = req.body;
   
@@ -52,7 +56,7 @@ import {
     }
   };
   
-  export const UpdateProductQuantity = async (req, res) => {
+  export const updateProductQuantityF = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
   
@@ -64,7 +68,7 @@ import {
     }
   };
   
-  export const RemoveProductFromCart = async (req, res) => {
+  export const removeProductFromCartF = async (req, res) => {
     const { cid, pid } = req.params;
   
     try {
@@ -75,7 +79,7 @@ import {
     }
   };
   
-  export const ClearCart = async (req, res) => {
+  export const clearCartF = async (req, res) => {
     const { cid } = req.params;
   
     try {

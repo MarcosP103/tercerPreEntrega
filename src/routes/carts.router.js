@@ -1,33 +1,35 @@
 import express from "express";
 import {
-    CreateCart,
-    AddProductToCart,
-    GetCartById,
-    UpdateCart,
-    UpdateProductQuantity,
-    RemoveProductFromCart,
-    ClearCart,
+    createCartF,
+    addProductToCartF,
+    getCartByIdF,
+    updateCartF,
+    updateProductQuantityF,
+    removeProductFromCartF,
+    clearCartF,
 } from "../controllers/carts.controller.js";
 import { purchaseCart } from "../services/carts.service.js";
 
 const router = express.Router();
 
-router.post("/", CreateCart);
+router.post("/", createCartF);
 
-router.post("/:cid/products/:pid", AddProductToCart);
+router.post("/:cid/products/:pid", (req, res, next) => {
+    console.log(`POST /api/carts/${req.params.cid}/products/${req.params.pid}`);
+    next();
+}, addProductToCartF);
 
-router.get("/:cid", GetCartById);
+router.get("/:cid", getCartByIdF);
 
-router.put("/:cid", UpdateCart);
-router.put("/:cid/products/:pid", UpdateProductQuantity);
+router.put("/:cid", updateCartF);
+router.put("/:cid/products/:pid", updateProductQuantityF);
 
-router.delete("/:cid/products/:pid", RemoveProductFromCart);
+router.delete("/:cid/products/:pid", removeProductFromCartF);
 
-router.delete("/:cid", ClearCart);
+router.delete("/:cid", clearCartF);
 
 router.post("/:cid/purchase", async (req, res) => {
     const { cid } = req.params
-
     try {
         const productsNotProcessed = await purchaseCart(cid)
         res.status(200).json({ message: "Compra realizada con exito", productsNotProcessed})

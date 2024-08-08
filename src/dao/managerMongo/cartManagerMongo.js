@@ -31,11 +31,11 @@ class CartManagerMongoose {
                 return null
             }
 
-            const productInCart = cart.products.find((item) => item.pid.equals(pid))
+            const productInCart = cart.products.find((item) => item.productId.equals(pid))
             if (productInCart) {
                 productInCart.quantity += quantity
             } else {
-                cart.products.push({ pid, quantity })
+                cart.products.push({ productId: pid, quantity })
             }
 
             await cart.save()

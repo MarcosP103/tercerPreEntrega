@@ -31,6 +31,11 @@ connectDB()
 const app = express();
 const PORT = process.env.PORT
 
+const httpServer = app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);
+
+configureSocket(httpServer)
 
 // Middleware
 app.use(cookieParser())
@@ -76,7 +81,7 @@ app.use("/", indexRouter);
 app.use("/", viewsRouter)
 app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
-app.use("/", cartsRouter);
+app.use("/api/carts", cartsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/api/loggertest", loggerRoutes)
 app.use("/chat", chatRouter)
@@ -91,11 +96,5 @@ app.get('/', (req, res) => {
   }
   console.log("Session", req.session)
 })
-
-const httpServer = app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
-
-configureSocket(httpServer)
 
 export default app;

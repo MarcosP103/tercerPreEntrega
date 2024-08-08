@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String, max: 50 },
   last_name: { type: String, max: 50 },
   email: { type: String, unique: true, index: true },
-  age: { type: Number, min: 1 },
+  age: { type: Number, min: 18 },
   password: { type: String } ,
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
   role: { type: String, enum: ['premium', 'user'], default: 'user'},
