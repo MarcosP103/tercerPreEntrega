@@ -13,7 +13,8 @@ import {
   editProfile,
   reqPassReset,
   resPassword,
-  renderPasswordResetForm
+  renderPasswordResetForm,
+  changeUserRole
 } from "../../controllers/user.controller.js";
 
 const router = Router();
@@ -45,5 +46,9 @@ router.get("/githubcallback", passport.authenticate("github", { failureRedirect:
 // Edición de perfil
 router.get("/editprofile", (req, res) => res.render("editProfile"));
 router.post("/editprofile", editProfile);
+
+router.post('/users/premium/:uid', changeUserRole);
+router.put("/users/premium/:uid", changeUserRole);
+
 
 export default router;

@@ -185,3 +185,22 @@ export const renderPasswordResetForm = async (req, res) => {
   }
 };
 
+export const changeUserRole = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await findUserById(uid);
+
+    if (!user) {
+      return res.status(404).send("Usuario no encontrado");
+    }
+
+    user.role = user.role === 'premium' ? 'user' : 'premium';
+    await user.save();
+
+    res.status(200).send(`El rol del usuario ha sido cambiado a ${user.role}`);
+  } catch (error) {
+    res.status(500).send("Error al cambiar el rol del usuario");
+  }
+};
+
+

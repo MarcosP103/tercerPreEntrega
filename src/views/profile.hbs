@@ -3,6 +3,18 @@
 <p>Apellido: {{user.last_name}}</p>
 <p>Email: {{user.email}}</p>
 <p>Edad: {{user.age}}</p>
+<p>Rol actual: {{user.role}}</p>
+
+<form action="/api/users/premium/{{user._id}}" method="POST">
+    <button type="submit">
+        {{#if (eq user.role 'premium')}}
+            Cambiar a Usuario
+        {{else}}
+            Cambiar a Premium
+        {{/if}}
+    </button>
+</form>
+
 <form action="/api/sessions/logout" method="POST">
     <button type="submit">Cerrar Sesión</button>
 </form>
