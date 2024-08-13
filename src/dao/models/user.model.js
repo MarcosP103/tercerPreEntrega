@@ -35,8 +35,12 @@ userSchema.pre("save", function (next) {
 })
 
 userSchema.methods.comparePassword = function (candidatePassword) {
-    return bcrypt.compareSync( candidatePassword, this.password )
-}
+  if (!this.password) {
+      throw new Error("La contraseña almacenada no está definida.");
+  }
+  return bcrypt.compareSync(candidatePassword, this.password);
+};
+
 
 const userModel = mongoose.model( userCollection, userSchema );
 

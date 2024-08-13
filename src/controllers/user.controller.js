@@ -147,7 +147,7 @@ export const reqPassReset = async (req, res) => {
 
   try {
     await requestPasswordReset(email)
-    res.status(200).send("Se ha enviado un correo para restablecer tu contraseña. Puede encontrarse en la carpeta Spam.")
+    res.redirect("/api/sessions/passwordResetSent")
   } catch (error) {
     res.status(500).send(error.message)
   }
@@ -163,7 +163,7 @@ export const resPassword = async (req, res) => {
 
   try {
     await resetPassword(token, password)
-    res.status(200).send("Tu contraseña ha sido actualizada.")
+    res.render("passwordUpdated")
   } catch (error) {
     res.status(500).send(error.message)
   }
@@ -178,7 +178,7 @@ export const renderPasswordResetForm = async (req, res) => {
       return res.status(400).send({ status: "error", error: "Enlace de restablecimiento inválido o expirado" });
     }
 
-    res.render("resetPassword", { token });
+    res.render("resetPass", { token });
   } catch (error) {
     console.error("Error validando el token de restablecimiento:", error);
     res.status(500).send({ status: "error", error: "Error interno del servidor" });

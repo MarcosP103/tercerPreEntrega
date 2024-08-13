@@ -19,6 +19,8 @@ import configureSocket from "./services/socket.service.js";
 import mailRouter from "./routes/api/mail.router.js"
 import loggerRoutes from "./routes/api/loggerW.routes.js";
 import chatRouter from "./routes/chat.router.js"
+import swaggerJSDoc from "swagger-jsdoc";
+import SwaggerUiExpress from "swagger-ui-express"
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -29,7 +31,21 @@ connectDB()
 /* const FileStoreInstance = FileStore(session) */
 
 const app = express();
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8080
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentacion Backend de Eccomerce",
+      description: "Api Users"
+    },
+  },
+  apis: [`src/docs/**/*.yaml`],
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs));
 
 const httpServer = app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)

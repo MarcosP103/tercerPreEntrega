@@ -1,5 +1,5 @@
 import userService from "../dao/models/user.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isSamePassword } from "../utils.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -44,7 +44,7 @@ export const requestPasswordReset = async (email) => {
   user.resetPasswordExpires = tokenExpiry;
   await user.save();
 
-  const resetLink = `http://localhost:8080/resetpassword/${token}`;
+  const resetLink = `${process.env.BASE_URL}/resetpassword/${token}`
 
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
@@ -58,7 +58,7 @@ export const requestPasswordReset = async (email) => {
     to: user.email,
     from: process.env.EMAIL_USER,
     subject: "Restablecimiento de contraseña",
-    text: `Estas recibiendo este correo porque tu(u otra persona) has solicitado el restablecimiento de la contraseña de tu cuenta.\n\nHaga clic en el siguiente enlace o peguelo en su navegador para completar el proceso dentro de una hora despues de rebiirlo: \n\n${resetLink}\n\nSi no solicitó este cambio, ignore este correo electrónico y su contraseña permanecerá sin cambios.\n`,
+    text: `Estas recibiendo este correo porque tu(u otra persona) has solicitado el restablecimiento de la contraseña de tu cuenta.\n\nHaga clic en el siguiente enlace o peguelo en su navegador para completar el proceso dentro de una hora despues de recibirlo: \n\n${resetLink}\n\nSi no solicitó este cambio, ignore este correo electrónico y su contraseña permanecerá sin cambios.\n`,
   };
 
   await transporter.sendMail(mailOptions)
@@ -73,8 +73,9 @@ export const resetPassword = async (token, password) => {
   if (!user) {
     throw new Error("El token de restablecimiento es invalido o ha expirado.")
   }
-  
-  if (!isValidPassword(password, user.password)) {
+
+  const isPasswordSame = await isSamePassword(password, user.password)
+  if (isPasswordSame) {
     throw new Error ("No puede usar la misma contraseña.")
   }
 

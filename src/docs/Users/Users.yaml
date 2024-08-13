@@ -1,0 +1,375 @@
+paths:
+  /api/auth/register:
+    post:
+      summary: Registra un nuevo usuario.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                age:
+                  type: integer
+      responses:
+        "200":
+          description: Usuario registrado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#components/schemas/User"
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Usuario registrado
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Id autogenerado de Mongo
+                        example: "60c72b2f4f1a23c001q3j5p"
+                      first_name:
+                        type: string
+                        example: "Juan"
+                      last_name:
+                        type: string
+                        example: "Perez"
+                      email:
+                        type: string
+                        format: email
+                        example: "juanperez@gmail.com"
+                      age:
+                        type: integer
+                        example: "30"
+                      role:
+                        type: string
+                        example: "user"
+                      cart:
+                        type: string
+                        example: "60c72b2f4f1a23c001j4h7k"
+        "400":
+          description: Error en los datos proporcionados.
+        "500":
+          description: Error al registrar al usuario.
+
+  /api/auth/failregister:
+    get:
+      summary: Redirige a la página de fallo de registro.
+      tags:
+        - Auth
+      responses:
+        "302":
+          description: Redirección a la vista de fallo en el registro.
+
+  /api/auth/login:
+    post:
+      summary: Inicia sesión un usuario.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: Inicio de sesión exitoso.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#components/schemas/User"
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Inicio exitoso
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+        "401":
+          description: Credenciales incorrectas.
+
+  /api/auth/faillogin:
+    get:
+      summary: Maneja los fallos en el inicio de sesión.
+      tags:
+        - Auth
+      responses:
+        "401":
+          description: Fallo en el inicio de sesión.
+
+  /api/auth/logout:
+    post:
+      summary: Cierra la sesión del usuario.
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Sesión cerrada exitosamente.
+
+  /api/auth/restorePassword:
+    get:
+      summary: Muestra el formulario de restablecimiento de contraseña.
+      tags:
+        - Password
+      responses:
+        "200":
+          description: Formulario de restablecimiento de contraseña.
+
+    post:
+      summary: Envía una solicitud para restablecer la contraseña.
+      tags:
+        - Password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Solicitud enviada exitosamente.
+        "400":
+          description: Error al enviar la solicitud.
+
+  /api/auth/requestpasswordreset:
+    get:
+      summary: Muestra la vista para solicitar el restablecimiento de contraseña.
+      tags:
+        - Password
+      responses:
+        "200":
+          description: Vista de solicitud de restablecimiento de contraseña.
+
+    post:
+      summary: Maneja la solicitud de restablecimiento de contraseña.
+      tags:
+        - Password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Solicitud procesada exitosamente.
+        "400":
+          description: Error al procesar la solicitud.
+
+  /api/auth/resetpassword/{token}:
+    get:
+      summary: Muestra el formulario para establecer una nueva contraseña.
+      tags:
+        - Password
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Token para restablecer la contraseña.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Formulario de restablecimiento de contraseña.
+        "400":
+          description: Token inválido o expirado.
+
+    post:
+      summary: Restablece la contraseña utilizando un token.
+      tags:
+        - Password
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Token para restablecer la contraseña.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: Contraseña restablecida exitosamente.
+        "400":
+          description: Error al restablecer la contraseña.
+
+  /api/auth/github:
+    get:
+      summary: Inicia la autenticación con GitHub.
+      tags:
+        - Auth
+      responses:
+        "302":
+          description: Redirige a la página de autenticación de GitHub.
+
+  /api/auth/githubcallback:
+    get:
+      summary: Maneja el callback de GitHub después de la autenticación.
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Autenticación exitosa con GitHub.
+        "401":
+          description: Fallo en la autenticación con GitHub.
+
+  /api/auth/editprofile:
+    get:
+      summary: Muestra la vista para editar el perfil del usuario.
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Vista de edición de perfil.
+
+    post:
+      summary: Actualiza el perfil del usuario.
+      tags:
+        - Profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                age:
+                  type: number
+      responses:
+        "200":
+          description: Perfil actualizado exitosamente.
+        "400":
+          description: Error al actualizar el perfil.
+
+  /api/users/premium/{uid}:
+    post:
+      summary: Cambia el rol de un usuario a 'premium'.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Rol del usuario actualizado a 'premium'.
+        "400":
+          description: Error al cambiar el rol del usuario.
+
+    put:
+      summary: Cambia el rol de un usuario a 'premium'.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Rol del usuario actualizado a 'premium'.
+        "400":
+          description: Error al cambiar el rol del usuario.
+
+components:
+  schemas:
+    User:
+      type: objetc
+      porperties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        first_name:
+          type: String
+          description: Nombre del usuario
+        last_name:
+          type: String
+          description: Apellido del usuario
+        email:
+          type: String
+          description: Email del usuario, este campo es unico
+        password:
+          type: String
+          description: Contraseña Hasheada del usuario
+        age:
+          type: Integer
+        role:
+          type: String
+        cart:
+          type: String

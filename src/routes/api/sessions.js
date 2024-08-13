@@ -39,6 +39,9 @@ router.post("/requestpasswordreset", reqPassReset);
 router.get("/resetpassword/:token", renderPasswordResetForm);
 router.post("/resetpassword/:token", resPassword);
 
+router.get("/passwordResetSent", (req, res) => res.render("passwordresetsent"))
+router.get("/passwordUpdated", (req, res) => res.render("passwordUpdated"))
+
 // Autenticación con GitHub
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }), githubAuth);
 router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), githubCallback);
