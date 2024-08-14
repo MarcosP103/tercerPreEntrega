@@ -5,59 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
 </head>
+
 <body>
     <h1>Bienvenido, {{userName}}</h1>
+    <a href="/profile">Ver mi perfil</a>
+
+    {{#if (eq user.role 'premium')}}
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
+    </div>
+    {{/if}}
 
     <h1>Lista de Productos</h1>
     {{#if products.length}}
+    <div>
+        {{#each products}}
         <div>
-            {{#each products}}
-            <div>
-                <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
-                <h2>{{this.title}} - ${{this.price}}</h2>
-                <p>{{this.category}}</p>
-                <h2>{{this.price}}</h2>
-                <a href="/api/products/{{this._id}}">Ver más</a>
-                <a href="#" onclick="addToCart('{{../cartId}}', '{{this._id}}')">Agregar al carrito</a>
-            </div>
-            <br/>
-            {{/each}}
+            <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
+            <h2>{{this.title}} - ${{this.price}}</h2>
+            <p>{{this.category}}</p>
+            <h2>{{this.price}}</h2>
+            <a href="/api/products/{{this._id}}">Ver más</a>
+
+            {{#if (eq ../user.role 'premium')}}
+            <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
+            <a href="#" onclick="confirmDelete('{{this._id}}')" class="btn btn-danger">Eliminar</a>
+            {{/if}}
         </div>
+        <br />
+        {{/each}}
+    </div>
     {{else}}
-        <h1>No hay productos</h1>
+    <h1>No hay productos</h1>
     {{/if}}
+
+    {{#if totalPages}}
+    <div>
+        {{#each docs}}
+        <div>
+            <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
+        </div>
+        <br />
+        {{/each}}
+    </div>
+    <br />
+    <div>
+        {{#if prevLink}}
+        <a href="{{prevLink}}">
+            << Anterior </a>
+                {{/if}}
+                &nbsp;
+                {{this.page}}
+                &nbsp;
+                {{#if nextLink}}
+                <a href="{{nextLink}}">
+                    Siguiente >>
+                </a>
+                {{/if}}
+    </div>
+    {{/if}}
+    <script>
+        function confirmDelete(productId) {
+            if (confirm("¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.")) {
+                window.location.href = `/api/products/delete/${productId}`;
+            }
+        } 
+    </script>
 
     <form action="/api/sessions/logout" method="post">
         <button type="submit">Logout</button>
     </form>
 
-    {{#if totalPages}}
-        <div>
-            {{#each docs}}
-            <div>
-                <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
-            </div>
-            <br/>
-            {{/each}}
-        </div>
-        <br />
-        <div>
-            {{#if prevLink}}
-            <a href="{{prevLink}}">
-                << Anterior
-            </a>
-            {{/if}}
-            &nbsp;
-            {{this.page}}
-            &nbsp;
-            {{#if nextLink}}
-            <a href="{{nextLink}}">
-                Siguiente >>
-            </a>
-            {{/if}}
-        </div>
-    {{/if}}
-
     <script src="/js/addProduct.js"></script>
 </body>
+
 </html>

@@ -197,7 +197,7 @@ export const changeUserRole = async (req, res) => {
     user.role = user.role === 'premium' ? 'user' : 'premium';
     await user.save();
 
-    res.status(200).send(`El rol del usuario ha sido cambiado a ${user.role}`);
+    res.render('changeRole', { message: `El rol del usuario ha sido cambiado a ${user.role}`});
   } catch (error) {
     res.status(500).send("Error al cambiar el rol del usuario");
   }

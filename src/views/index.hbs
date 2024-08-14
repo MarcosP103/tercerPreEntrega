@@ -8,7 +8,7 @@
 <body>
     {{#if user}}
     <h3 class="text-center">
-        Bienvenido, <strong>{{userName}}</strong>
+        Bienvenido, <strong>{{user.first_name}}</strong>
     </h3>
     {{else}}
     <h3>
@@ -77,33 +77,32 @@
     <form action="/api/sessions/logout" method="post">
         <button type="submit">Logout</button>
     </form>
-    <br>    
-    
+    <br>
+
     {{#if totalPages}}
+    <div>
+        {{#each docs}}
         <div>
-            {{#each docs}}
-            <div>
-                <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
-            </div>
-            <br/>
-            {{/each}}
+            <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
         </div>
         <br />
-        <div>
-            {{#if prevLink}}
-            <a href="{{prevLink}}">
-                << Anterior
-            </a>
-            {{/if}}
-            &nbsp;
-            {{this.page}}
-            &nbsp;
-            {{#if nextLink}}
-            <a href="{{nextLink}}">
-                Siguiente >>
-            </a>
-            {{/if}}
-        </div>
+        {{/each}}
+    </div>
+    <br />
+    <div>
+        {{#if prevLink}}
+        <a href="{{prevLink}}">
+            << Anterior </a>
+                {{/if}}
+                &nbsp;
+                {{this.page}}
+                &nbsp;
+                {{#if nextLink}}
+                <a href="{{nextLink}}">
+                    Siguiente >>
+                </a>
+                {{/if}}
+    </div>
     {{/if}}
 
 </body>

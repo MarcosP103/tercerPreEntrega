@@ -36,8 +36,11 @@ import {
         Prev Link: ${prevLink}
         Next Link: ${nextLink}
       `);
-  
-      res.render('index', { products: result.docs, prevLink, nextLink });
+      
+      console.log('User Role:', req.user ? req.user.role : 'No User');
+
+      const user = req.user ? { ...req.user._doc } : null;  
+      res.render('index', { user, products: result.docs, prevLink, nextLink });
     } catch (error) {
       console.error("No se pudieron obtener los productos", error);
       res.status(500).json({ status: 'error', message: "No se pudieron obtener los productos" });

@@ -50,8 +50,8 @@ router.get("/githubcallback", passport.authenticate("github", { failureRedirect:
 router.get("/editprofile", (req, res) => res.render("editProfile"));
 router.post("/editprofile", editProfile);
 
-router.post('/users/premium/:uid', changeUserRole);
-router.put("/users/premium/:uid", changeUserRole);
+router.post('/premium/:uid', changeUserRole);
+router.put("/premium/:uid", changeUserRole);
 
 
 export default router;

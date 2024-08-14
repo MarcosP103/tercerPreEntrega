@@ -21,6 +21,7 @@ import loggerRoutes from "./routes/api/loggerW.routes.js";
 import chatRouter from "./routes/chat.router.js"
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerUiExpress from "swagger-ui-express"
+import { eq, getProperty } from "./utils/helpers.js"
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -83,11 +84,7 @@ app.use(passport.session())
 app.engine('hbs', engine({
   extname: '.hbs',
   defaultLayout: 'main',
-  helpers: {
-    eq: function (a, b) {
-      return a === b
-    }
-  }
+  helpers: { eq, getProperty }
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
