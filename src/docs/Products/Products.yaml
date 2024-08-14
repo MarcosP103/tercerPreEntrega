@@ -1,0 +1,257 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene una lista de productos.
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
+          description: Límite de productos por página.
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 1
+          description: Número de la página.
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: "asc"
+          description: Orden de los productos (asc o desc).
+        - in: query
+          name: query
+          schema:
+            type: string
+            example: "ropa"
+          description: Filtro de búsqueda por categoría o título.
+      responses:
+        "200":
+          description: Lista de productos obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/Product"
+                  totalPages:
+                    type: integer
+                    example: 5
+                  currentPage:
+                    type: integer
+                    example: 1
+                  prevPage:
+                    type: integer
+                    example: 0
+                  nextPage:
+                    type: integer
+                    example: 2
+                  hasPrevPage:
+                    type: boolean
+                    example: false
+                  hasNextPage:
+                    type: boolean
+                    example: true
+                  prevLink:
+                    type: string
+                    example: "/api/products?limit=10&page=0&sort=asc"
+                  nextLink:
+                    type: string
+                    example: "/api/products?limit=10&page=2&sort=asc"
+        "500":
+          description: Error al obtener los productos.
+
+    post:
+      summary: Agrega un nuevo producto.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - code
+                - price
+                - status
+                - stock
+                - category
+              properties:
+                title:
+                  type: string
+                  example: "Camiseta"
+                description:
+                  type: string
+                  example: "Camiseta de algodón 100%"
+                code:
+                  type: string
+                  example: "CAM123"
+                price:
+                  type: number
+                  example: 19.99
+                status:
+                  type: boolean
+                  example: true
+                stock:
+                  type: integer
+                  example: 50
+                category:
+                  type: string
+                  example: "Ropa"
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+                  example: ["imagen1.jpg", "imagen2.jpg"]
+      responses:
+        "201":
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Producto agregado correctamente
+        "400":
+          description: Error en los datos proporcionados.
+        "500":
+          description: Error al crear el producto.
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por su ID.
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      responses:
+        "200":
+          description: Producto obtenido exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "404":
+          description: Producto no encontrado.
+        "500":
+          description: Error al obtener el producto.
+
+    put:
+      summary: Actualiza un producto por su ID.
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                code:
+                  type: string
+                price:
+                  type: number
+                status:
+                  type: boolean
+                stock:
+                  type: integer
+                category:
+                  type: string
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Producto actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Producto modificado correctamente
+                  product:
+                    $ref: "#components/schemas/Product"
+        "404":
+          description: Producto no encontrado.
+        "500":
+          description: Error al actualizar el producto.
+
+    delete:
+      summary: Elimina un producto por su ID.
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      responses:
+        "200":
+          description: Producto eliminado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Producto eliminado correctamente
+        "404":
+          description: Producto no encontrado.
+        "500":
+          description: Error al eliminar el producto.
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id autogenerado de Mongo
+          example: "60c72b2f4f1a23c001q3j5p"
+        title:
+          type: string
+          example: "Camiseta"
+        price:
+          type: number
+          example: 19.99
+        category:
+          type: string
+          example: "Ropa"
+        description:
+          type: string
+          example: "Camiseta de algodón 100%"

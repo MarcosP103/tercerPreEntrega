@@ -52,6 +52,8 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
         try {
+          console.log(`Registrando usuario con email: ${username}`);
+
           let user = await userService.findOne({ email: username });
           if (user) {
             console.log("El usuario ya existe");
@@ -89,6 +91,8 @@ const initializePassport = () => {
   passport.use("login", new LocalStrategy({ usernameField: "email" },
       async (username, password, done) => {
         try {
+          console.log(`Intentando iniciar sesión con email: ${username}`);
+          
           const user = await userService.findOne({ email: username });
           if (!user) {
             console.log("El usuario no existe");

@@ -1,0 +1,318 @@
+paths:
+  /api/carts:
+    post:
+      summary: Crea un nuevo carrito de compras.
+      tags:
+        - Carts
+      responses:
+        "201":
+          description: Carrito creado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Carrito creado correctamente"
+                  cartId:
+                    type: string
+                    example: "60c72b2f4f1a23c001q3j5p"
+        "500":
+          description: Error al crear el carrito.
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un carrito por su ID.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+      responses:
+        "200":
+          description: Carrito obtenido exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    $ref: "#/components/schemas/Cart"
+        "404":
+          description: Carrito no encontrado.
+        "500":
+          description: Error al obtener el carrito.
+
+    put:
+      summary: Actualiza un carrito por su ID.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ProductInCart"
+      responses:
+        "200":
+          description: Carrito actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Carrito actualizado correctamente"
+                  cart:
+                    $ref: "#/components/schemas/Cart"
+        "404":
+          description: Carrito no encontrado.
+        "500":
+          description: Error al actualizar el carrito.
+
+    delete:
+      summary: Elimina un carrito por su ID.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+      responses:
+        "200":
+          description: Carrito eliminado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Carrito eliminado correctamente"
+        "404":
+          description: Carrito no encontrado.
+        "500":
+          description: Error al eliminar el carrito.
+
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Agrega un producto al carrito.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Producto agregado al carrito exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Producto agregado correctamente al carrito"
+        "404":
+          description: Carrito o producto no encontrado.
+        "500":
+          description: Error al agregar el producto al carrito.
+
+    put:
+      summary: Actualiza la cantidad de un producto en el carrito.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  example: 2
+      responses:
+        "200":
+          description: Cantidad de producto actualizada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cantidad de producto actualizada correctamente"
+        "404":
+          description: Carrito o producto no encontrado.
+        "500":
+          description: Error al actualizar la cantidad del producto en el carrito.
+
+    delete:
+      summary: Elimina un producto del carrito.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID del producto.
+      responses:
+        "200":
+          description: Producto eliminado del carrito exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Producto eliminado correctamente del carrito"
+        "404":
+          description: Carrito o producto no encontrado.
+        "500":
+          description: Error al eliminar el producto del carrito.
+
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Realiza la compra de los productos en el carrito.
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID del carrito.
+      responses:
+        "200":
+          description: Compra realizada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Compra realizada con éxito"
+                  productsNotProcessed:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+        "500":
+          description: Error al realizar la compra.
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60c72b2f4f1a23c001q3j5p"
+        title:
+          type: string
+          example: "Camiseta"
+        description:
+          type: string
+          example: "Camiseta de algodón 100%"
+        code:
+          type: string
+          example: "CAM123"
+        price:
+          type: number
+          example: 19.99
+        stock:
+          type: integer
+          example: 50
+        category:
+          type: string
+          example: "Ropa"
+        thumbnails:
+          type: array
+          items:
+            type: string
+          example: ["imagen1.jpg", "imagen2.jpg"]
+
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60c72b2f4f1a23c001q3j5p"
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductInCart"
+
+    ProductInCart:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+        quantity:
+          type: integer
+          example: 2
