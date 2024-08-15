@@ -83,6 +83,30 @@ Acá se maneja la lógica del cliente para enviar y recibir datos del servidor a
 - A través de socket.on("products") se escucha el evento 'products' enviado desde el servidor. Cuando el servidor envía este evento a través de la conexión WebSocket, el callback proporcionado se ejecuta. El callback se encarga de actualizar la lista de productos en la interfaz de usuario con los datos recibidos desde el servidor.
 - 'resAdd' y 'resDel' estos códigos de escucha devuelven los mensajes correspondientes de producto agregado y producto eliminado a través de un elemento 'p'.
 
+## Swagger
+Swagger es un conjunto de herramientas de código abierto que ayuda a los desarrolladores a diseñar, construir, documentar y consumir APIs (Interfaces de Programación de Aplicaciones). Es parte del ecosistema OpenAPI, que es un estándar de especificación para describir APIs RESTful.
+Para utilizarlo se partió creando el archivo swagger.config dentro de la carpeta config. 
+
+Se realizó la importación de 'fileURLToPath' y 'dirname' para manejar rutas de archivos y directorios. Por otro lado 'resolve' para obtener la ruta absoluta de los archivos a utilizar.
+Tambien se importaron 'swaggerJSDoc' y 'swaggerUiExpress' los cuales sirven para generar la especificacion de OpenAPI en formato JSON a partir de las opciones que se le pasan y proporcionr middleware para servir la UI de Swagger en una aplicación con Express, como es esta.
+
+Se comienza por configurar swagger, donde se define la version de OpenAPI y se proporciona información como el titulo y la descripcion.
+![configuracion swagger](image.png)
+
+Posteriormente se crea la especificacion Swagger donde se genera un objeto JSON
+![especificacion swagger](image-1.png)
+
+Finalmente se configuraron las rutas donde se muestra la documentación
+![rutas de swagger](image-2.png)
+
+Las rutas son:
+/api-docs-users: Para la documentación relacionada con la API de usuarios.
+/api-docs-products: Para la documentación relacionada con la API de productos.
+/api-docs-carts: Para la documentación relacionada con la API de carritos.
+
+Finalmente para poder usarlo se importó en app la función con las rutas y se ejecutó para poder utilizarlas
+import { setupSwaggerDocs } from "./config/swagger.config.js";
+setupSwaggerDocs(app)
 
 
 
