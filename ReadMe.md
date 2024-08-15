@@ -100,9 +100,9 @@ Finalmente se configuraron las rutas donde se muestra la documentación
 ![rutas de swagger](image-2.png)
 
 Las rutas son:
-/api-docs-users: Para la documentación relacionada con la API de usuarios.
-/api-docs-products: Para la documentación relacionada con la API de productos.
-/api-docs-carts: Para la documentación relacionada con la API de carritos.
+- /api-docs-users: Para la documentación relacionada con la API de usuarios.
+- /api-docs-products: Para la documentación relacionada con la API de productos.
+- /api-docs-carts: Para la documentación relacionada con la API de carritos.
 
 Finalmente para poder usarlo se importó en app la función con las rutas y se ejecutó para poder utilizarlas
 import { setupSwaggerDocs } from "./config/swagger.config.js";
