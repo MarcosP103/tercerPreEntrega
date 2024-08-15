@@ -40,7 +40,7 @@ paths:
                   products:
                     type: array
                     items:
-                      $ref: "#components/schemas/Product"
+                      $ref: "#/components/schemas/Product"
                   totalPages:
                     type: integer
                     example: 5
@@ -86,6 +86,7 @@ paths:
                 - status
                 - stock
                 - category
+                - owner
               properties:
                 title:
                   type: string
@@ -113,6 +114,9 @@ paths:
                   items:
                     type: string
                   example: ["imagen1.jpg", "imagen2.jpg"]
+                owner:
+                  type: string
+                  example: "60c72b2f4f1a23c001q3j5p"
       responses:
         "201":
           description: Producto creado exitosamente.
@@ -147,7 +151,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/Product"
+                $ref: "#/components/schemas/Product"
         "404":
           description: Producto no encontrado.
         "500":
@@ -189,6 +193,8 @@ paths:
                   type: array
                   items:
                     type: string
+                owner:
+                  type: string
       responses:
         "200":
           description: Producto actualizado exitosamente.
@@ -201,7 +207,7 @@ paths:
                     type: string
                     example: Producto modificado correctamente
                   product:
-                    $ref: "#components/schemas/Product"
+                    $ref: "#/components/schemas/Product"
         "404":
           description: Producto no encontrado.
         "500":
@@ -246,12 +252,30 @@ components:
         title:
           type: string
           example: "Camiseta"
-        price:
-          type: number
-          example: 19.99
-        category:
-          type: string
-          example: "Ropa"
         description:
           type: string
           example: "Camiseta de algodón 100%"
+        code:
+          type: string
+          example: "CAM123"
+        price:
+          type: number
+          example: 19.99
+        status:
+          type: boolean
+          example: true
+        stock:
+          type: integer
+          example: 50
+        category:
+          type: string
+          example: "Ropa"
+        thumbnails:
+          type: array
+          items:
+            type: string
+          example: ["imagen1.jpg", "imagen2.jpg"]
+        owner:
+          type: string
+          description: Id del propietario del producto
+          example: "60c72b2f4f1a23c001q3j5p"

@@ -14,8 +14,7 @@ const router = express.Router();
 
 router.post("/", createCartF);
 
-router.post("/:cid/products/:pid", (req, res, next) => {
-    console.log(`POST /api/carts/${req.params.cid}/products/${req.params.pid}`);
+router.post("/:cid/products/:pid", (req, res, next) => {console.log(`POST /api/carts/${req.params.cid}/products/${req.params.pid}`);
     next();
 }, addProductToCartF);
 
