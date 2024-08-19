@@ -52,26 +52,26 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
         try {
-          console.log(`Registrando usuario con email: ${username}`);
+          console.log(` usuario con email: ${username}`);
 
-          let user = await userService.findOne({ email: username });
+          let user = await userService.findOne({ email });
           if (user) {
             console.log("El usuario ya existe");
             return done(null, false, { message: "El usuario ya existe" });
           }
-          const role = username.includes("@premium") ? "premium" : "user";
+          /* const role = username.includes("@premium") ? "premium" : "user"; */
   
-          const newUser = {
+          const newUser = new userService({
             first_name,
             last_name,
             email,
             age,
             password: createHash(password),
-            role: role,
-          };
+            role: email.includes("@premium") ? "premium" : "user",
+          });
   
-          let result = await userService.create(newUser);
-          return done(null, result);
+          await newUser.save()
+          return done(null, newUser);
         } catch (error) {
           return done("Error al obtener el usuario" + error);
         }
@@ -99,7 +99,10 @@ const initializePassport = () => {
             return done(null, user);
           }
 
-          if (!isValidPassword(user, password)) return done(null, false, { message: "Contraseña incorrecta" });
+          if (!isValidPassword(user, password)){
+            console.log('Contraseña incorrecta')
+            return done(null, false, { message: "Contraseña incorrecta" })
+          };
 
           return done(null, user);
         } catch (error) {

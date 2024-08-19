@@ -10,16 +10,23 @@ import {
 } from "../services/user.service.js";
 
 export const register = async (req, res, next) => {
+  //Elimina usuarios que se hayan creado con email:null para evitar conflictos
+  await userModel.deleteMany({ email: null });
+
   passport.authenticate("register", async (err, user, info) => {
     if (err) {
       return next(err);
     }
     if (!user) {
-      return res.redirect("failregister");
+      return res.redirect("/failregister");
     }
     try {
       const newUser = await registerUser(user);
-      req.user = {
+      req.login(newUser, (err) =>{
+        if (err) {
+          return res.status(500).send('Error al inciar sesion despues del registro')
+        }
+        req.user = {
         first_name: newUser.first_name,
         last_name: newUser.last_name,
         email: newUser.email,
@@ -27,8 +34,10 @@ export const register = async (req, res, next) => {
         role: newUser.role,
         cart: newUser.cartId,
       };
-      res.send({ status: "success", message: "Usuario registrado" });
-    } catch (err) {
+      res.redirect('/login')
+      }) 
+    }catch (err) {
+      console.error('Error durante el registro:', err)
       res.status(500).send("Error al registrar al usuario");
     }
   })(req, res, next);
@@ -43,6 +52,12 @@ export const login = async (req, res, next) => {
       return res.redirect("/faillogin");
     }
     try {
+      
+      req.login(user, async (err) => {
+        if(err) {
+          return res.status(500).send('Error al iniciar sesion.')
+        }
+      })
       const foundUser = await findUserById(user._id);
       req.user = {
         first_name: foundUser.first_name,

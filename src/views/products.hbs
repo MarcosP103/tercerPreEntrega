@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -18,7 +19,7 @@
 
     <h1>Lista de Productos</h1>
     {{#if products.length}}
-    <div>
+    <div class="divproducts">
         {{#each products}}
         <div>
             <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">

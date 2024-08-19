@@ -11,17 +11,21 @@ let user;
 let chatBox = document.getElementById("chatBox");
 let sendBtn = document.getElementById("sendBtn");
 
-Swal.fire({
-  title: "Identificate",
-  input: "text",
-  text: "Ingresa tu usuario para identificarte en el chat",
-  inputValidator: (value) => {
-    return !value && "Necesitas escribir un nombre";
-  },
-  allowOutsideClick: false,
-}).then((result) => {
-  user = result.value;
-});
+if (userAuthenticated) {
+  user = userAuthenticated.first_name
+} else {
+  Swal.fire({
+    title: "Identificate",
+    input: "text",
+    text: "Ingresa tu usuario para identificarte en el chat",
+    inputValidator: (value) => {
+      return !value && "Necesitas escribir un nombre";
+    },
+    allowOutsideClick: false,
+  }).then((result) => {
+    user = result.value;
+  });
+}
 
 const sendMessage = () => {
   if (chatBox.value.trim().length > 0) {
