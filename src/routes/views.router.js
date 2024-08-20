@@ -32,6 +32,10 @@ router.get('/profile', isAuthenticated, (req, res) => {
   res.render('profile', { user: req.user });
 });
 
+router.get('/cartdet', (req, res) => {
+  res.render('cartDet'); 
+});
+
 router.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: 'Error interno del servidor' });
