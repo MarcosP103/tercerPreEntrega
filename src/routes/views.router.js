@@ -12,8 +12,7 @@ router.get("/realTimeProducts", (req, res) => {
 
 router.get('/premium', isPremium, async (req, res) => {
   try {
-    const user = req.user;
-    res.render('premium', { user, message: 'Página de administración: solo accesible para usuario premium' });
+    res.render('premium', { message: 'Página de administración: solo accesible para usuario premium' });
   } catch (error) {
     res.status(500).send("Error al cargar la página premium");
   }

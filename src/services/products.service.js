@@ -33,12 +33,15 @@ export const getProducts = async (limit, page, sort, query) => {
 
 
 export const getProductById = async (id) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.isValidObjectId(id)) {
     throw new Error('ID inválido');
   }
 
-  const objectId = new mongoose.Types.ObjectId(id);
-  return await productModel.findById(objectId);
+  const product = await productModel.findById(id);
+  if(!product) {
+    throw new Error('Producto no encontrado')
+  }
+  return product
 };
 
 export const addProduct = async (title, description, code, price, status, stock, category, thumbnails, owner, testProduct) => {

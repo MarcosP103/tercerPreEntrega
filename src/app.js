@@ -49,6 +49,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.locals.user = req.user
+  next()
+})
 
 //Configuracion de la sesion
 app.use(session({
@@ -68,7 +72,7 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-// Set up handlebars engine
+// Set up handlebars engine y helpers
 app.engine('hbs', engine({
   extname: '.hbs',
   defaultLayout: 'main',
@@ -76,6 +80,7 @@ app.engine('hbs', engine({
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
+
 
 // Routes
 app.use("/", indexRouter);

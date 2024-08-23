@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,8 @@
 
 <body>
     <h1>Bienvenido, {{userName}}</h1>
-    <a href="/profile">Ver mi perfil</a>
-
-    {{#if (eq user.role 'premium')}}
-    <div style="text-align: right; margin-bottom: 20px;">
-        <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
-    </div>
+    {{#if (eq (getProperty user 'role') 'premium')}}
+    <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
     {{/if}}
 
     <h1>Lista de Productos</h1>
@@ -27,8 +24,7 @@
             <p>{{this.category}}</p>
             <h2>{{this.price}}</h2>
             <a href="/api/products/{{this._id}}">Ver más</a>
-
-            {{#if (eq ../user.role 'premium')}}
+            {{#if (eq (getProperty ../user 'role') 'premium')}}
             <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
             <a href="#" onclick="confirmDelete('{{this._id}}')" class="btn btn-danger">Eliminar</a>
             {{/if}}

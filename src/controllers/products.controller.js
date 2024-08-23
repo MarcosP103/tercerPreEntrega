@@ -96,6 +96,25 @@ import {
       res.status(500).json({ error: "Error al agregar el producto" });
     }
   };
+
+  export const RenderEditProduct = async (req, res) => {
+    try {
+      const { pid } = req.params
+
+      if (!pid) {
+        return res.status(400).send('ID de producto no proporcionado');
+      }
+
+      const product = await getProductById(pid)
+      
+      if(!product) {
+        return res.status(404).send('Producto no encontrado')
+      }
+      res.rener('upProducts', {product})
+    } catch (error) {
+      res.status(500).send('Error al cargar el producto para editar')
+    }
+  }
   
   export const UpdateProduct = async (req, res) => {
     const { id } = req.params;
