@@ -41,8 +41,8 @@ export const getProductById = async (id) => {
   return await productModel.findById(objectId);
 };
 
-export const addProduct = async (title, description, code, price, status, stock, category, thumbnails) => {
-  return await productManager.addProduct(title, description, code, price, status, stock, category, thumbnails);
+export const addProduct = async (title, description, code, price, status, stock, category, thumbnails, owner, testProduct) => {
+  return await productManager.addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct);
 };
 
 export const updateProduct = async (id, productMod) => {

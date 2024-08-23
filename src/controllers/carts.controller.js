@@ -11,6 +11,7 @@ import {
   export const createCartF = async (req, res) => {
     try {
       const newCart = await createCart();
+      console.log('New Cart:', newCart)
       res.status(201).json(newCart);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -26,8 +27,8 @@ import {
     console.log('Quantity:', quantity);
 
     try {
-        const updatedCart = await addProductToCart(cid, pid, quantity);
-        res.json(updatedCart);
+        const cart = await addProductToCart(cid, pid, quantity);
+        res.status(201).json({ payload: cart });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -15,8 +15,7 @@ const productSchema = new mongoose.Schema({
   thumbnails: { type: String, required: true },
   owner: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+    ref: 'User',
   }
 }, {
   timestamps: true 
