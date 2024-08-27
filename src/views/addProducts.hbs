@@ -7,7 +7,7 @@
 </head>
 <div>
     <h1>Agregar nuevo producto</h1>
-    <form method="POST" action="/api/products">
+    <form method="POST" action="/api/products/add">
         <div class="form-group">
             <label for="title">Título del Producto</label>
             <input type="text" class="form-control" id="title" name="title" required>
@@ -48,11 +48,11 @@
                 <option value="false">Inactivo</option>
             </select>
         </div>
+    </form>
         <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{product._id}}');" style="margin-top: 20px;">
             <label for="cartQuantity">Cantidad a agregar al carrito:</label>
             <input type="number" id="cartQuantity" name="cartQuantity" min="1" required>
             <button type="submit">Agregar al carrito</button>
         </form>
-
-    </form>
 </div>
+<script src="/js/addProductDB.js"></script>

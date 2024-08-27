@@ -49,20 +49,21 @@ import {
   
   export const GetProductById = async (req, res) => {
     try {
-      const pId = req.params.pid;
+      const pid = req.params.pid;
+      console.log('ID recibido para buscar el producto:', pid);
       const userId = req.user ? req.user._id : null;
       
-      const product = await getProductById(pId);
+      const product = await getProductById(pid);
   
       if (!product) {
         return res.status(404).send({ status: "error", error: "Producto no encontrado" });
       }
   
       let cartId = null;
-      if (userId) {
-        const user = await userService.findOne({ _id: userId });
-        cartId = user ? user.cartId : null;
-      }
+    if (req.user) {
+      const user = await userService.findOne({ _id: req.user._id });
+      cartId = user ? user.cartId : null;
+    }
   
       res.render('productsDet', {
         product: {
@@ -84,13 +85,22 @@ import {
     }
   };
   
+  export const RenderAddProduct = (req, res) => {
+    try {
+      res.render('addProducts');
+    } catch (error) {
+      console.error('Error al renderizar la vista para agregar producto:', error);
+      res.status(500).send('Error al renderizar la vista para agregar producto');
+    }
+  };
+  
   
   export const AddProduct = async (req, res) => {
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+    const { title, description, code, price, status, stock, category, thumbnails, owner, testProduct } = req.body;
   
     try {
-      await addProduct(title, description, code, price, status, stock, category, thumbnails);
-      res.status(201).json({ message: "Producto agregado correctamente" });
+      const newProduct = await addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct);
+      res.status(201).json({ message: "Producto agregado correctamente", product: newProduct });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error al agregar el producto" });
@@ -110,22 +120,22 @@ import {
       if(!product) {
         return res.status(404).send('Producto no encontrado')
       }
-      res.rener('upProducts', {product})
+      res.render('upProducts', { product })
     } catch (error) {
       res.status(500).send('Error al cargar el producto para editar')
     }
   }
   
   export const UpdateProduct = async (req, res) => {
-    const { id } = req.params;
+    const { pid } = req.params;
     const productMod = req.body;
   
     try {
-      const updatedProduct = await updateProduct(id, productMod);
+      const updatedProduct = await updateProduct(pid, productMod);
       if (!updatedProduct) {
         return res.status(404).json({ message: "Producto no encontrado" });
       }
-      res.json({ message: "Producto modificado correctamente", product: updatedProduct });
+      return res.status(200).json({ status: 'success', message: "Producto modificado correctamente", product: updatedProduct });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error al modificar el producto" });

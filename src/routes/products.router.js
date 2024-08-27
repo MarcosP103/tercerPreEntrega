@@ -4,6 +4,7 @@ import {
   GetProducts,
   GetProductById,
   AddProduct,
+  RenderAddProduct,
   UpdateProduct,
   RenderEditProduct,
   DeleteProduct
@@ -16,7 +17,8 @@ router.get('/realTimeProducts', GetRealTimeProducts);
 router.get('/', GetProducts);
 router.get('/:pid', GetProductById);
 
-router.post('/', AddProduct);
+router.get('/add', RenderAddProduct)
+router.post('/add', AddProduct);
 
 router.get('/edit/:pid', RenderEditProduct)
 router.put('/:pid', UpdateProduct);

@@ -33,6 +33,7 @@ export const getProducts = async (limit, page, sort, query) => {
 
 
 export const getProductById = async (id) => {
+  console.log('Verificando Id:', id)
   if (!mongoose.isValidObjectId(id)) {
     throw new Error('ID inválido');
   }
@@ -45,11 +46,21 @@ export const getProductById = async (id) => {
 };
 
 export const addProduct = async (title, description, code, price, status, stock, category, thumbnails, owner, testProduct) => {
-  return await productManager.addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct);
+  try {
+    return await productManager.addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct);
+  } catch (error) {
+    console.error('Error al agregar el producto en el servicio:', error);
+    throw error;
+  }
 };
 
 export const updateProduct = async (id, productMod) => {
-  return await productManager.modProduct(id, productMod);
+  try{
+    return await productManager.modProduct(id, productMod);
+  } catch (error) {
+    console.error('Error al modificar el producto:', error);
+    throw error;
+  } 
 };
 
 export const deleteProduct = async (id) => {

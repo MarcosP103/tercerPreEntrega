@@ -3,49 +3,59 @@
     <form id="upProductsForm">
         <div class="form-group">
             <label for="pid">ID del Producto</label>
-            <input type="hidden" id="pid" name="pid" value="{{product._id}}">
+            <input type="hidden" id="pid" name="pid" value="{{getProperty product '_id'}}" required>
         </div>
         <div class="form-group">
             <label for="title">Título</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{product.title}}">
+            <input type="text" class="form-control" id="title" name="title" value="{{getProperty product 'title'}}">
         </div>
         <div class="form-group">
             <label for="description">Descripción</label>
-            <input type="text" class="form-control" id="description" name="description" value="{{product.description}}"required>
+            <input type="text" class="form-control" id="description" name="description"
+                value="{{getProperty product 'description'}}" required>
         </div>
-        <div class="form-group">
-            <label for="category">Categoría</label>
-            <select class="form-control" id="category" name="category" required>
-                <option value="" selected disabled>Seleccione una categoría</option>
-                <option value="casillas-camas">Casillas-Camas</option>
-                <option value="arnes-collares-correas">Arnes-Collares-Correas</option>
-                <option value="bebederos-comederos">Bebederos-Comederos</option>
-        </div>
+        <label for="category">Categoría</label>
+        <select class="form-control" id="category" name="category" required>
+            <option value="" disabled>Seleccione una categoría</option>
+            <option value="casillas-camas" {{#if (eq (getProperty product 'category' ) 'casillas-camas'
+                )}}selected{{/if}}>Casillas-Camas
+            </option>
+            <option value="arnes-collares-correas" {{#if (eq (getProperty product 'category') 'arnes-collares-correas'
+                )}}selected{{/if}}>Arnes-Collares-Correas</option>
+            <option value="bebederos-comederos" {{#if (eq (getProperty product 'category' ) 'bebederos-comederos'
+                )}}selected{{/if}}>Bebederos-Comederos</option>
+        </select>
         <div class="form-group">
             <label for="price">Precio</label>
-            <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{product.price}}"required>
+            <input type="number" step="0.01" class="form-control" id="price" name="price"
+                value="{{getProperty product 'price'}}" required>
         </div>
         <div class="form-group">
             <label for="thumbnails">Imagenes</label>
-            <input type="string" class="form-control" id="thumbnails" name="thumbnails" required>
+            <input type="string" class="form-control" id="thumbnails" name="thumbnails"
+                value="{{getProperty product 'thumbnails'}}">
         </div>
         <div class="form-group">
             <label for="code">Código</label>
-            <input type="text" class="form-control" id="code" name="code" value="{{product.code}}"required>
+            <input type="text" class="form-control" id="code" name="code" value="{{getProperty product 'code'}}"
+                required>
         </div>
         <div class="form-group">
             <label for="stock">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock" value="{{product.stock}}"required>
+            <input type="number" class="form-control" id="stock" name="stock" value="{{getProperty product 'stock'}}"
+                required>
         </div>
         <div class="form-group">
             <label for="status">Estado</label>
-            <select class="form-control" id="status" name="status" value="{{product.status}}"required>
-                <option value="true">Activo</option>
-                <option value="false">Inactivo</option>
+            <select class="form-control" id="status" name="status" required>
+                <option value="true" {{#if (eq (getProperty product 'status') true)}}selected{{/if}}>Activo</option>
+                <option value="false" {{#if (eq (getProperty product 'status') false)}}selected{{/if}}>Inactivo</option>
             </select>
         </div>
         <button type="submit">Actualizar producto</button>
     </form>
 </div>
 
-<script src="/js/upProduct.js"></script>
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/upProductForm.js"></script>
