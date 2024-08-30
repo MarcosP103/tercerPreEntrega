@@ -3,6 +3,11 @@ import bcrypt from "bcryptjs"
 import { createHash } from "../../utils.js";
 import cartsModel from "./carts.model.js";
 
+const documentSchema = new mongoose.Schema ({
+  name: { type: String, required: true },
+  reference: { type: String, required: true }
+})
+
 //crear coleccion
 const userCollection = "user";
 
@@ -16,6 +21,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['premium', 'user'], default: 'user'},
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  documents: [documentSchema],
 });
 
 userSchema.pre("save", async function(next) {

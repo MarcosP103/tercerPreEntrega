@@ -93,3 +93,26 @@ export const validateResetToken = async (token) => {
 
   return !!user;
 };
+
+export const mDocumentUpload = async (userId, files) => {
+  const user = await userService.findById(userId)
+
+  if(!user) {
+    throw new Error('Usuario no encontrado')
+  }
+
+  files.forEach(file => {
+    user.documents.push({
+      name: file.originalname,
+      reference: file.path,
+    })
+  });
+
+  if (user.documents.lenght >= 3) {
+    user.role = 'premium'
+  }
+  
+  await user.save()
+
+  return { message: 'Documentos subidos correctamente', documents: user.documents }
+}

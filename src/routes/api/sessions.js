@@ -11,11 +11,16 @@ import {
   githubAuth,
   githubCallback,
   editProfile,
+  renderEditProfile,
   reqPassReset,
   resPassword,
   renderPasswordResetForm,
-  changeUserRole
+  changeUserRole,
+  uploadDocuments,
+  renderUploadDocuments
 } from "../../controllers/user.controller.js";
+import upload from "../../middleware/multer.js"
+import { isAuthenticated } from "../../middleware/auth.js"
 
 const router = Router();
 initializePassport();
@@ -50,8 +55,14 @@ router.get("/githubcallback", passport.authenticate("github", { failureRedirect:
 router.get("/editprofile", (req, res) => res.render("editProfile"));
 router.post("/editprofile", editProfile);
 
+//router.get('/profile/edit', isAuthenticated, renderEditProfile);
+//router.post('/profile/edit', isAuthenticated, editProfile);
+
 router.post('/premium/:uid', changeUserRole);
 router.put("/premium/:uid", changeUserRole);
+
+router.get('/:uid/documents', isAuthenticated, renderUploadDocuments);
+router.post('/:uid/documents', isAuthenticated, upload.array('documents', 10), uploadDocuments);
 
 
 export default router;

@@ -6,7 +6,8 @@ import {
   updateUserPassword,
   requestPasswordReset,
   resetPassword, 
-  validateResetToken
+  validateResetToken,
+  mDocumentUpload
 } from "../services/user.service.js";
 
 export const register = async (req, res, next) => {
@@ -157,6 +158,14 @@ export const editProfile = async (req, res) => {
   }
 };
 
+export const renderEditProfile = async (req, res) => {
+  const user = await findUserById(req.user._id);
+  if (!user) {
+    return res.status(404).send("Usuario no encontrado");
+  }
+  res.render('editProfile', { user });
+};
+
 export const reqPassReset = async (req, res) => {
   const { email } = req.body
 
@@ -217,5 +226,60 @@ export const changeUserRole = async (req, res) => {
     res.status(500).send("Error al cambiar el rol del usuario");
   }
 };
+//////////////////////////////////
+export const uploadDocuments = async (req, res) => {
+  try {
+    const userId =  req.params.uid
+    const files = req.files
 
+    const result = await mDocumentUpload(userId, files)
 
+    res.status(200).json(result)
+  } catch (error) {
+    res.status(500).json({ message: 'Error al subir los documentos', error })  
+  }
+}
+
+/* export const changeUserRole = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await findUserById(uid);
+
+    if (!user) {
+      return res.status(404).send("Usuario no encontrado");
+    }
+
+    if (req.files.length < 3) {
+    return res.render('uploadDocuments', { user, errorMessage: "Debes subir los tres documentos requeridos." });
+    }
+
+    user.documents = req.files.map(file => ({
+      name: file.originalname,
+      reference: file.path,
+    }));
+
+    if (user.documents.length >= 3) {
+      user.role = 'premium';
+    }
+
+    await user.save();
+
+    res.redirect('/profile');
+  } catch (error) {
+    res.status(500).send("Error al cambiar el rol del usuario");
+  }
+}; */
+
+export const renderUploadDocuments = async (req, res) => {
+  const { uid } = req.params
+  try {
+    const user = await findUserById(uid)
+
+    if(!user) {
+      return res.status(404).send('Usuario no encontrado')
+    }
+    res.render('uploadDocuments', { user })
+  } catch (error) {
+    res.status(500).send("Error al subir los archivos.")
+  }
+}

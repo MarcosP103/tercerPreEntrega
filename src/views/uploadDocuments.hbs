@@ -1,0 +1,29 @@
+<h2>Subir Documentos para Cambiar a Premium</h2>
+
+<form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+  <label for="profile">Imagen de Perfil:</label>
+  <input type="file" name="documents" accept="image/*" required>
+  <br>
+  
+  <label for="document1">Documento de identidad(DNI):</label>
+  <input type="file" name="documents" required>
+  <br>
+  
+  <label for="document2">Constancia de Domicilio:</label>
+  <input type="file" name="documents" required>
+  <br>
+  
+  <label for="document3">Constacia de Tarjeta:</label>
+  <input type="file" name="documents" required>
+  <br>
+
+  <button type="submit">Subir Archivos</button>
+</form>
+
+{{#if errorMessage}}
+  <p style="color:red;">{{errorMessage}}</p>
+{{/if}}
+
+<form action="/profile" method="GET">
+  <button type="submit">Cancelar</button>
+</form>

@@ -18,7 +18,7 @@ router.get('/', GetProducts);
 router.get('/:pid', GetProductById);
 
 router.get('/add', RenderAddProduct)
-router.post('/add', AddProduct);
+router.post('/', AddProduct);
 
 router.get('/edit/:pid', RenderEditProduct)
 router.put('/:pid', UpdateProduct);

@@ -5,14 +5,19 @@
 <p>Edad: {{getProperty user 'age'}}</p>
 <p>Rol actual: {{getProperty user 'role'}}</p>
 
-<form action="/api/sessions/premium/{{getProperty user '_id'}}" method="POST">
-    <button type="submit">
-        {{#if (eq (getProperty user 'role') 'premium')}}
-            Cambiar a Usuario
-        {{else}}
-            Cambiar a Premium
-        {{/if}}
-    </button>
+{{#if (eq (getProperty user 'role') 'premium')}}
+  <form action="/api/sessions/premium/{{getProperty user '_id'}}" method="POST">
+    <button type="submit">Cambiar a Usuario</button>
+  </form>
+{{else}}
+  <form action="/api/users/{{getProperty user '_id'}}/documents" method="GET">
+    <button type="submit">Cambiar a Premium</button>
+  </form>
+{{/if}}
+<br>
+
+<form action="/profile/editprofile" method="GET">
+    <button type="submit">Modificar Datos</button>
 </form>
 <br>
 <form action="/" method="GET">

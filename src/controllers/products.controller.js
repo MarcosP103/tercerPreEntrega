@@ -87,13 +87,13 @@ import {
   
   export const RenderAddProduct = (req, res) => {
     try {
+      console.log('Intentando renderizar')
       res.render('addProducts');
     } catch (error) {
       console.error('Error al renderizar la vista para agregar producto:', error);
       res.status(500).send('Error al renderizar la vista para agregar producto');
     }
   };
-  
   
   export const AddProduct = async (req, res) => {
     const { title, description, code, price, status, stock, category, thumbnails, owner, testProduct } = req.body;
