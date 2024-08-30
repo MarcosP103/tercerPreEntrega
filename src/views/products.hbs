@@ -22,7 +22,6 @@
             <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
             <h2>{{this.title}} - ${{this.price}}</h2>
             <p>{{this.category}}</p>
-            <h2>{{this.price}}</h2>
             <a href="/api/products/{{this._id}}">Ver más</a>
             {{#if (eq (getProperty ../user 'role') 'premium')}}
             <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
@@ -70,7 +69,7 @@
     </script>
 
     <form action="/api/sessions/logout" method="post">
-        <button type="submit">Logout</button>
+        <button type="submit" class="btn btn-warning">Logout</button>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

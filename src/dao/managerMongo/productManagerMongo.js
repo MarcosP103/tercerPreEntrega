@@ -29,7 +29,7 @@ class ProductManagerMongoose {
   }
 
   async addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct) {
-    if (!title || !description || !code || !price || !status || !stock || !category || !thumbnails || !owner) {
+    if (!title || !description || !code || !price || !status || !stock || !category || !thumbnails) {
         console.log("Debe ingresar todos los campos");
         return;
     }

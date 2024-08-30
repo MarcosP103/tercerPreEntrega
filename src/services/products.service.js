@@ -37,7 +37,6 @@ export const getProductById = async (id) => {
   if (!mongoose.isValidObjectId(id)) {
     throw new Error('ID inválido');
   }
-
   const product = await productModel.findById(id);
   if(!product) {
     throw new Error('Producto no encontrado')

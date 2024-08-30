@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             
             const formData = new FormData(form);
-            const data = {};
+            const data = {}
             
             formData.forEach((value, key) => {
                 data[key] = value;
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (response.ok) {
                     alert('Producto agregado con éxito');
-                    window.location.href = '/products';
+                    window.location.href = '/';
                 } else {
                     const errorData = await response.json();
                     alert(`Error: ${errorData.error}`);

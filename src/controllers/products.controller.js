@@ -86,18 +86,19 @@ import {
   };
   
   export const RenderAddProduct = (req, res) => {
+    const userEmail = req.user.email
+    console.log('Entrando render')
     try {
       console.log('Intentando renderizar')
-      res.render('addProducts');
+      res.render('addProducts', {userEmail});
     } catch (error) {
       console.error('Error al renderizar la vista para agregar producto:', error);
       res.status(500).send('Error al renderizar la vista para agregar producto');
     }
   };
   
-  export const AddProduct = async (req, res) => {
-    const { title, description, code, price, status, stock, category, thumbnails, owner, testProduct } = req.body;
-  
+  export const AddProduct = async (req, res) => {  
+    const { title, description, code, price, status, stock, category, thumbnails, owner, testProduct} = req.body
     try {
       const newProduct = await addProduct(title, description, code, price, status, stock, category, thumbnails, owner, testProduct);
       res.status(201).json({ message: "Producto agregado correctamente", product: newProduct });
