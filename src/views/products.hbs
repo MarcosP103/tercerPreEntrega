@@ -25,7 +25,7 @@
             <a href="/api/products/{{this._id}}">Ver más</a>
             {{#if (eq (getProperty ../user 'role') 'premium')}}
             <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
-            <a href="#" onclick="confirmDelete('{{this._id}}')" class="btn btn-danger">Eliminar</a>
+            <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
             {{/if}}
         </div>
         <br />
@@ -60,13 +60,6 @@
                 {{/if}}
     </div>
     {{/if}}
-    <script>
-        function confirmDelete(productId) {
-            if (confirm("¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.")) {
-                window.location.href = `/api/products/delete/${productId}`;
-            }
-        } 
-    </script>
 
     <form action="/api/sessions/logout" method="post">
         <button type="submit" class="btn btn-warning">Logout</button>

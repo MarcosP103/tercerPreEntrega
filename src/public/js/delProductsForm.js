@@ -4,25 +4,27 @@ document.getElementById('delProductsForm').addEventListener('submit', async func
     const pid = document.getElementById('pid').value;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/products/delete/${pid}`, {
+        const response = await fetch(`/api/products/${pid}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
+        
         if (!response.ok) {
-            throw new Error(`¡Error HTTP! estado: ${response.status}`);
-        }
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
         const result = await response.json();
         console.log('Respuesta del servidor:', result);
 
-        if (result.result === 'success') {
+        if (result.status === 'success') {
             Swal.fire({
                 icon: 'success',
                 title: 'Producto eliminado',
                 text: 'El producto se ha eliminado con éxito',
+            }).then(() => {
+                window.location.href = '/api/products';
             });
         } else {
             Swal.fire({
@@ -39,4 +41,4 @@ document.getElementById('delProductsForm').addEventListener('submit', async func
             text: `Hubo un error al eliminar el producto: ${error.message}`,
         });
     }
-})
+});

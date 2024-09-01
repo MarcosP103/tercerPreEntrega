@@ -52,11 +52,8 @@ router.get("/github", passport.authenticate("github", { scope: ["user:email"] })
 router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), githubCallback);
 
 // Edición de perfil
-router.get("/editprofile", (req, res) => res.render("editProfile"));
-router.post("/editprofile", editProfile);
-
-//router.get('/profile/edit', isAuthenticated, renderEditProfile);
-//router.post('/profile/edit', isAuthenticated, editProfile);
+router.get('/profile/edit', isAuthenticated, renderEditProfile);
+router.post('/profile/edit', isAuthenticated, editProfile);
 
 router.post('/premium/:uid', changeUserRole);
 router.put("/premium/:uid", changeUserRole);

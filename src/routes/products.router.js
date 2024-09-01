@@ -7,7 +7,8 @@ import {
   RenderAddProduct,
   UpdateProduct,
   RenderEditProduct,
-  DeleteProduct
+  DeleteProduct,
+  RenderDeleteProduct
 } from '../controllers/products.controller.js';
 
 const router = Router();
@@ -23,6 +24,7 @@ router.get('/:pid', GetProductById);
 router.get('/edit/:pid', RenderEditProduct)
 router.put('/:pid', UpdateProduct);
 
+router.get('/delete/:pid', RenderDeleteProduct);
 router.delete('/:pid', DeleteProduct);
 
 export default router;

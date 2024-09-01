@@ -62,6 +62,6 @@ export const updateProduct = async (id, productMod) => {
   } 
 };
 
-export const deleteProduct = async (id) => {
-  return await productManager.delProduct(id);
+export const deleteProduct = async (pid) => {
+  return await productManager.delProduct(pid);
 };

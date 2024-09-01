@@ -1,29 +1,27 @@
 <h2>Perfil de Usuario</h2>
-<p>Nombre: {{getProperty user 'first_name'}}</p>
-<p>Apellido: {{getProperty user 'last_name'}}</p>
-<p>Email: {{getProperty user 'email'}}</p>
-<p>Edad: {{getProperty user 'age'}}</p>
-<p>Rol actual: {{getProperty user 'role'}}</p>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item fs-6 p-2">Nombre: {{getProperty user 'first_name'}}</li>
+  <li class="list-group-item fs-6 p-2">Apellido: {{getProperty user 'last_name'}}</li>
+  <li class="list-group-item fs-6 p-2">Email: {{getProperty user 'email'}}</li>
+  <li class="list-group-item fs-6 p-2">Edad: {{getProperty user 'age'}}</li>
+  <li class="list-group-item fs-6 p-2">Rol actual: {{getProperty user 'role'}}</li>
+</ul>
 
-{{#if (eq (getProperty user 'role') 'premium')}}
-  <form action="/api/sessions/premium/{{getProperty user '_id'}}" method="POST">
-    <button type="submit">Cambiar a Usuario</button>
-  </form>
-{{else}}
+{{#if (eq (getProperty user 'role') 'user')}}
   <form action="/api/users/{{getProperty user '_id'}}/documents" method="GET">
-    <button type="submit">Cambiar a Premium</button>
+    <button type="submit" class="btn btn-warning" >Cambiar a Premium</button>
   </form>
 {{/if}}
 <br>
 
-<form action="/profile/editprofile" method="GET">
-    <button type="submit">Modificar Datos</button>
+<form action="/api/sessions/profile/edit" method="GET">
+    <button type="submit" class="btn btn-light">Modificar Datos</button>
 </form>
 <br>
 <form action="/" method="GET">
-    <button type="submit">Volver a Productos</button>
+    <button type="submit" class="btn btn-success">Volver a Productos</button>
 </form>
 <br>
 <form action="/api/sessions/logout" method="POST">
-    <button type="submit">Cerrar Sesión</button>
+    <button type="submit" class="btn btn-warning">Cerrar Sesión</button>
 </form>

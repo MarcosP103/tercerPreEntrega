@@ -159,12 +159,17 @@ export const editProfile = async (req, res) => {
 };
 
 export const renderEditProfile = async (req, res) => {
-  const user = await findUserById(req.user._id);
-  if (!user) {
-    return res.status(404).send("Usuario no encontrado");
+  try {
+    const user = await findUserById(req.user._id);
+    if (!user) {
+      return res.status(404).send("Usuario no encontrado");
+    }
+    res.render('editprofile', { user });
+  } catch (error) {
+    res.status(500).send(`Error al cargar el perfil para editar: ${error.message}`);
   }
-  res.render('editProfile', { user });
 };
+
 
 export const reqPassReset = async (req, res) => {
   const { email } = req.body
@@ -209,23 +214,6 @@ export const renderPasswordResetForm = async (req, res) => {
   }
 };
 
-export const changeUserRole = async (req, res) => {
-  const { uid } = req.params;
-  try {
-    const user = await findUserById(uid);
-
-    if (!user) {
-      return res.status(404).send("Usuario no encontrado");
-    }
-
-    user.role = user.role === 'premium' ? 'user' : 'premium';
-    await user.save();
-
-    res.render('changeRole', { message: `El rol del usuario ha sido cambiado a ${user.role}`});
-  } catch (error) {
-    res.status(500).send("Error al cambiar el rol del usuario");
-  }
-};
 //////////////////////////////////
 export const uploadDocuments = async (req, res) => {
   try {
@@ -240,7 +228,7 @@ export const uploadDocuments = async (req, res) => {
   }
 }
 
-/* export const changeUserRole = async (req, res) => {
+export const changeUserRole = async (req, res) => {
   const { uid } = req.params;
   try {
     const user = await findUserById(uid);
@@ -268,7 +256,7 @@ export const uploadDocuments = async (req, res) => {
   } catch (error) {
     res.status(500).send("Error al cambiar el rol del usuario");
   }
-}; */
+};
 
 export const renderUploadDocuments = async (req, res) => {
   const { uid } = req.params
