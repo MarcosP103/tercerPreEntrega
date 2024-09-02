@@ -116,3 +116,7 @@ export const mDocumentUpload = async (userId, files) => {
 
   return { message: 'Documentos subidos correctamente', documents: user.documents }
 }
+
+export const updateUser = async (id, updateData) => {
+  return await userService.findByIdAndUpdate(id, updateData, { new: true })
+}

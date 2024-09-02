@@ -15,7 +15,6 @@ import {
   reqPassReset,
   resPassword,
   renderPasswordResetForm,
-  changeUserRole,
   uploadDocuments,
   renderUploadDocuments
 } from "../../controllers/user.controller.js";
@@ -55,11 +54,7 @@ router.get("/githubcallback", passport.authenticate("github", { failureRedirect:
 router.get('/profile/edit', isAuthenticated, renderEditProfile);
 router.post('/profile/edit', isAuthenticated, editProfile);
 
-router.post('/premium/:uid', changeUserRole);
-router.put("/premium/:uid", changeUserRole);
-
 router.get('/:uid/documents', isAuthenticated, renderUploadDocuments);
 router.post('/:uid/documents', isAuthenticated, upload.array('documents', 10), uploadDocuments);
-
 
 export default router;

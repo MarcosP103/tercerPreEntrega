@@ -8,7 +8,7 @@
 </ul>
 
 {{#if (eq (getProperty user 'role') 'user')}}
-  <form action="/api/users/{{getProperty user '_id'}}/documents" method="GET">
+  <form action="/api/sessions/{{getProperty user '_id'}}/documents" method="GET">
     <button type="submit" class="btn btn-warning" >Cambiar a Premium</button>
   </form>
 {{/if}}
