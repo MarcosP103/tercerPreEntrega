@@ -13,49 +13,157 @@
 <body>
     <!-- Navbar -->
     <div class="nav">
-    <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-md">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="/assets/animal-footprint-svgrepo-comgreen.png" width="40px" alt="Logo de la tienda.">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
-                aria-labelledby="offcanvasDarkNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menú</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-center">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Categorias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="api/products">Ofertas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/profile">Mi perfil</a>
-                        </li>
-                    </ul>
-                    <div class="d-flex justify-content-center w-90">
-                        <form class="d-flex mx-auto" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
+        <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-md">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <img src="/assets/animal-footprint-svgrepo-comgreen.png" width="40px" alt="Logo de la tienda.">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                    aria-labelledby="offcanvasDarkNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menú</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-center">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categorías</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Casillas-Camas</a>
+                                    <a class="dropdown-item" href="#">Arnes-Collares-Correas</a>
+                                    <a class="dropdown-item" href="#">Comederos-Bebederos</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Proximamente...</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="api/products">Ofertas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/profile">Mi perfil</a>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-center w-90">
+                            <form id="searchForm" class="d-flex mx-auto" role="search">
+                                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search"
+                                    aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                        </div>
+                        <div id="searchResults" class="mt-4" style="display: none;">
+                            <h3 id="resultCount" class="mb-3"></h3>
+                            <ul id="resultList" class="list-group"></ul>
+                            <div class="mt-3">
+                                <button id="prevResult" class="btn btn-sm btn-secondary">Previous</button>
+                                <button id="nextResult" class="btn btn-sm btn-secondary">Next</button>
+                            </div>
+                        </div>
+                        <form class="d-flex ms-auto" role="search">
+                            <a href="/cartdet" class="btn btn-outline-success ms-auto">Mi carrito</a>
                         </form>
                     </div>
-                    <form class="d-flex ms-auto" role="search">
-                        <a href="/cartdet" class="btn btn-outline-success ms-auto">Mi carrito</a>
-                    </form>
                 </div>
             </div>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>
+    <!--cuadrobusqueda -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const resultCount = document.getElementById('resultCount');
+            const resultList = document.getElementById('resultList');
+            const prevResult = document.getElementById('prevResult');
+            const nextResult = document.getElementById('nextResult');
+            let currentResult = 0;
+
+            searchForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.toLowerCase();
+
+                // Limpiar resultados anteriores
+                resultList.innerHTML = '';
+
+                // Buscar coincidencias
+                const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+                let node;
+                let results = [];
+                while (node = walker.nextNode()) {
+                    const parent = node.parentNode;
+                    if (parent.nodeName !== 'SCRIPT' && parent.nodeName !== 'STYLE') {
+                        const content = node.textContent;
+                        const index = content.toLowerCase().indexOf(searchTerm);
+                        if (index >= 0) {
+                            const beforeContext = content.substring(Math.max(0, index - 30), index);
+                            const match = content.substring(index, index + searchTerm.length);
+                            const afterContext = content.substring(index + searchTerm.length, Math.min(content.length, index + searchTerm.length + 30));
+                            results.push({ beforeContext, match, afterContext, element: parent });
+                        }
+                    }
+                }
+
+                // Mostrar resultados
+                if (results.length > 0) {
+                    resultCount.textContent = `${results.length} result${results.length > 1 ? 's' : ''} found`;
+                    results.forEach((result, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.innerHTML = `
+                    ${result.beforeContext}<mark>${result.match}</mark>${result.afterContext}
+                `;
+                        li.addEventListener('click', () => {
+                            currentResult = index;
+                            scrollToResult(currentResult);
+                        });
+                        resultList.appendChild(li);
+                    });
+                    searchResults.style.display = 'block';
+                    currentResult = 0;
+                    scrollToResult(currentResult);
+                } else {
+                    resultCount.textContent = 'No results found';
+                    searchResults.style.display = 'block';
+                }
+            });
+
+            function scrollToResult(index) {
+                const results = resultList.children;
+                if (results[index]) {
+                    results[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    results[index].classList.add('active');
+                    Array.from(results).forEach((result, i) => {
+                        if (i !== index) result.classList.remove('active');
+                    });
+                    results[index].closest('.list-group-item').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            prevResult.addEventListener('click', function () {
+                const results = resultList.children;
+                if (results.length > 0) {
+                    currentResult = (currentResult - 1 + results.length) % results.length;
+                    scrollToResult(currentResult);
+                }
+            });
+
+            nextResult.addEventListener('click', function () {
+                const results = resultList.children;
+                if (results.length > 0) {
+                    currentResult = (currentResult + 1) % results.length;
+                    scrollToResult(currentResult);
+                }
+            });
+        });
+    </script>
+
 
     <!-- Main content -->
     {{{body}}}

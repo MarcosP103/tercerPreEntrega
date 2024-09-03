@@ -1,15 +1,25 @@
-<h2>Registro</h2>
-<form action="/api/sessions/register" method="POST">
-    <label for="first_name">Nombre:</label>
-    <input type="text" name="first_name" required>
-    <label for="last_name">Apellido:</label>
-    <input type="text" name="last_name" required>
-    <label for="email">Email:</label>
-    <input type="email" name="email" required>
-    <label for="age">Edad:</label>
-    <input type="number" name="age" required>
-    <label for="password">Contraseña:</label>
-    <input type="password" name="password" required>
-    <button type="submit">Registrarse</button>
-</form>
-<a href="/login">Iniciar sesión</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Registro</h2>
+    <form action="/api/sessions/register" method="POST">
+        <label for="first_name">Nombre:</label>
+        <input type="text" name="first_name" required>
+        <label for="last_name">Apellido:</label>
+        <input type="text" name="last_name" required>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <label for="age">Edad:</label>
+        <input type="number" name="age" required>
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" required>
+        <button type="submit" class="btn btn-success">Registrarse</button>
+    </form>
+</body>
+</html>

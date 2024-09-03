@@ -1,22 +1,37 @@
-<div class="container">
-    <h1>Eliminar producto</h1>
-    <form id="delProductsForm" method="POST">
-        <div class="form-group">
-            <label for="pid">ID del Producto:</label>
-            <input type="text" class="form-control" id="pid" name="pid" value="{{getProperty product '_id'}}" readonly>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-danger">Eliminar producto</button>
-        <a href="/" class="btn btn-secondary">Cancelar</a>
-    </form>
+<!DOCTYPE html>
+<html lang="en">
 
-    <script>
-        document.getElementById('delProductsForm').addEventListener('submit', function (event) {
-            if (!confirm("¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.")) {
-                event.preventDefault();
-            }
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/delProductsForm.js"></script>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eliminar producto</h1>
+        <form id="delProductsForm" method="POST">
+            <div class="form-group">
+                <label for="pid">ID del Producto:</label>
+                <input type="text" class="form-control" id="pid" name="pid" value="{{getProperty product '_id'}}"
+                    readonly>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-danger">Eliminar producto</button>
+            <a href="/" class="btn btn-secondary">Cancelar</a>
+        </form>
+
+        <script>
+            document.getElementById('delProductsForm').addEventListener('submit', function (event) {
+                if (!confirm("¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.")) {
+                    event.preventDefault();
+                }
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/js/delProductsForm.js"></script>
+    </div>
+
+</body>
+
+</html>

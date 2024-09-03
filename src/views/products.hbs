@@ -13,8 +13,7 @@
     {{#if (eq (getProperty user 'role') 'premium')}}
     <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
     {{/if}}
-
-    <h1>Lista de Productos</h1>
+    <h2>Lista de Productos</h2>
     {{#if products.length}}
     <div class="divproducts">
         {{#each products}}
@@ -61,10 +60,15 @@
     </div>
     {{/if}}
 
+    {{#if user}}
     <form action="/api/sessions/logout" method="post">
         <button type="submit" class="btn btn-warning">Logout</button>
     </form>
+    {{else}}
+    <a href="/login" class="btn btn-primary">Iniciar sesión</a>
+    {{/if}}
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
 </html>

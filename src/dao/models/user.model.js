@@ -14,7 +14,7 @@ const userCollection = "user";
 const userSchema = new mongoose.Schema({
   first_name: { type: String, max: 50 },
   last_name: { type: String, max: 50 },
-  email: { type: String, unique: true, index: true },
+  email: { type: String, unique: true, index: true, required: true },
   age: { type: Number, min: 18 },
   password: { type: String } ,
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },

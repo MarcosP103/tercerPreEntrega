@@ -7,38 +7,36 @@ import {
   requestPasswordReset,
   resetPassword, 
   validateResetToken,
-  mDocumentUpload
+  updateUser
 } from "../services/user.service.js";
 
 export const register = async (req, res, next) => {
-  //Elimina usuarios que se hayan creado con email:null para evitar conflictos
-  await userModel.deleteMany({ email: null });
-
   passport.authenticate("register", async (err, user, info) => {
     if (err) {
-      return next(err);
+      console.error('Error durante la autenticación:', err);
+      return res.status(500).send("Error durante el registro");
     }
     if (!user) {
       return res.redirect("/failregister");
     }
     try {
-      const newUser = await registerUser(user);
-      req.login(newUser, (err) =>{
+      req.login(user, (err) => {
         if (err) {
-          return res.status(500).send('Error al inciar sesion despues del registro')
+          console.error('Error al iniciar sesión después del registro:', err);
+          return res.status(500).send('Error al iniciar sesión después del registro');
         }
         req.user = {
-        first_name: newUser.first_name,
-        last_name: newUser.last_name,
-        email: newUser.email,
-        age: newUser.age,
-        role: newUser.role,
-        cart: newUser.cartId,
-      };
-      res.redirect('/login')
-      }) 
-    }catch (err) {
-      console.error('Error durante el registro:', err)
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          age: user.age,
+          role: user.role,
+          cart: user.cartId,
+        };
+        res.redirect('/login');
+      });
+    } catch (err) {
+      console.error('Error durante el registro:', err);
       res.status(500).send("Error al registrar al usuario");
     }
   })(req, res, next);
@@ -53,22 +51,18 @@ export const login = async (req, res, next) => {
       return res.redirect("/faillogin");
     }
     try {
-      
       req.login(user, async (err) => {
-        if(err) {
-          return res.status(500).send('Error al iniciar sesion.')
+        if (err) {
+          return res.status(500).send('Error al iniciar sesión.');
         }
-      })
-      const foundUser = await findUserById(user._id);
-      req.user = {
-        first_name: foundUser.first_name,
-        last_name: foundUser.last_name,
-        email: foundUser.email,
-        age: foundUser.age,
-        role: foundUser.role,
-        cart: foundUser.cartId,
-      };
-      res.redirect("/api/products");
+
+        await updateUser(user._id, { last_connection: new Date() });
+
+        console.log(`Usuario conectado: ${user.email}`);
+        console.log(`Última conexión: ${new Date().toISOString()}`);
+
+        res.redirect("/api/products");
+      });
     } catch (err) {
       res.status(500).send("Error al iniciar sesión");
     }
@@ -83,13 +77,28 @@ export const failLogin = (req, res) => {
   res.send({ error: "Login fallido" });
 };
 
-export const logout = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send("Error al cerrar sesión");
+export const logout = async (req, res) => {
+  try {
+    if (req.user) {
+      console.log(`Usuario desconectado: ${req.user.email}`);
+
+      await updateUser(req.user._id, { last_connection: new Date() });
+
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Error al destruir la sesión:", err);
+          return res.status(500).send("Error al cerrar sesión");
+        }
+        res.redirect("/login");
+      });
+    } else {
+      console.warn("Intento de cerrar sesión sin usuario autenticado");
+      res.redirect("/login");
     }
-    res.redirect("/login");
-  });
+  } catch (error) {
+    console.error("Error durante el proceso de logout:", error);
+    res.status(500).send("Error al cerrar sesión");
+  }
 };
 
 export const restorePassword = async (req, res) => {

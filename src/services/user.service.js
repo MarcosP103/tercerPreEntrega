@@ -4,11 +4,26 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 
 export const registerUser = async (userData) => {
-  const user = await userService.create({
-    ...userData,
-    password: createHash(userData.password),
-  });
-  return await userService.findById(user._id).populate("cartId");
+  if (!userData.email) {
+    throw new Error("El email es requerido");
+  }
+  try {
+    const existingUser = await userService.findOne({ email: userData.email });
+    if (existingUser) {
+      throw new Error("Ya existe un usuario con este email");
+    }
+
+    const user = await userService.create({
+      ...userData,
+      password: createHash(userData.password),
+    });
+    return await userService.findById(user._id).populate("cartId");
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new Error("Ya existe un usuario con este email");
+    }
+    throw error;
+  }
 };
 
 export const findUserById = async (userId) => {
@@ -22,13 +37,6 @@ export const findUserByEmail = async (email) => {
 export const updateUserPassword = async (user, newPassword) => {
   user.password = createHash(newPassword);
   await user.save();
-};
-
-export const createUser = async (userData) => {
-  return await userService.create({
-    ...userData,
-    password: createHash(userData.password),
-  });
 };
 
 export const requestPasswordReset = async (email) => {
@@ -113,10 +121,14 @@ export const mDocumentUpload = async (userId, files) => {
   }
   
   await user.save()
-
   return { message: 'Documentos subidos correctamente', documents: user.documents }
 }
 
-export const updateUser = async (id, updateData) => {
-  return await userService.findByIdAndUpdate(id, updateData, { new: true })
+export const updateUser = async (id, updateDate) => {
+  try {
+    const updateUser = await userService.findByIdAndUpdate(id, updateDate, { new: true })
+    return updateUser
+  } catch (error) {
+    throw new Error('Error al actualizar el usuario.')
+  }
 }

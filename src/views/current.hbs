@@ -1,8 +1,21 @@
-<h2>Perfil de Usuario</h2>
-<p>Nombre: {{user.first_name}}</p>
-<p>Apellido: {{user.last_name}}</p>
-<p>Email: {{user.email}}</p>
-<p>Edad: {{user.age}}</p>
-<form action="/api/sessions/logout" method="POST">
-    <button type="submit">Cerrar Sesión</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Perfil de Usuario</h2>
+    <p>Nombre: {{user.first_name}}</p>
+    <p>Apellido: {{user.last_name}}</p>
+    <p>Email: {{user.email}}</p>
+    <p>Edad: {{user.age}}</p>
+    <form action="/api/sessions/logout" method="POST">
+        <button type="submit">Cerrar Sesión</button>
+    </form>
+</body>
+
+</html>

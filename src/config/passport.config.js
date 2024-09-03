@@ -51,16 +51,18 @@ const initializePassport = () => {
   passport.use("register", new LocalStrategy({ passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
+        
         try {
-          console.log(` usuario con email: ${username}`);
+          if (!email) {
+            console.log("El email es requerido");
+            return done(null, false, { message: "El email es requerido" });
+          }
 
           let user = await userService.findOne({ email });
           if (user) {
             console.log("El usuario ya existe");
             return done(null, false, { message: "El usuario ya existe" });
-          }
-          /* const role = username.includes("@premium") ? "premium" : "user"; */
-  
+          }  
           const newUser = new userService({
             first_name,
             last_name,
