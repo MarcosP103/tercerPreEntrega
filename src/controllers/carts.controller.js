@@ -22,10 +22,6 @@ import {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
 
-    console.log('CID:', cid);
-    console.log('PID:', pid);
-    console.log('Quantity:', quantity);
-
     try {
         const cart = await addProductToCart(cid, pid, quantity);
         res.status(201).json({ payload: cart });
@@ -38,8 +34,12 @@ import {
     const { cid } = req.params;
   
     try {
-      const cart = await getCartById(cid).lean()
-      res.render("cartDet", { cart });
+      console.log('Fetching cart with ID:', cid);
+      const cart = await getCartById(cid)
+      if (!cart) {
+        return res.render("cartDet", { cart: { products: [] } });
+      }
+      res.render("cartDet", { cart: cart });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

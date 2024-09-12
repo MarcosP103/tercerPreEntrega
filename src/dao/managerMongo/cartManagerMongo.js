@@ -3,14 +3,17 @@ import productModel from '../models/products.model.js'
 import userModel from '../models/user.model.js'
 import { sendProductAdded } from '../../services/mail.service.js'
 
-
 class CartManagerMongoose {
-    async createCart() {
+    async createCart(userId) {
         try {
-            const newCart = new cartModel({ products: [] })
-            await newCart.save()
-            console.log("Carrito crado correctamente")
-            return newCart
+            const newCart = new cartModel({
+                user: userId,
+                products: [],
+                createdAt: new Date()
+            })
+            const savedCart = await newCart.save()
+            console.log("Carrito crado correctamente. ID: ", savedCart._id)
+            return savedCart
         } catch (error) {
             console.error("Error al crear el carrito: ", error)
             throw error
@@ -41,7 +44,7 @@ class CartManagerMongoose {
             await cart.save()
             console.log("Producto agregado al carrito correctamente")
 
-            const user = await userModel.findOne({ cid: cart._id })
+            const user = await userModel.findOne({ _id: cart.user })
 
             if (user) {
                 await sendProductAdded(user.email, {
@@ -61,14 +64,14 @@ class CartManagerMongoose {
 
     async getCartById(cid) {
         try {
-            const cart = await cartModel.findById(cid).populate("products.pid").lean()
+            const cart = await cartModel.findById(cid).populate("products.productId").lean()
             if (!cart) {
                 console.error("Carrito no encontrado por ID: ", cid)
                 return null
             }
             return cart
         } catch (error) {
-            console.error("Error al obtener el carrito por ID: ". error)
+            console.error("Error al obtener el carrito por ID: ", error)
             throw error
         }
     }
@@ -99,7 +102,7 @@ class CartManagerMongoose {
                 return null
             }
 
-            const productInCart = cart.products.find((item) => item.pid.equals(pid))
+            const productInCart = cart.products.find((item) => item.productId.equals(pid));
             if (!productInCart) {
                 console.error("Producto no encontrado en el carrito: ", pid)
                 return null
@@ -123,7 +126,7 @@ class CartManagerMongoose {
                 return null
             }
 
-            cart.products = cart.products.filter((item) => !item.pid.equals(pid))
+            cart.products = cart.products.filter((item) => !item.productId.equals(pid))
             await cart.save()
             console.log("Producto eliminado del carrito correctamente")
             return cart

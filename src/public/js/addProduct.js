@@ -1,6 +1,6 @@
-async function addToCart(cid, pid) {
+async function addToCart(cid, pid, quantity = 1) {
     const url = `http://localhost:8080/api/carts/${cid}/products/${pid}`;
-    console.log(`Adding to cart: ${cid}, product: ${pid}`); 
+    console.log(`Adding to cart: ${cid}, product: ${pid}, quantity: ${quantity}`); 
 
     try {
         const response = await fetch(url, {
@@ -8,7 +8,7 @@ async function addToCart(cid, pid) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ quantity: 1 })
+            body: JSON.stringify({ quantity })
         });
 
         if (response.ok) {
