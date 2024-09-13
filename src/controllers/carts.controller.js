@@ -6,6 +6,7 @@ import {
     updateProductQuantity,
     removeProductFromCart,
     clearCart,
+    purchaseCart
   } from "../services/carts.service.js";
   
   export const createCartF = async (req, res) => {
@@ -90,4 +91,17 @@ import {
       res.status(500).json({ error: error.message });
     }
   };
+
+  export const purchaseF = async (req, res) => {
+    const { cid } = req.params
+    try {
+      const productsNotProcessed = await purchaseCart(cid)
+      res.status(200).json ({
+        message: "Compra realizada con éxito.",
+        productsNotProcessed
+      })
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
   

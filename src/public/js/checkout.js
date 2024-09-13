@@ -5,15 +5,21 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch(`/api/carts/${cartId}/purchase`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
-            if (response.ok) {
-                window.location.href = '/checkout-confirmation';
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Compra finalizada con éxito. Ticket generado.');
+                window.location.reload();
             } else {
-                console.error("Error al finalizar la compra.");
+                alert('Error al finalizar la compra: ' + result.message);
             }
         } catch (error) {
-            console.error("Error en la solicitud:", error);
+            alert('Error en la compra: ' + error.message);
         }
     });
 });

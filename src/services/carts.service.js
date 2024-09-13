@@ -1,8 +1,10 @@
 import CartManagerMongoose from "../dao/managerMongo/cartManagerMongo.js";
 import cartsModel from "../dao/models/carts.model.js";
 import productModel from "../dao/models/products.model.js";
+import userModel from "../dao/models/user.model.js";
 import TicketService from "./ticket.service.js";
 import { v4 as uuidv4 } from "uuid";
+import { sendPurchaseConfirm } from "./mail.service.js";
 
 const cartManager = new CartManagerMongoose();
 const ticketService = new TicketService();
@@ -42,15 +44,18 @@ export const addProductToCart = async (cid, pid, quantity) => {
 
 export const getCartById = async (cid) => {
   try {
-    const cart = await cartsModel.findById(cid).populate({
-      path: "products.productId",
-      model: "product"
-    }).lean();
-    
-    console.log('Cart from service:', JSON.stringify(cart, null, 2));
+    const cart = await cartsModel
+      .findById(cid)
+      .populate({
+        path: "products.productId",
+        model: "product",
+      })
+      .lean();
+
+    console.log("Cart from service:", JSON.stringify(cart, null, 2));
     return cart;
   } catch (error) {
-    console.error('Error in getCartById:', error);
+    console.error("Error in getCartById:", error);
     throw new Error("Error al obtener el carrito");
   }
 };
@@ -96,42 +101,60 @@ export const clearCart = async (cid) => {
 };
 
 export const purchaseCart = async (cid) => {
-  const cart = await getCartById(cid);
-  if (!cart) {
-    throw new Error("Carrito no encontrado.");
-  }
-
-  const productsToPurchase = cart.products;
-  const productsNotProcessed = [];
-  let totalAmount = 0;
-
-  for (let item of productsToPurchase) {
-    const product = await productModel.findById(item.productId);
-
-    if (product.stock >= item.quantity) {
-      product.stock -= item.quantity;
-      await product.save();
-      totalAmount += product.price * item.quantity;
-    } else {
-      productsNotProcessed.push(item.productId);
+  try {
+    const cart = await getCartById(cid);
+    if (!cart) {
+      throw new Error("Carrito no encontrado.");
     }
+
+    const user = await userModel.findById(cart.user); 
+  if (!user || !user.email) {
+    throw new Error("Usuario no encontrado o sin email.");
   }
 
-  if (totalAmount > 0) {
-    await ticketService.createTicket({
-      code: uuidv4().replace(/-/g, ""),
-      amount: totalAmount,
-      purchaser: cart.user.email,
-      products: cart.products.filter(
-        (item) => !productsNotProcessed.includes(item.productId)
-      ),
-    });
+    console.log("Cart from service:", cart);
+
+    const productsToPurchase = cart.products;
+    const productsNotProcessed = [];
+    let totalAmount = 0;
+
+    for (let item of productsToPurchase) {
+      const product = await productModel.findById(item.productId);
+
+      if (product.stock >= item.quantity) {
+        product.stock -= item.quantity;
+        await product.save();
+        totalAmount += product.price * item.quantity;
+      } else {
+        productsNotProcessed.push(item.productId);
+      }
+    }
+
+    console.log("Total amount:", totalAmount);
+
+    if (totalAmount > 0) {
+      const ticket = await ticketService.createTicket({
+        code: uuidv4().replace(/-/g, ""),
+        amount: totalAmount,
+        purchaser: user.email,
+        products: cart.products.filter(
+          (item) => !productsNotProcessed.includes(item.productId)
+        ),
+      });
+
+      console.log("Ticket created:", ticket);
+
+      await sendPurchaseConfirm(cart.user.email, ticket);
+    }
+
+    cart.products = cart.products.filter((item) =>
+      productsNotProcessed.includes(item.productId)
+    );
+    await updateCart(cid, cart.products);
+
+    return productsNotProcessed;
+  } catch (error) {
+    console.error("Error during purchase:", error.message);
+    throw error;
   }
-
-  cart.products = cart.products.filter((item) =>
-    productsNotProcessed.includes(item.productId)
-  );
-  await updateCart(cid, cart.products);
-
-  return productsNotProcessed;
 };

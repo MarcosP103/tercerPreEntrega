@@ -7,6 +7,7 @@ import {
     updateProductQuantityF,
     removeProductFromCartF,
     clearCartF,
+    purchaseF
 } from "../controllers/carts.controller.js";
 import { purchaseCart } from "../services/carts.service.js";
 
@@ -27,15 +28,7 @@ router.delete("/:cid/products/:pid", removeProductFromCartF);
 
 router.delete("/:cid", clearCartF);
 
-router.post("/:cid/purchase", async (req, res) => {
-    const { cid } = req.params
-    try {
-        const productsNotProcessed = await purchaseCart(cid)
-        res.status(200).json({ message: "Compra realizada con exito", productsNotProcessed})
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-})
+router.post("/:cid/purchase", purchaseF)
 
 export default router;
 

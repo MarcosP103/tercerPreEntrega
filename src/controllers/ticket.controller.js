@@ -3,12 +3,13 @@ import TicketService from "../services/ticket.service.js";
 const ticketService = new TicketService();
 
 export const createTicket = async (req, res) => {
-    const { amount, purchaser } = req.body;
+    const { amount, purchaser, products } = req.body;
 
     try {
         const newTicket = {
             amount,
-            purchaser
+            purchaser,
+            products
         };
 
         const savedTicket = await ticketService.createTicket(newTicket);
