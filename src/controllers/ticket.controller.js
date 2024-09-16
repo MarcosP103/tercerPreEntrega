@@ -9,19 +9,20 @@ export const createTicket = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
-    const purchaser = user.email
-    const { products } = req.body
+
+    const purchaser = user.email;
+    const { products } = req.body;
 
     if (!Array.isArray(products) || products.length === 0) {
-        return res.status(400).json({ error: "Debe proporcionar un arreglo de productos no vacío" });
-      }
+      return res.status(400).json({ error: "Debe proporcionar un arreglo de productos no vacío" });
+    }
 
     const amount = products.reduce((total, item) => {
-        if (typeof item.price !== 'number' || typeof item.quantity !== 'number') {
-            throw new Error("Precio y cantidad deben ser números");
-          }
-        return total + item.price * item.quantity
-    }, 0)
+      if (typeof item.price !== 'number' || typeof item.quantity !== 'number') {
+        return res.status(400).json({ error: "Precio y cantidad deben ser números" });
+      }
+      return total + item.price * item.quantity;
+    }, 0);
 
     const newTicket = {
       amount,
