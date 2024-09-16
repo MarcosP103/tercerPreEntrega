@@ -116,7 +116,7 @@ export const mDocumentUpload = async (userId, files) => {
     })
   });
 
-  if (user.documents.lenght >= 3) {
+  if (user.documents.length >= 3) {
     user.role = 'premium'
   }
   

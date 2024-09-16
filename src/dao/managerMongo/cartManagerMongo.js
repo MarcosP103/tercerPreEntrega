@@ -78,21 +78,23 @@ class CartManagerMongoose {
 
     async updateCart(cid, products) {
         try {
-            const cart = await cartModel.findById(cid)
+            const cart = await cartModel.findById(cid);
             if (!cart) {
-                console.error("Carrito no encontrado por ID: ", cid)
-                return null
+                console.error("Carrito no encontrado por ID: ", cid);
+                return null;
             }
-
-            cart.products = products
-            await cart.save()
-            console.log("Carrito actualizado correctamente")
-            return cart
+    
+            cart.products = products; 
+            await cart.save();
+    
+            console.log("Carrito actualizado correctamente");
+            return cart;
         } catch (error) {
-            console.error("Error al actualizar el carrito: ", error)
-            throw error
+            console.error("Error al actualizar el carrito: ", error);
+            throw error;
         }
     }
+    
 
     async updateProductQuantity(cid, pid, quantity) {
         try {
@@ -107,7 +109,6 @@ class CartManagerMongoose {
                 console.error("Producto no encontrado en el carrito: ", pid)
                 return null
             }
-
             productInCart.quantity = quantity
             await cart.save()
             console.log("Cantidad del producto actualizada correctamente")

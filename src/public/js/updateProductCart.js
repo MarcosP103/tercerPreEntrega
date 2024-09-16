@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const formData = new FormData(this);
             const quantity = formData.get('quantity');
             const productId = this.id.split('-')[1]; 
-            const cartId = document.getElementById('cart-id').value;
+            const cartId = document.getElementById('cartId').value;
 
             try {
                 const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {

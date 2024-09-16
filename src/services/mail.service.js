@@ -37,12 +37,12 @@ export const sendPurchaseConfirm = async (userEmail, ticket) => {
         <div>
             <h1>Gracias por tu compra</h1>
             <p>Hemos procesado tu pedido con éxito.</p>
-            <p><strong>Ticket Id:</strong> $${ticket.code}</p>
-            <p><strong>Total pagado:</strong> $${ticket.amount}</p>
+            <p><strong>Ticket Id:</strong> ${ticket.code}</p>
+            <p><strong>Total pagado:</strong> ${ticket.amount.toFixed(2)}</p>
             <p><strong>Productos:</strong></p>
             <ul>
                 ${ticket.products.map(item => `
-                    <li>${item.productId.title} - Cantidad: ${item.quantity}</li>
+                    <li>${item.title} - Cantidad: ${item.quantity} - Precio: $${item.price.toFixed(2)}</li>
                 `).join('')}
             </ul>
             <p>Gracias por tu preferencia.</p>

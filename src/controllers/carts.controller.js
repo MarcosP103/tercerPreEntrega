@@ -93,15 +93,26 @@ import {
   };
 
   export const purchaseF = async (req, res) => {
-    const { cid } = req.params
     try {
-      const productsNotProcessed = await purchaseCart(cid)
-      res.status(200).json ({
-        message: "Compra realizada con éxito.",
-        productsNotProcessed
-      })
+      console.log("Request params:", req.params);
+      console.log("Request body:", req.body);
+      
+      const { cid } = req.params;
+      const { products } = req.body;
+  
+      if (!cid) {
+        return res.status(400).json({ success: false, message: "ID de carrito no proporcionado" });
+      }
+  
+      if (!Array.isArray(products) || products.length === 0) {
+        return res.status(400).json({ success: false, message: "Debe proporcionar un arreglo de productos no vacío" });
+      }
+  
+      const result = await purchaseCart(cid, products);
+      return res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ error: error.message })
+      console.error("Error en purchaseF:", error);
+      res.status(500).json({ success: false, error: error.message });
     }
-  }
+  };
   

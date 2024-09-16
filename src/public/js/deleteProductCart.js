@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const productId = this.querySelector('input[name="productId"]').value;
-            const cartId = document.getElementById('cart-id').value;
+            const cartId = document.getElementById('cartId').value;
 
             try {
                 const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {

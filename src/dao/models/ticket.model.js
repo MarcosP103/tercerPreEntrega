@@ -22,10 +22,10 @@ const ticketSchema = new mongoose.Schema({
         required: true,
     },
     products: [{
-        product: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
-        quantity: {
-            type: Number
-        }
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'product', required: true },
+        title: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, required: true }
     }]
 }, { timestamps: true });
 

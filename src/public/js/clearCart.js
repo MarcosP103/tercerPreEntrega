@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('clearCartButton').addEventListener('click', async function () {
-        const cartId = document.getElementById('cart-id').value;
+        const cartId = document.getElementById('cartId').value;
 
         try {
             const response = await fetch(`/api/carts/${cartId}/clear`, {

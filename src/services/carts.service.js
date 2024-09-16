@@ -1,10 +1,10 @@
 import CartManagerMongoose from "../dao/managerMongo/cartManagerMongo.js";
 import cartsModel from "../dao/models/carts.model.js";
-import productModel from "../dao/models/products.model.js";
-import userModel from "../dao/models/user.model.js";
+import { findUserById } from "../services/user.service.js"
 import TicketService from "./ticket.service.js";
 import { v4 as uuidv4 } from "uuid";
 import { sendPurchaseConfirm } from "./mail.service.js";
+import mongoose from "mongoose";
 
 const cartManager = new CartManagerMongoose();
 const ticketService = new TicketService();
@@ -60,14 +60,28 @@ export const getCartById = async (cid) => {
   }
 };
 
-export const updateCart = async (cid, products) => {
-  if (!Array.isArray(products) || products.length === 0) {
-    throw new Error("Debe ser un arreglo de productos");
-  }
+export const updateCart = async (cid, updatedCart) => {
   try {
-    return await cartManager.updateCart(cid, products);
+    console.log('Updating cart:', cid);
+    console.log('Updated cart data:', JSON.stringify(updatedCart, null, 2));
+
+    if (!updatedCart || !Array.isArray(updatedCart.products)) {
+      throw new Error("Debe ser un arreglo de productos");
+    }
+
+    const transformedProducts = updatedCart.products.map(product => ({
+      productId: product.product,
+      quantity: product.quantity
+    }));
+
+    const cartToUpdate = { products: transformedProducts };
+
+    const result = await cartManager.updateCart(cid, cartToUpdate);
+    console.log('Cart updated successfully:', result);
+    return result;
   } catch (error) {
-    throw new Error("Error al actualizar el carrito");
+    console.error('Error updating cart:', error);
+    throw new Error(`Error al actualizar el carrito: ${error.message}`);
   }
 };
 
@@ -100,61 +114,99 @@ export const clearCart = async (cid) => {
   }
 };
 
-export const purchaseCart = async (cid) => {
+export const purchaseCart = async (cid, productsFromClient) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const cart = await getCartById(cid);
     if (!cart) {
       throw new Error("Carrito no encontrado.");
     }
 
-    const user = await userModel.findById(cart.user); 
-  if (!user || !user.email) {
-    throw new Error("Usuario no encontrado o sin email.");
-  }
+    if (!Array.isArray(productsFromClient) || productsFromClient.length === 0) {
+      throw new Error("No se proporcionaron productos para la compra.");
+    }
 
-    console.log("Cart from service:", cart);
+    const user = await findUserById(cart.user);
+    if (!user || !user.email) {
+      throw new Error("Usuario no encontrado o sin email.");
+    }
 
-    const productsToPurchase = cart.products;
+    console.log("Products from client:", JSON.stringify(productsFromClient, null, 2));
+
     const productsNotProcessed = [];
     let totalAmount = 0;
+    const ticketProducts = [];
 
-    for (let item of productsToPurchase) {
-      const product = await productModel.findById(item.productId);
-
-      if (product.stock >= item.quantity) {
-        product.stock -= item.quantity;
-        await product.save();
-        totalAmount += product.price * item.quantity;
-      } else {
-        productsNotProcessed.push(item.productId);
+    for (let clientProduct of productsFromClient) {
+      const cartProduct = cart.products.find(p => p.productId._id.toString() === clientProduct.product);
+      if (!cartProduct) {
+        productsNotProcessed.push({ id: clientProduct.product, reason: "No encontrado en el carrito" });
+        continue;
       }
+
+      const product = cartProduct.productId;
+      if (!product) {
+        productsNotProcessed.push({ id: clientProduct.product, reason: "Producto no encontrado en la base de datos" });
+        continue;
+      }
+
+      if (product.stock < clientProduct.quantity) {
+        productsNotProcessed.push({ id: clientProduct.product, reason: "Stock insuficiente" });
+        continue;
+      }
+
+      product.stock -= clientProduct.quantity;
+      await cartsModel.findOneAndUpdate(
+        { _id: product._id },
+        { $set: { stock: product.stock } },
+        { session }
+      );
+      totalAmount += product.price * clientProduct.quantity;
+      ticketProducts.push({
+        product: product._id,
+        title: product.title,
+        quantity: clientProduct.quantity,
+        price: product.price
+      });
     }
 
     console.log("Total amount:", totalAmount);
 
-    if (totalAmount > 0) {
-      const ticket = await ticketService.createTicket({
+    let ticket = null;
+    if (totalAmount > 0 && ticketProducts.length > 0) {
+      ticket = await ticketService.createTicket({
         code: uuidv4().replace(/-/g, ""),
         amount: totalAmount,
         purchaser: user.email,
-        products: cart.products.filter(
-          (item) => !productsNotProcessed.includes(item.productId)
-        ),
-      });
+        products: ticketProducts,
+      }, { session });
 
-      console.log("Ticket created:", ticket);
+      console.log("Ticket created:", JSON.stringify(ticket, null, 2));
 
-      await sendPurchaseConfirm(cart.user.email, ticket);
+      await sendPurchaseConfirm(user.email, ticket);
     }
 
-    cart.products = cart.products.filter((item) =>
-      productsNotProcessed.includes(item.productId)
+    const updatedCartProducts = cart.products.filter((item) =>
+      !productsNotProcessed.some(p => p.id === item.productId._id.toString())
     );
-    await updateCart(cid, cart.products);
+    await updateCart(cid, { products: updatedCartProducts });
 
-    return productsNotProcessed;
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      success: true,
+      message: "Compra realizada con éxito",
+      ticket,
+      productsNotProcessed
+    };
   } catch (error) {
-    console.error("Error during purchase:", error.message);
-    throw error;
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error en purchaseCart:", error);
+    throw new Error(`Error al procesar la compra: ${error.message}`);
   }
 };
+
