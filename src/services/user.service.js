@@ -132,3 +132,19 @@ export const updateUser = async (id, updateDate) => {
     throw new Error('Error al actualizar el usuario.')
   }
 }
+
+export const getAllUsers = async () => {
+  try {
+    return await userService.find( {}, 'first_name last_name email role')
+  } catch (error) {
+    throw new Error('Error al obtener los usuarios.')
+  }
+}
+
+export const deleteUserById = async () => {
+  try {
+    return await userService.findByIdAndDelete(id)
+  } catch (error) {
+    throw new Error('Error al eliminar el usuario.')
+  }
+}

@@ -10,7 +10,7 @@
 <body>
   <h2>Subir Documentos para Cambiar a Premium</h2>
 
-  <form action="/api/sessions/{{getProperty user '_id'}}/documents" method="POST" enctype="multipart/form-data">
+  <form action="/api/users/{{getProperty user '_id'}}/documents" method="POST" enctype="multipart/form-data">
     <label for="document1">Documento de identidad(DNI):</label>
     <input type="file" class="btn btn-light" name="documents" required>
     <br>

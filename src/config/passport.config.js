@@ -11,7 +11,7 @@ const initializePassport = () => {
   passport.use("github", new GitHubStrategy({
         clientID: "Iv23liSYHTwwlrcbPS9c",
         clientSecret: "8ed53d3b958654e51a1a38e29199f257400ce30f",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+        callbackURL: "http://localhost:8080/api/users/githubcallback",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -20,7 +20,7 @@ const initializePassport = () => {
 
           if (!user) {
             const firstName = profile._json.name || profile.username;
-            const role = email.includes("@premium") ? "premium" : "user";
+            const role = email.includes("@admin") ? "admin" : "user";
 
             const newCart = new cartsModel({ products: [] })
             await newCart.save()
@@ -69,7 +69,7 @@ const initializePassport = () => {
             email,
             age,
             password: createHash(password),
-            role: email.includes("@premium") ? "premium" : "user",
+            role: email.includes("@admin") ? "admin" : "user",
           });
   
           await newUser.save()

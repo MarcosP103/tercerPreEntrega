@@ -16,10 +16,12 @@ import {
   resPassword,
   renderPasswordResetForm,
   uploadDocuments,
-  renderUploadDocuments
+  renderUploadDocuments,
+  renderUserList,
+  deleteUserF
 } from "../../controllers/user.controller.js";
 import upload from "../../middleware/multer.js"
-import { isAuthenticated } from "../../middleware/auth.js"
+import { isAuthenticated, isAdmin } from "../../middleware/auth.js"
 
 const router = Router();
 initializePassport();
@@ -56,5 +58,8 @@ router.post('/profile/edit', isAuthenticated, editProfile);
 
 router.get('/:uid/documents', isAuthenticated, renderUploadDocuments);
 router.post('/:uid/documents', isAuthenticated, upload.array('documents', 10), uploadDocuments);
+
+router.get('/users', isAdmin, renderUserList)
+router.delete('/users/:id', isAdmin, deleteUserF)
 
 export default router;

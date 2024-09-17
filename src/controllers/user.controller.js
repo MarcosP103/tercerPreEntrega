@@ -1,13 +1,14 @@
 import passport from "passport";
 import {
-  registerUser,
   findUserById,
   findUserByEmail,
   updateUserPassword,
   requestPasswordReset,
   resetPassword, 
   validateResetToken,
-  updateUser
+  updateUser,
+  getAllUsers,
+  deleteUserById
 } from "../services/user.service.js";
 
 export const register = async (req, res, next) => {
@@ -184,7 +185,7 @@ export const reqPassReset = async (req, res) => {
 
   try {
     await requestPasswordReset(email)
-    res.redirect("/api/sessions/passwordResetSent")
+    res.redirect("/api/users/passwordResetSent")
   } catch (error) {
     res.status(500).send(error.message)
   }
@@ -264,5 +265,43 @@ export const uploadDocuments = async (req, res) => {
     res.render('changeRole', { user });
   } catch (error) {
     res.status(500).json({ message: 'Error al subir los documentos', error });
+  }
+}
+
+export const renderUserList = async (req, res) => {
+  try {
+    const users = await getAllUsersF()
+    res.render("takeUsers", { users })
+  } catch (error) {
+    res.status(500).json( "Error al cargar la lista de usuarios.")
+  }
+}
+
+export const getAllUsersF = async (req, res) => {
+  try {
+    const users = await getAllUsers()
+    const usersData = users.map(user => ({
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
+      role: user.role
+    }))
+
+    res.status(200).json(usersData)
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener los usuarios.", error })
+  }
+}
+
+export const deleteUserF = async (req, res) => {
+  try {
+    const userId = req.params.id
+    const user = await deleteUserById(userId)
+
+    if(!user) {
+      return res.status(404).json({ message: "Usuario no encontrado."})
+    }
+    res.status(200).json({ message: "Usuario eliminado correctamente."})
+  } catch (error) {
+    res.status(500).json({ message: "Error al eliminar el usuario.", error })
   }
 }

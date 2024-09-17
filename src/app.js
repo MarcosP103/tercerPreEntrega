@@ -6,7 +6,7 @@ import { engine } from "express-handlebars";
 import MongoStore from "connect-mongo";
 import dotenv from "dotenv"
 import connectDB from "./config/db.js";
-import sessionsRouter from './routes/api/sessions.js'
+import usersRouter from './routes/api/users.js'
 import viewsRouter from './routes/views.router.js'
 import indexRouter from "./routes/index.router.js";
 import productsRouter from "./routes/products.router.js";
@@ -20,7 +20,7 @@ import mailRouter from "./routes/api/mail.router.js"
 import loggerRoutes from "./routes/api/loggerW.routes.js";
 import chatRouter from "./routes/chat.router.js"
 import { setupSwaggerDocs } from "./config/swagger.config.js";
-import { eq, getProperty } from "./utils/helpers.js"
+import { eq, getProperty, isAdmin, or } from "./utils/helpers.js"
 /* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
@@ -76,7 +76,7 @@ app.use(passport.session())
 app.engine('hbs', engine({
   extname: '.hbs',
   defaultLayout: 'main',
-  helpers: { eq, getProperty }
+  helpers: { eq, getProperty, isAdmin, or }
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -85,7 +85,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Routes
 app.use("/", indexRouter);
 app.use("/", viewsRouter)
-app.use('/api/sessions', sessionsRouter);
+app.use('/api/users', usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/mail", mailRouter)

@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, min: 18 },
   password: { type: String } ,
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
-  role: { type: String, enum: ['premium', 'user'], default: 'user'},
+  role: { type: String, enum: [ 'admin', 'premium', 'user'], default: 'user'},
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   documents: [documentSchema],

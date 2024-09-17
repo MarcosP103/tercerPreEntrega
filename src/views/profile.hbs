@@ -18,13 +18,13 @@
   </ul>
 
   {{#if (eq (getProperty user 'role') 'user')}}
-  <form action="/api/sessions/{{getProperty user '_id'}}/documents" method="GET">
+  <form action="/api/users/{{getProperty user '_id'}}/documents" method="GET">
     <button type="submit" class="btn btn-warning">Cambiar a Premium</button>
   </form>
   {{/if}}
   <br>
 
-  <form action="/api/sessions/profile/edit" method="GET">
+  <form action="/api/users/profile/edit" method="GET">
     <button type="submit" class="btn btn-light">Modificar Datos</button>
   </form>
   <br>
@@ -32,7 +32,7 @@
     <button type="submit" class="btn btn-success">Volver a Productos</button>
   </form>
   <br>
-  <form action="/api/sessions/logout" method="POST">
+  <form action="/api/users/logout" method="POST">
     <button type="submit" class="btn btn-warning">Cerrar Sesión</button>
   </form>
 

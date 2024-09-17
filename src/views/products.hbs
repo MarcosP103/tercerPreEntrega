@@ -10,8 +10,11 @@
 
 <body>
     <h1>Bienvenido, {{userName}}</h1>
-    {{#if (eq (getProperty user 'role') 'premium')}}
+    {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
     <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
+    {{/if}}
+    {{#if (eq (getProperty user 'role') 'admin')}}
+    <a href="/api/users" class="btn btn-primary">Usuarios</a>
     {{/if}}
     <h2>Lista de Productos</h2>
     {{#if products.length}}
@@ -61,7 +64,7 @@
     {{/if}}
 
     {{#if user}}
-    <form action="/api/sessions/logout" method="post">
+    <form action="/api/users/logout" method="post">
         <button type="submit" class="btn btn-warning">Logout</button>
     </form>
     {{else}}

@@ -28,3 +28,11 @@ export const isUser = (req, res, next) => {
         res.status(403).json({ message: 'Acceso denegado: Solo los usuarios pueden realizar esta acción.' });
     }
 }
+
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        return next();
+    } else {
+        res.status(403).send('Acceso denegado: solo los administradores pueden acceder a esta página.');
+    }
+};
