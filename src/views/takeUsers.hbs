@@ -1,28 +1,28 @@
-<h1>Gestión de Usuarios</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Usuarios</title>
+</head>
+
+<body>
+  <h1>Lista de Usuarios</h1>
+  {{#if users.length}}
+  <ul>
     {{#each users}}
-    <tr>
-      <td>{{this.first_name}} {{this.last_name}}</td>
-      <td>{{this.email}}</td>
-      <td>{{this.role}}</td>
-      <td>
-        <form action="/api/users/users/{{this._id}}" method="POST">
-          <input type="hidden" name="_method" value="DELETE" />
-          <button type="submit" onclick="return confirm('¿Seguro que deseas eliminar a este usuario?');">
-            Eliminar
-          </button>
-        </form>
-      </td>
-    </tr>
+    <li id="user-{{this._id}}">
+      <span>{{this.first_name}} {{this.last_name}} ({{this.email}})</span>
+      <button class="delete-user-button" data-user-id="{{this._id}}">Eliminar</button>
+    </li>
+    <br>
     {{/each}}
-  </tbody>
-</table>
+  </ul>
+  {{else}}
+  <p>No hay usuarios</p>
+  {{/if}}
+
+  <script src="/js/userActions.js"></script>
+</body>
+
+</html>

@@ -1,3 +1,4 @@
+import userModel from "../dao/models/user.model.js";
 import userService from "../dao/models/user.model.js";
 import { createHash, isSamePassword } from "../utils.js";
 import crypto from "crypto";
@@ -141,10 +142,14 @@ export const getAllUsers = async () => {
   }
 }
 
-export const deleteUserById = async () => {
+export const deleteUserById = async (id) => {
   try {
-    return await userService.findByIdAndDelete(id)
+    const deleteUser = await userModel.findByIdAndDelete(id)
+    if(!deleteUser) {
+      throw new Error("Usuario no encontrado.")
+    }
+    return deleteUser;
   } catch (error) {
-    throw new Error('Error al eliminar el usuario.')
+    throw new Error('Error al eliminar el usuario.');
   }
 }

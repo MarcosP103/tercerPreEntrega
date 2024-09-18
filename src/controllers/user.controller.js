@@ -268,36 +268,14 @@ export const uploadDocuments = async (req, res) => {
   }
 }
 
-export const renderUserList = async (req, res) => {
-  try {
-    const users = await getAllUsersF()
-    res.render("takeUsers", { users })
-  } catch (error) {
-    res.status(500).json( "Error al cargar la lista de usuarios.")
-  }
-}
-
-export const getAllUsersF = async (req, res) => {
-  try {
-    const users = await getAllUsers()
-    const usersData = users.map(user => ({
-      name: `${user.first_name} ${user.last_name}`,
-      email: user.email,
-      role: user.role
-    }))
-
-    res.status(200).json(usersData)
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener los usuarios.", error })
-  }
-}
-
 export const deleteUserF = async (req, res) => {
   try {
     const userId = req.params.id
+    console.log('Intentando eliminar usuario con ID:', userId);
     const user = await deleteUserById(userId)
 
     if(!user) {
+      console.log('Usuario no encontrado para eliminar');
       return res.status(404).json({ message: "Usuario no encontrado."})
     }
     res.status(200).json({ message: "Usuario eliminado correctamente."})
@@ -305,3 +283,18 @@ export const deleteUserF = async (req, res) => {
     res.status(500).json({ message: "Error al eliminar el usuario.", error })
   }
 }
+
+export const renderUserList = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    const usersData = users.map(user => ({
+      name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
+      role: user.role
+    }));
+
+    res.render("takeUsers", { users: usersData });
+  } catch (error) {
+    res.status(500).json({ message: "Error al cargar la lista de usuarios." });
+  }
+};

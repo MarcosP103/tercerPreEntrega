@@ -59,7 +59,7 @@ router.post('/profile/edit', isAuthenticated, editProfile);
 router.get('/:uid/documents', isAuthenticated, renderUploadDocuments);
 router.post('/:uid/documents', isAuthenticated, upload.array('documents', 10), uploadDocuments);
 
-router.get('/users', isAdmin, renderUserList)
-router.delete('/users/:id', isAdmin, deleteUserF)
+router.get('/', isAdmin, renderUserList)
+router.delete('/:id', isAdmin, deleteUserF)
 
 export default router;
