@@ -1,4 +1,3 @@
-import userModel from "../dao/models/user.model.js";
 import userService from "../dao/models/user.model.js";
 import { createHash, isSamePassword } from "../utils.js";
 import crypto from "crypto";
@@ -144,7 +143,7 @@ export const getAllUsers = async () => {
 
 export const deleteUserById = async (id) => {
   try {
-    const deleteUser = await userModel.findByIdAndDelete(id)
+    const deleteUser = await userService.findByIdAndDelete(id)
     if(!deleteUser) {
       throw new Error("Usuario no encontrado.")
     }

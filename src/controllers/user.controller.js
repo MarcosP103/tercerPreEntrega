@@ -268,29 +268,34 @@ export const uploadDocuments = async (req, res) => {
   }
 }
 
-export const deleteUserF = async (req, res) => {
+export const deleteUserF = async (req, res) => { 
   try {
-    const userId = req.params.id
+    const userId = req.params.id;
     console.log('Intentando eliminar usuario con ID:', userId);
-    const user = await deleteUserById(userId)
+    const user = await deleteUserById(userId);
 
-    if(!user) {
+    if (!user) {
       console.log('Usuario no encontrado para eliminar');
-      return res.status(404).json({ message: "Usuario no encontrado."})
+      return res.status(404).json({ message: "Usuario no encontrado." });
     }
-    res.status(200).json({ message: "Usuario eliminado correctamente."})
+
+    console.log('Usuario eliminado:', user);
+    res.status(200).json({ message: "Usuario eliminado correctamente." });
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar el usuario.", error })
+    console.error('Error al eliminar el usuario:', error);
+    res.status(500).json({ message: "Error al eliminar el usuario.", error });
   }
-}
+};
 
 export const renderUserList = async (req, res) => {
   try {
     const users = await getAllUsers();
     const usersData = users.map(user => ({
-      name: `${user.first_name} ${user.last_name}`,
+      first_name: user.first_name,
+      last_name: user.last_name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      _id: user._id
     }));
 
     res.render("takeUsers", { users: usersData });

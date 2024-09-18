@@ -83,9 +83,14 @@ class CartManagerMongoose {
                 console.error("Carrito no encontrado por ID: ", cid);
                 return null;
             }
+
+            const validatedProducts = products.map(product => ({
+                productId: product.productId,
+                quantity: product.quantity || 1
+              }));
     
-            cart.products = products; 
-            await cart.save();
+            cart.products = validatedProducts; 
+            await cart.save({ validateBeforeSave: true });
     
             console.log("Carrito actualizado correctamente");
             return cart;
