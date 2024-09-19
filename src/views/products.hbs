@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1>Bienvenido, {{userName}}</h1>
+    <h1>Bienvenido a la seccion, {{userName}}</h1>
     {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
     <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
     {{/if}}
@@ -25,7 +25,7 @@
             <h2>{{this.title}} - ${{this.price}}</h2>
             <p>{{this.category}}</p>
             <a href="/api/products/{{this._id}}">Ver más</a>
-            {{#if (eq (getProperty ../user 'role') 'premium')}}
+            {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
             <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
             <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
             {{/if}}
@@ -43,7 +43,7 @@
         <div>
             <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
         </div>
-        <br />
+        <br/>
         {{/each}}
     </div>
     <br />

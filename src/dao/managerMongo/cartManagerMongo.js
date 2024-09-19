@@ -84,12 +84,17 @@ class CartManagerMongoose {
                 return null;
             }
 
+            if (!Array.isArray(products)) {
+                console.error("Se esperaba un array para products, pero se recibió:", products);
+                throw new TypeError("Products should be an array");
+            }
+    
             const validatedProducts = products.map(product => ({
                 productId: product.productId,
                 quantity: product.quantity || 1
-              }));
-    
-            cart.products = validatedProducts; 
+            }));
+        
+            cart.products = validatedProducts;
             await cart.save({ validateBeforeSave: true });
     
             console.log("Carrito actualizado correctamente");

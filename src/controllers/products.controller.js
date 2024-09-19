@@ -54,12 +54,10 @@ export const GetProducts = async (req, res) => {
     res.render("index", { user, products: result.docs, prevLink, nextLink });
   } catch (error) {
     console.error("No se pudieron obtener los productos", error);
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "No se pudieron obtener los productos",
-      });
+    res.status(500).json({
+      status: "error",
+      message: "No se pudieron obtener los productos",
+    });
   }
 };
 
@@ -80,7 +78,19 @@ export const GetProductById = async (req, res) => {
     let cartId = null;
     if (req.user) {
       const user = await userService.findOne({ _id: req.user._id });
-      cartId = user ? user.cartId : null;
+
+      if (!user) {
+        console.log("Usuario no encontrado en la base de datos.");
+      } else {
+        cartId = user.cartId;
+        if (!cartId) {
+          console.log("El usuario no tiene un carrito asignado.");
+        } else {
+          console.log("Cart ID encontrado:", cartId);
+        }
+      }
+    } else {
+      console.log("No hay usuario autenticado.");
     }
 
     res.render("productsDet", {
@@ -96,6 +106,9 @@ export const GetProductById = async (req, res) => {
         thumbnails: product.thumbnails,
       },
       cartId,
+      errorMessage: !cartId
+        ? "No se encontró un carrito para este usuario"
+        : null,
     });
   } catch (error) {
     console.error("No se pudo obtener el producto por ID", error);
@@ -143,12 +156,10 @@ export const AddProduct = async (req, res) => {
       owner,
       testProduct
     );
-    res
-      .status(201)
-      .json({
-        message: "Producto agregado correctamente",
-        product: newProduct,
-      });
+    res.status(201).json({
+      message: "Producto agregado correctamente",
+      product: newProduct,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al agregar el producto" });
@@ -183,7 +194,13 @@ export const UpdateProduct = async (req, res) => {
     if (!updatedProduct) {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
-    return res.status(200).json({ status: "success", message: "Producto modificado correctamente", product: updatedProduct });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        message: "Producto modificado correctamente",
+        product: updatedProduct,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al modificar el producto" });
@@ -203,7 +220,7 @@ export const RenderDeleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).send("Producto no encontrado");
     }
-    
+
     res.render("delProducts", { product });
   } catch (error) {
     res.status(500).send("Error al cargar el producto para eliminar");
@@ -214,10 +231,16 @@ export const DeleteProduct = async (req, res) => {
   const { pid } = req.params;
   try {
     const productDeleted = await deleteProduct(pid);
-    if(!productDeleted){
-      return res.status(404).json({ message: "Producto no encontrado" })
+    if (!productDeleted) {
+      return res.status(404).json({ message: "Producto no encontrado" });
     }
-    return res.status(200).json({ status: 'success', message: 'Producto eliminado correctamente', product: productDeleted });
+    return res
+      .status(200)
+      .json({
+        status: "success",
+        message: "Producto eliminado correctamente",
+        product: productDeleted,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al eliminar el producto" });

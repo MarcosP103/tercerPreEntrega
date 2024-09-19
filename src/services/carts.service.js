@@ -197,7 +197,7 @@ export const purchaseCart = async (cid, productsFromClient) => {
       productId: item.productId._id,
       quantity: item.quantity
     }))
-    await cartManager.updateCart(cid, { products: updatedCartProducts }, { session });
+    await cartManager.updateCart(cid, updatedCartProducts, { session });
 
     await session.commitTransaction();
     session.endSession();

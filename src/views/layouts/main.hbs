@@ -44,7 +44,7 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="api/products">Ofertas</a>
+                                <a class="nav-link active" aria-current="page" href="/api/products">Ofertas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/profile">Mi perfil</a>
@@ -66,7 +66,8 @@
                             </div>
                         </div>
                         <form class="d-flex ms-auto" role="search">
-                            <a href="/api/carts/{{getProperty user 'cartId'}}" class="btn btn-outline-success ms-auto">Mi carrito</a>
+                            <a href="{{ base_url }}/api/carts/{{getProperty user 'cartId'}}"
+                                class="btn btn-outline-success ms-auto">Mi carrito</a>
                         </form>
                     </div>
                 </div>
@@ -75,6 +76,10 @@
     </div>
     <!--cuadrobusqueda -->
     <script>
+        document.getElementById('offcanvasDarkNavbar').addEventListener('show.bs.offcanvas', function () {
+            console.log('Offcanvas menu opened');
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             const searchForm = document.getElementById('searchForm');
             const searchInput = document.getElementById('searchInput');

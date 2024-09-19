@@ -1,6 +1,6 @@
-async function addToCart(cid, pid, quantity = 1) {
-    const url = `http://localhost:8080/api/carts/${cid}/products/${pid}`;
-    console.log(`Adding to cart: ${cid}, product: ${pid}, quantity: ${quantity}`); 
+async function addToCart( cartId, pid, quantity = 1 ) {
+    const url = `http://localhost:8080/api/carts/${cartId}/products/${pid}`;
+    console.log(`Adding to cart: ${cartId}, product: ${pid}, quantity: ${quantity}`); 
 
     try {
         const response = await fetch(url, {
@@ -15,6 +15,13 @@ async function addToCart(cid, pid, quantity = 1) {
             const data = await response.json();
             console.log('Producto agregado al carrito:', data);
             alert('Producto agregado al carrito con éxito');
+            //Redirigir a pagina principal
+            const userChoice = window.confirm('Quieres ir al carrito o seguir comprando? Ok para el carrito cancelar para ver más productos')
+            if(userChoice) {
+                window.location.href = `/api/carts/${cartId}`
+            } else {
+                window.location.href = '/'
+            }
         } else {
             throw new Error('Error al agregar el producto al carrito');
         }

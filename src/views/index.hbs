@@ -7,15 +7,32 @@
 </head>
 <body>
     {{#if user}}
-    <h3 class="text-center" id="bienvenida">
-        Bienvenido, <strong>{{user.first_name}}</strong>
-    </h3>
-    {{else}}
-    <h3>
-        <br>Inicia sesión para poder comprar
-        <br><a href="/login" class="btn btn-info">Iniciar</a>
-    </h3>
+  <h3 class="text-center" id="bienvenida">
+    Bienvenido, <strong>{{userName}}</strong>
+  </h3>
+
+  {{!-- Si el usuario tiene rol "user", mostrar el botón de "ver más" --}}
+   {{#if (eq (getProperty user 'role') 'user')}}
+    <a href="/api/products/{{product._id}}" class="btn btn-info">Ver más</a>
+  {{/if}}
+
+  {{!-- Si el usuario tiene rol "premium" o "admin", mostrar opciones avanzadas --}}
+ {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
+    <a href="/api/products" class="btn btn-success">Ir a Productos</a>
+
+    {{#if (eq (getProperty user 'role') 'admin')}}
+      <a href="/api/users" class="btn btn-primary">Gestión de Usuarios</a>
     {{/if}}
+  {{/if}}
+
+{{else}}
+  <h3>
+    <br>
+    <br>
+    <p>Inicia sesión para poder comprar</p>
+    <a href="/login" class="btn btn-info">Iniciar sesion</a>
+  </h3>
+{{/if}}
 
     <div class="container mt-5">
         <div class="card">
@@ -36,32 +53,28 @@
             </div>
         </div>
     </div>
-
+    
     <div>
-        {{#if products.length}}
+        <h2>Lista de Productos</h2>
+    {{#if products.length}}
+    <div class="divproducts">
+        {{#each products}}
         <div>
-            <h1>Productos:</h1>
-            <ul>
-                {{#each products}}
-                <li>
-                    <strong class="infP">Titulo:</strong> {{this.title}},
-                    <strong class="infP">Descripcion:</strong> {{this.description}},
-                    <strong class="infP">Codigo:</strong> {{this.code}},
-                    <strong class="infP">Precio:</strong> ${{this.price}},
-                    <strong class="infP">Status:</strong> {{this.status}},
-                    <strong class="infP">Stock:</strong> {{this.stock}},
-                    <strong class="infP">Categoria:</strong> {{this.category}},
-                    <strong class="infP">Thumbnail:</strong>
-                    {{#each this.thumbnails}}
-                    <img src="{{this}}" alt="Thumbnail">
-                    {{/each}}
-                </li>
-                {{/each}}
-            </ul>
+            <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
+            <h2>{{this.title}} - ${{this.price}}</h2>
+            <p>{{this.category}}</p>
+            <a href="/api/products/{{this._id}}">Ver más</a>
+            {{#if (eq (getProperty ../user 'role') 'premium')}}
+            <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
+            <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
+            {{/if}}
         </div>
-        {{else}}
-        <h1>No hay productos</h1>
-        {{/if}}
+        <br />
+        {{/each}}
+    </div>
+    {{else}}
+    <h1>No hay productos</h1>
+    {{/if}}
     </div>
 
     <h2>Bienvenido al Chat!</h2>

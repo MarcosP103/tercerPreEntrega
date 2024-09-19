@@ -62,7 +62,7 @@ export const login = async (req, res, next) => {
         console.log(`Usuario conectado: ${user.email}`);
         console.log(`Última conexión: ${new Date().toISOString()}`);
 
-        res.redirect("/api/products");
+        res.redirect("/");
       });
     } catch (err) {
       res.status(500).send("Error al iniciar sesión");
