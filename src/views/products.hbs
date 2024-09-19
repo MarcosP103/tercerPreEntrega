@@ -9,7 +9,9 @@
 </head>
 
 <body>
-    <h1>Bienvenido a la seccion, {{userName}}</h1>
+    <h3 class="text-center" id="bienvenida">
+        Bienvenido, <strong>{{userName}}</strong>
+    </h3>
     {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
     <a href="/api/products/add" class="btn btn-success">Agregar Producto</a>
     {{/if}}
@@ -24,8 +26,8 @@
             <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
             <h2>{{this.title}} - ${{this.price}}</h2>
             <p>{{this.category}}</p>
-            <a href="/api/products/{{this._id}}">Ver más</a>
-            {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
+            <a href="/api/products/{{this._id}}" class="btn btn-success">Ver más</a>
+            {{#if (or (eq (getProperty ../user 'role') 'premium') (eq (getProperty ../user 'role') 'admin'))}}
             <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
             <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
             {{/if}}
@@ -38,27 +40,16 @@
     {{/if}}
 
     {{#if totalPages}}
-    <div>
-        {{#each docs}}
-        <div>
-            <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
-        </div>
-        <br/>
-        {{/each}}
-    </div>
-    <br />
-    <div>
+    <div class="pagination">
         {{#if prevLink}}
-        <a href="{{prevLink}}">
-            << Anterior </a>
+        <a href="{{prevLink}}" class="btn btn-secondary">
+            << Anterior</a>
                 {{/if}}
-                &nbsp;
-                {{this.page}}
-                &nbsp;
+
+                <span>Página {{currentPage}} de {{totalPages}}</span>
+
                 {{#if nextLink}}
-                <a href="{{nextLink}}">
-                    Siguiente >>
-                </a>
+                <a href="{{nextLink}}" class="btn btn-secondary">Siguiente >></a>
                 {{/if}}
     </div>
     {{/if}}

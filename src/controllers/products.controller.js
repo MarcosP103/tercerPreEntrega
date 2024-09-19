@@ -11,7 +11,7 @@ import userService from "../dao/models/user.model.js";
 export const GetRealTimeProducts = async (req, res) => {
   try {
     const products = await getRealTimeProducts();
-    res.render("index", { products, length: products.length > 0 });
+    res.render("products", { products, length: products.length > 0 });
   } catch (error) {
     res.status(500).json({ error: "Error al obtener los productos" });
   }
@@ -19,8 +19,14 @@ export const GetRealTimeProducts = async (req, res) => {
 
 export const GetProducts = async (req, res) => {
   try {
-    const { limit, page, sort, query } = req.query;
+    console.log("Query Parameters: ", req.query);
+    const limit = req.query.limit || 10;
+    const page = req.query.page || 1;
+    const sort = req.query.sort || 'asc'; 
+    const query = req.query.query || ''; 
+
     const result = await getProducts(limit, page, sort, query);
+
     const {
       totalPages,
       prevPage,
@@ -29,11 +35,12 @@ export const GetProducts = async (req, res) => {
       hasPrevPage,
       hasNextPage,
     } = result;
+
     const prevLink = hasPrevPage
-      ? `${req.baseUrl}/get?limit=${limit}&page=${prevPage}&sort=${sort}&query=${query}`
+      ? `${req.baseUrl}?limit=${limit}&page=${prevPage}&sort=${sort}&query=${query}`
       : null;
     const nextLink = hasNextPage
-      ? `${req.baseUrl}/get?limit=${limit}&page=${nextPage}&sort=${sort}&query=${query}`
+      ? `${req.baseUrl}?limit=${limit}&page=${nextPage}&sort=${sort}&query=${query}`
       : null;
 
     console.log(`
@@ -51,7 +58,9 @@ export const GetProducts = async (req, res) => {
     console.log("User Role:", req.user ? req.user.role : "No User");
 
     const user = req.user ? { ...req.user._doc } : null;
-    res.render("index", { user, products: result.docs, prevLink, nextLink });
+    const userName = user ? user.first_name : 'Invitado'
+
+    res.render("products", { user, userName, products: result.docs, prevLink, nextLink });
   } catch (error) {
     console.error("No se pudieron obtener los productos", error);
     res.status(500).json({

@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", async (req, res) => {
     try {
         const products = await productModel.find().lean();
-        res.render('products', { 
+        res.render('index', { 
             products,
             userName: req.user ? req.user.first_name : 'Invitado',
             user: req.user

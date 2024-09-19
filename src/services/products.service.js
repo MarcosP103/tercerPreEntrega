@@ -28,7 +28,9 @@ export const getProducts = async (limit, page, sort, query) => {
     lean: true
   };
 
-  return await productModel.paginate(filter, options);
+  const result = await productModel.paginate(filter, options);
+  console.log("Paginate result:", result); 
+  return result
 };
 
 

@@ -83,14 +83,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 // Routes
-app.use("/", indexRouter);
-app.use("/", viewsRouter)
-app.use('/api/users', usersRouter);
 app.use("/api/products", productsRouter);
+app.use('/api/users', usersRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/api/loggertest", loggerRoutes)
 app.use("/chat", chatRouter)
+app.use("/", viewsRouter)
+app.use("/", indexRouter);
 
 app.get('/', (req, res) => {
   if(req.session.views) {

@@ -9,7 +9,6 @@ import {
     clearCartF,
     purchaseF
 } from "../controllers/carts.controller.js";
-import { purchaseCart } from "../services/carts.service.js";
 
 const router = express.Router();
 
