@@ -14,12 +14,20 @@
     <h2>Precio: ${{product.price}}</h2>
 
     <form id="addToCartForm" onsubmit="event.preventDefault(); addToCart('{{cartId}}', '{{product._id}}')">
-        <label for="cartQuantity">Cantidad:</label>
-        <input type="number" id="cartQuantity" name="cartQuantity" min="1" max="{{product.stock}}" required>
-        <button type="submit">Agregar al carrito</button>
+        <div class="row">
+            <label for="cartQuantity">Cantidad:</label>
+                <div class="col-auto">
+                    <input type="number" id="cartQuantity" name="cartQuantity" min="1" max="{{product.stock}}" required>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-success" type="submit">Agregar al carrito</button>
+                </div>
+        </div>
     </form>
 
-    <a href="/api/products">Volver a productos</a>
+    <br>
+    
+    <a class="btn btn-light" href="/api/products">Volver a productos</a>
 
     <script src="/js/addProduct.js"></script>
 </body>

@@ -17,9 +17,12 @@ export const getProducts = async (limit, page, sort, query) => {
   let filter = {};
 
   if (query) {
-    const categoryRegex = new RegExp(`^${query}$`, 'i');
-    filter = { category: categoryRegex };
-  }
+    filter = {
+      $or: [
+        { category: { $regex: query, $options: 'i' } },
+        { title: { $regex: query, $options: 'i' } }
+      ]
+  }}
 
   let options = {
     page: page,

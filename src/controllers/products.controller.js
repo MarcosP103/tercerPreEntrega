@@ -17,6 +17,10 @@ export const GetRealTimeProducts = async (req, res) => {
   }
 };
 
+function generatePageLink(baseUrl, limit, page, sort, query) {
+  return `${baseUrl}?limit=${limit}&page=${page}&sort=${sort}&query=${encodeURIComponent(query)}`;
+}
+
 export const GetProducts = async (req, res) => {
   try {
     console.log("Query Parameters: ", req.query);
@@ -37,11 +41,11 @@ export const GetProducts = async (req, res) => {
     } = result;
 
     const prevLink = hasPrevPage
-      ? `${req.baseUrl}?limit=${limit}&page=${prevPage}&sort=${sort}&query=${query}`
-      : null;
-    const nextLink = hasNextPage
-      ? `${req.baseUrl}?limit=${limit}&page=${nextPage}&sort=${sort}&query=${query}`
-      : null;
+  ? generatePageLink(req.baseUrl, limit, prevPage, sort, query)
+  : null;
+const nextLink = hasNextPage
+  ? generatePageLink(req.baseUrl, limit, nextPage, sort, query)
+  : null;
 
     console.log(`
         Paginación:
@@ -60,12 +64,21 @@ export const GetProducts = async (req, res) => {
     const user = req.user ? { ...req.user._doc } : null;
     const userName = user ? user.first_name : 'Invitado'
 
-    res.render("products", { user, userName, products: result.docs, prevLink, nextLink });
+    res.render("products", { 
+      user, 
+      userName, 
+      products: result.docs, 
+      prevLink, 
+      nextLink,
+      currentPage: result.page,
+      totalPages: result.totalPages,
+      query: query
+     });
   } catch (error) {
     console.error("No se pudieron obtener los productos", error);
-    res.status(500).json({
-      status: "error",
-      message: "No se pudieron obtener los productos",
+    res.status(500).render("error", {
+      message: "Hubo un problema al cargar los productos. Por favor, inténtalo de nuevo más tarde.",
+      error: process.env.NODE_ENV === 'development' ? error : {}
     });
   }
 };

@@ -1,39 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
 </head>
+
 <body>
-    {{#if user}}
-  <h3 class="text-center" id="bienvenida">
-    Bienvenido, <strong>{{userName}}</strong>
-  </h3>
-
-  {{!-- Si el usuario tiene rol "user", mostrar el botón de "ver más" --}}
-   {{#if (eq (getProperty user 'role') 'user')}}
-    <a href="/api/products/{{product._id}}" class="btn btn-info">Ver más</a>
-  {{/if}}
-
-  {{!-- Si el usuario tiene rol "premium" o "admin", mostrar opciones avanzadas --}}
- {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
-    <a href="/api/products" class="btn btn-success">Ir a Productos</a>
-
-    {{#if (eq (getProperty user 'role') 'admin')}}
-      <a href="/api/users" class="btn btn-primary">Gestión de Usuarios</a>
-    {{/if}}
-  {{/if}}
-
-{{else}}
-  <h3>
     <br>
-    <br>
-    <p>Inicia sesión para poder comprar</p>
-    <a href="/login" class="btn btn-info">Iniciar sesion</a>
-  </h3>
-{{/if}}
-
     <div class="container mt-5">
         <div class="card">
             <div class="card-header bg-primary text-black text-center">
@@ -53,76 +28,74 @@
             </div>
         </div>
     </div>
-    
+
+    {{#if user}}
+    <h3 class="text-center" id="bienvenida">
+        Bienvenido, <strong>{{userName}}</strong>
+    </h3>
+
+    {{#if (or (eq (getProperty user 'role') 'premium') (eq (getProperty user 'role') 'admin'))}}
+    <a href="/api/products" class="btn btn-success">Ir a Productos</a>
+
+    {{#if (eq (getProperty user 'role') 'admin')}}
+    <a href="/api/users" class="btn btn-primary">Gestión de Usuarios</a>
+    {{/if}}
+    {{/if}}
+
+    {{else}}
+    <br>
+    <h3>Inicia sesión para poder comprar</h3>
+    {{/if}}
     <div>
         <h2>Lista de Productos</h2>
-    {{#if products.length}}
-    <div class="divproducts">
-        {{#each products}}
-        <div>
-            <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
-            <h2>{{this.title}} - ${{this.price}}</h2>
-            <p>{{this.category}}</p>
-            <a href="/api/products/{{this._id}}">Ver más</a>
-            {{#if (eq (getProperty ../user 'role') 'premium')}}
-            <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
-            <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
-            {{/if}}
+        {{#if products.length}}
+        <div class="divproducts">
+            {{#each products}}
+            <div>
+                <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
+                <h2>{{this.title}} - ${{this.price}}</h2>
+                <p>{{this.category}}</p>
+                <a href="/api/products/{{this._id}}">Ver más</a>
+                {{#if (eq (getProperty ../user 'role') 'premium')}}
+                <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
+                <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
+                {{/if}}
+            </div>
+            <br />
+            {{/each}}
         </div>
-        <br />
-        {{/each}}
-    </div>
-    {{else}}
-    <h1>No hay productos</h1>
-    {{/if}}
+        {{else}}
+        <h1>No hay productos</h1>
+        {{/if}}
     </div>
 
     <h2>Bienvenido al Chat!</h2>
-    <div>
-        <input id="chatBox">
-        <button id="sendBtn">Enviar</button>
-    </div>
-    <div>
-        <p id="messageLogs"></p>
-    </div>
-
-    <br>
-    <form action="/api/users/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
-    <br>
-
-    {{#if totalPages}}
-    <div>
-        {{#each docs}}
-        <div>
-            <h1><a href="/{{this._id}}">{{this.title}}</a></h1>
+    <div class="row">
+        <div class="col-auto">
+            <input class="form-control" id="chatBox">
         </div>
-        <br />
-        {{/each}}
+        <div class="col-auto">
+            <button class="btn btn-success" id="sendBtn">Enviar</button>
+        </div>
     </div>
-    <br />
-    <div>
-        {{#if prevLink}}
-        <a href="{{prevLink}}">
-            << Anterior </a>
-                {{/if}}
-                &nbsp;
-                {{this.page}}
-                &nbsp;
-                {{#if nextLink}}
-                <a href="{{nextLink}}">
-                    Siguiente >>
-                </a>
-                {{/if}}
-    </div>
-    {{/if}}
 
+    <div>
+        <p class="text-muted" id="messageLogs"></p>
+    </div>
+
+    <br>
+    {{#if user}}
+    <form action="/api/users/logout" method="post">
+        <button type="submit" class="btn btn-warning">Logout</button>
+    </form>
+    {{else}}
+    <a href="/login" class="btn btn-primary">Iniciar sesión</a>
+    {{/if}}
+    <br>
 </body>
 
 <script>
-    const userAuthenticated = {{#if user}} {first_name: "{{user.first_name}}"} 
-    {{else}} null {{/if}}
+    const userAuthenticated = {{#if user}} { first_name: "{{user.first_name}}" }  {{else }} null {{/if }};
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
