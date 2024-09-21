@@ -1,7 +1,9 @@
+import userModel from "../dao/models/user.model.js";
 import userService from "../dao/models/user.model.js";
 import { createHash, isSamePassword } from "../utils.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { sendAccountDeletionEmail } from "./mail.service.js";
 
 export const registerUser = async (userData) => {
   if (!userData.email) {
@@ -151,4 +153,37 @@ export const deleteUserById = async (id) => {
   } catch (error) {
     throw new Error('Error al eliminar el usuario.');
   }
+}
+
+export const updateUserRole = async (userId, newRole) => {
+  if(!['user', 'premium'].includes(newRole)) {
+    throw new Error ('Rol invalido')
+  }
+  const user = await userModel.findById(userId)
+  if(!user) {
+    throw new Error ('Usuario no encontrado')
+  }
+
+  user.role = newRole
+  await user.save()
+
+  return user
+}
+
+const periodInactivity = 30 * 24 * 60 * 60 * 1000
+
+export const deleteInactivityUsers = async () => {
+  const now = new Date()
+  const thresholdDate = new Date(now.getTime() - periodInactivity)
+
+  const inactiveUsers = await userModel.find({
+    last_connection: { $lt: thresholdDate },
+    role: { $ne: 'admin' }
+  })
+
+  for (const user of inactiveUsers) {
+    await userModel.findByIdAndDelete(user._id)
+    await sendAccountDeletionEmail(user)
+  }
+  return inactiveUsers.length
 }

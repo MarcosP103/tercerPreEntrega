@@ -55,7 +55,7 @@
                 <img src="{{this.thumbnails}}" alt="{{this.title}}" style="width: 200px; height: auto;">
                 <h2>{{this.title}} - ${{this.price}}</h2>
                 <p>{{this.category}}</p>
-                <a href="/api/products/{{this._id}}">Ver más</a>
+                <a href="/api/products/{{this._id}}" class="btn btn-success">Ver más</a>
                 {{#if (eq (getProperty ../user 'role') 'premium')}}
                 <a href="/api/products/edit/{{this._id}}" class="btn btn-warning">Editar</a>
                 <a href="/api/products/delete/{{this._id}}" class="btn btn-danger">Eliminar</a>
@@ -95,7 +95,7 @@
 </body>
 
 <script>
-    const userAuthenticated = {{#if user}} { first_name: "{{user.first_name}}" }  {{else }} null {{/if }};
+    const userAuthenticated = {{#if user}} {first_name: "{{user.first_name}}"}  {{else}} null {{/if}};
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -51,3 +51,36 @@ async function deleteUser(uid) {
       });
     });
   });
+
+  //Cambio rol
+  document.addEventListener('DOMContentLoaded', () => {
+    const changeRoleButtons = document.querySelectorAll('.change-role-button');
+  
+    changeRoleButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const userId = button.getAttribute('data-user-id');
+        const currentRole = button.getAttribute('data-current-role');
+
+        const newRole = currentRole === 'user' ? 'premium' : 'user';
+  
+        try {
+          const response = await fetch(`/api/users/${userId}/role`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: newRole })
+          });
+  
+          if (response.ok) {
+            alert('Rol actualizado correctamente');
+            location.reload();
+          } else {
+            alert('Error al cambiar el rol');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error al cambiar el rol');
+        }
+      });
+    });
+  });
+  

@@ -18,7 +18,8 @@ import {
   uploadDocuments,
   renderUploadDocuments,
   renderUserList,
-  deleteUserF
+  deleteUserF,
+  updateUserRoleF
 } from "../../controllers/user.controller.js";
 import upload from "../../middleware/multer.js"
 import { isAuthenticated, isAdmin } from "../../middleware/auth.js"
@@ -61,5 +62,8 @@ router.post('/:uid/documents', isAuthenticated, upload.array('documents', 10), u
 
 router.get('/', isAdmin, renderUserList)
 router.delete('/:id', isAdmin, deleteUserF)
+
+//Administrador cambia Rol de otros usuarios
+router.put('/:id/role', updateUserRoleF)
 
 export default router;

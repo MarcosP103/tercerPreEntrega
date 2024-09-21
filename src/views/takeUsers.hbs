@@ -12,8 +12,11 @@
   <ul>
     {{#each users}}
     <li id="user-{{this._id}}">
-      <span>{{this.first_name}}, {{this.last_name}}, {{this.email}}</span>
-      <button class="delete-user-button" data-user-id="{{this._id}}">Eliminar</button>
+      <span>{{this.first_name}} - {{this.last_name}} - {{this.email}} - {{this.role}}</span>
+      <span>Última conexión: {{this.last_connection}}</span>
+      <br>
+      <button type="button" class="delete-user-button btn btn-outline-dark" data-user-id="{{this._id}}">Eliminar</button>
+      <button type="button" class="change-role-button btn btn-outline-warning" data-user-id="{{this._id}}" data-current-role="{{this.role}}">Cambiar Rol</button>
     </li>
     <br>
     {{/each}}

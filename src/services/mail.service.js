@@ -50,3 +50,20 @@ export const sendPurchaseConfirm = async (userEmail, ticket) => {
     })
     return result
 }
+
+export const sendAccountDeletionEmail = async (userEmail) => {
+    let result = await transport.sendMail({
+        from: process.env.EMAIL_USER,
+        to: userEmail,
+        subject: "Alerta eliminacion de su cuenta en 'Tu PetShop'.",
+        html: `
+        <div>
+            <h1>Se ha eliminado su cuenta por inactividad.</h1>
+            <p>Usuario: ${user.first_name}</p>
+            <p>Ultima conexión: ${user.last_connection.toISOString()}</p>
+            
+        </div>
+        `
+    });
+    return result;
+}

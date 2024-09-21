@@ -8,7 +8,9 @@ import {
   validateResetToken,
   updateUser,
   getAllUsers,
-  deleteUserById
+  deleteUserById,
+  updateUserRole,
+  deleteInactivityUsers
 } from "../services/user.service.js";
 
 export const register = async (req, res, next) => {
@@ -295,11 +297,42 @@ export const renderUserList = async (req, res) => {
       last_name: user.last_name,
       email: user.email,
       role: user.role,
+      last_connection: user.last_connection ? user.last_connection.toLocaleString() : 'Nunca',
       _id: user._id
     }));
 
     res.render("takeUsers", { users: usersData });
   } catch (error) {
     res.status(500).json({ message: "Error al cargar la lista de usuarios." });
+  }
+};
+
+export const deleteInactiveUsersF = async (req, res) => {
+  try {
+    const deletedCount = await deleteInactivityUsers();
+    res.status(200).json({ message: `${deletedCount} cuentas eliminadas por inactividad.` });
+  } catch (error) {
+    console.error('Error al eliminar usuarios inactivos:', error);
+    res.status(500).json({ message: "Error al eliminar usuarios inactivos." });
+  }
+};
+
+export const updateUserRoleF = async (req, res) => {
+  try {
+    console.log('Iniciando actualización de rol');
+    const { id } = req.params;
+    const { role } = req.body;
+    console.log(`ID: ${id}, Nuevo rol: ${role}`);
+
+    const updatedUser = await updateUserRole(id, role);
+
+    res.status(200).json({ message: 'Rol actualizado correctamente', user: updatedUser });
+  } catch (error) {
+    console.error('Error al actualizar el rol:', error);
+    if (error.message === 'Rol inválido' || error.message === 'Usuario no encontrado') {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: 'Error al actualizar el rol', error: error.message });
+    }
   }
 };
