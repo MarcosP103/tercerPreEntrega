@@ -274,8 +274,13 @@ export const deleteUserF = async (req, res) => {
   try {
     const userId = req.params.id;
     console.log('Intentando eliminar usuario con ID:', userId);
+    
+    const currentUserId = req.user._id
+    if(req.user.role === 'admin' && userId === currentUserId.toString()) {
+      return res.status(403).json({ message: "No puedes eliminar tu propia cuenta."})
+    }
+    
     const user = await deleteUserById(userId);
-
     if (!user) {
       console.log('Usuario no encontrado para eliminar');
       return res.status(404).json({ message: "Usuario no encontrado." });

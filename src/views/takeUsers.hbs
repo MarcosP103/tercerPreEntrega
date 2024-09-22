@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Lista de Usuarios</title>
 </head>
-
 <body>
   <h1>Lista de Usuarios</h1>
   {{#if users.length}}
@@ -13,6 +11,7 @@
     {{#each users}}
     <li id="user-{{this._id}}">
       <span>{{this.first_name}} - {{this.last_name}} - {{this.email}} - {{this.role}}</span>
+      <br>
       <span>Última conexión: {{this.last_connection}}</span>
       <br>
       <button type="button" class="delete-user-button btn btn-outline-dark" data-user-id="{{this._id}}">Eliminar</button>

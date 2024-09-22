@@ -95,7 +95,11 @@
 </body>
 
 <script>
-    const userAuthenticated = {{#if user}} {first_name: "{{user.first_name}}"}  {{else}} null {{/if}};
+    const userAuthenticated = 
+    {{#if user}} 
+        {first_name: "{{user.first_name}}"}  
+        {{else}} null 
+    {{/if}};
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

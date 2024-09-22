@@ -87,6 +87,10 @@ const initializePassport = () => {
 
   passport.deserializeUser(async (id, done) => {
     let user = await userService.findById(id);
+    if(user) {
+      user.last_connection = new Date()
+      await user.save()
+    }
     done(null, user);
   });
 
@@ -98,7 +102,7 @@ const initializePassport = () => {
           const user = await userService.findOne({ email: username });
           if (!user) {
             console.log("El usuario no existe");
-            return done(null, user);
+            return done(null, false, {message: "El usuario no existe" });
           }
 
           if (!isValidPassword(user, password)){

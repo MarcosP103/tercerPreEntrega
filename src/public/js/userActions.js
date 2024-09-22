@@ -35,6 +35,8 @@ async function deleteUser(uid) {
   
     deleteButtons.forEach(button => {
       const userId = button.getAttribute('data-user-id');
+
+      
   
       button.addEventListener('click', (event) => {
         event.preventDefault();

@@ -1,4 +1,3 @@
-import userModel from "../dao/models/user.model.js";
 import userService from "../dao/models/user.model.js";
 import { createHash, isSamePassword } from "../utils.js";
 import crypto from "crypto";
@@ -137,7 +136,8 @@ export const updateUser = async (id, updateDate) => {
 
 export const getAllUsers = async () => {
   try {
-    return await userService.find( {}, 'first_name last_name email role')
+    const users = await userService.find( {}, 'first_name last_name email role last_connection')
+    return users
   } catch (error) {
     throw new Error('Error al obtener los usuarios.')
   }
@@ -159,7 +159,7 @@ export const updateUserRole = async (userId, newRole) => {
   if(!['user', 'premium'].includes(newRole)) {
     throw new Error ('Rol invalido')
   }
-  const user = await userModel.findById(userId)
+  const user = await userService.findById(userId)
   if(!user) {
     throw new Error ('Usuario no encontrado')
   }
@@ -176,13 +176,13 @@ export const deleteInactivityUsers = async () => {
   const now = new Date()
   const thresholdDate = new Date(now.getTime() - periodInactivity)
 
-  const inactiveUsers = await userModel.find({
+  const inactiveUsers = await userService.find({
     last_connection: { $lt: thresholdDate },
     role: { $ne: 'admin' }
   })
 
   for (const user of inactiveUsers) {
-    await userModel.findByIdAndDelete(user._id)
+    await userService.findByIdAndDelete(user._id)
     await sendAccountDeletionEmail(user)
   }
   return inactiveUsers.length

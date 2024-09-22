@@ -59,12 +59,12 @@ app.use(session({
   //store: new FileStoreInstance({path: './session', ttl: 100, retries: 0}),
   store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL_SESSION,
-      ttl: 100
+      ttl: 10800
   }),
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 180 * 60 * 1000 },
+  cookie: { maxAge: 180 * 60 * 1000, secure: true, httpOnly: true },
 }))
 
 //Passport

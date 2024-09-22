@@ -45,7 +45,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
             alert('Compra finalizada con éxito. Ticket generado.');
+
+            // Vaciar el carrito después de la compra
+            const clearResponse = await fetch(`/api/carts/${cartId}/clear`, {
+                method: 'DELETE',
+            });
+
+            if (!clearResponse.ok) {
+                throw new Error('Error al vaciar el carrito');
+            }
+
             window.location.reload();
+
         } catch (error) {
             console.error('Error en la compra:', error);
             alert('Error en la compra: ' + error.message);

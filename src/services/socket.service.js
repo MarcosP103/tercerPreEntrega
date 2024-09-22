@@ -8,7 +8,7 @@ export default function configureSocket(httpServer) {
   const socketServer = new Server(httpServer);
 
   socketServer.on("connection", (socket) => {
-    console.log("Cliente conectado");
+    console.log("Cliente conectado, mensaje Socket");
 
     productManager.uploadProducts().then((products) => {
       socket.emit("products", products);

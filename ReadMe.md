@@ -1,113 +1,301 @@
-﻿# Carrito de compra
+﻿# Plataforma Ecommerce - PetShop 
 
-Este proyecto implementa un sistema de gestión de carritos de compra utilizando Express, Node.js y WebSocket y Handlebars. Está configurado para escuchar el puerto 8080 y cuenta con dos grupos de rutas: **/products y /carts**. Permite al usuario crear, agregar productos y ver el contenido de los carritos de compra.
-Todo el proyecto trabaja con Promises y persistencia de información implementando FileSystem.
-
-# Instalación y creación de carpetas
-
-Se optó por crear dos carpetas principales. La primera se llama 'manager' donde se encuentran los archivos .json con la información relacionada a los productos y los carritos. Y el productManager.js donde se encuentra la class con dicho nombre y los metodos necesarios para poder operar.
-Por otro lado se encuentra la carpeta 'src' con el archivo 'app.js' y la carpeta 'routes' con los archivos, 'products.router.js' y 'carts.router.js'
-
-Para comenzar a crear el proyecto se procedio en primera instancia por ejecutar los comandos **npm install -y** y **npm install express**. 
-El primero instala las dependencias en el archivo 'package.json'y el segundo es para instalar el framework.
-Además se hizo uso de una librería uuid la cual crea números unicos, la cual se instaló de la siguiente forma **npm install uuid**.
-Para darle interaccion entre el navegador del usuario y el servidor se implementó WebSocket con **npm install socket.io**
-
-Debido a esta última tecnología las importaciones comenzaron a realizarse de forma distinta, pasando de 'require' a 'import'
-
-## App.js
-
-1. Importación de módulos:
-- express
-- path
-- server
-- handlebars
-
-2. Creación de la aplicacion Express:
-- app = express ()
-3. Manejo de rutas con routers:
-- prodsRouter = require("./routes/products.router.js")
--  cartsRouter = require("./routes/carts.router.js") 
-- app.use("/", prodsRouter)
-- app.use("/", cartsRouter)
-4. Configuración del puerto:
-- const PORT = 8080
-5. Configuración de Middleware:
-- app.use(express.json())
-- app.use(express.urlencoded)
-6. Inicializar el servidor:
--app.listen(PORT)
-
-## ProductRoutes
-1. Importación de módulos:
--const express = require("express")
--const router = express.Router
--const fs = require("fs").promises
-2. Creación de una instancia ProductManager:
--const ProductManager = require
--const productManager = new ProductManager
-
-Se precisaba crear los endpoint GET, POST, PUT y DELETE
- -  **GET**, se indicó que listara todos los productos alojados en DB.json agregando que se pueda establecer un limite. Esto se llevó a cabo mediante la variable 'limit'.
-Por otro lado la ruta GET /:pid muestra solo el producto según el id indicado.
--  **POST**, sólo se agrega el producto con los campos: id, title, description, code, price, status, stock, category y thumbnails. 
-Se realizan las validaciones correspondientes para asegurar que los campos sean de determinado tipo con 'validateType' y que el id se autoincremente con 'lastProductId'.
-Además se asegura que el status sea por defecto TRUE con la constante 'defaultStatus'.
-- **PUT**, este endpoint toma un producto según su ID y los actualiza desde Body donde se valida que el ID no debe modificar o eliminar tras la actualización.
-- **DELETE**, se indica el ID del producto a eliminar.
+Este proyecto es una plataforma de ecommerce de una tienda de mascotas (PetShop) desarrollada en JavaScript con Node.js y Express. Utiliza una arquitectura por capas y módulos ES (`type: module`) para mejorar la organización y escalabilidad del código. 
 
 
-## CartsRoutes
-1. Nuevamente se realizaron importaciones de Express, Routes y FileSystem.
-2. Se agregaron los endpoints GET y POST.
-- **POST**, la ruta raíz POST crea un nuevo carrito que cuenta unicamente con los campos id y products. El 'ID' se auto genera mediante la función 'generateId' la cual a traves de Math.random devuelve siempre un numero al azar. En el caso de 'products' se trata de un array con objetos que representan cada producto seleccionado.
-- Además nos encontramos con una ruta POST que agrega un producto al array 'products' del carrito seleccionado por su 'ID' y que tiene una variable 'quantity' que contiene el numero de ejemplares de dicho producto. En este endpoint se valida que 'product' solo contenga el ID del producto y que 'quantity' se sume en caso de ser necesario.
-- **GET**, esta ruta llamada por un 'ID' de carrito lista los productos correspondientes a ese carrito.
+## Tabla de Contenidos 
 
-Para poder realizar la vista en tiempo real se utilizan dentro de la carpeta 'views' plantillas handlebars donde se define la vista HTML .
+- [Características](#características) 
 
-La plantilla de Handlebars define la estructura HTML de la pagina, se utilizan expresiones 'if', 'each', 'this', etcpara insertar datos dinamicos en la plantilla. A la vez se verifican si hay productos disponibles y los muestra en lista 'ul' o con un mensaje donde indica que no hay productos.
-Cada producto se muestra en lista 'li' donde se muestra el detalle de cada cosa.
+- [Instalación](#instalación) 
 
-Por otro lado se incluye el formulario que precisa el usuario para ingresar los detalles de cada nuevo producto con su respectivo boton 'Subir producto'
+- [Uso](#uso) 
 
-En index.js se establece una conexión WebSocket con el servidor, envía un mensaje al servidor y escucha eventos del servidor en el cliente. Esto permite una comunicación -bidireccional- en tiempo real entre el cliente y el servidor.
+- [Arquitectura](#arquitectura) 
 
-## realTimeProducts.js
-Acá se maneja la lógica del cliente para enviar y recibir datos del servidor a traves de WebSocket, además, actualiza la interfaz de usuario en consecuencia con los datos recibidos del servidor.
+- [Rutas](#rutas) 
 
-- Se comienza importando 'io' desde el módulo 'socket.io-client' para poder crear una instancia de cliente Socket.IO
-- 'document.addEventListener', acá se espera a que el documento HTML esté completamente cargado antes de ejecutar el código JS. Esto asegura que el script se ejecute solo cuando el DOM esté listo para ser manipulado.
-- Luego se crea una instancia de cliente Socket.IO llamando a la función 'io()' para establecer una conexíon con el servidor.
-- Se agrega un evento de clic al boton 'Enviar'('btnSend') para recopilar los datos del formulario y enviar al servidor a través de WebSocket utilizando el evento 'newProduct'.
-- A través de socket.on("products") se escucha el evento 'products' enviado desde el servidor. Cuando el servidor envía este evento a través de la conexión WebSocket, el callback proporcionado se ejecuta. El callback se encarga de actualizar la lista de productos en la interfaz de usuario con los datos recibidos desde el servidor.
-- 'resAdd' y 'resDel' estos códigos de escucha devuelven los mensajes correspondientes de producto agregado y producto eliminado a través de un elemento 'p'.
+- [Tecnologías Utilizadas](#tecnologías-utilizadas) 
 
-## Swagger
-Swagger es un conjunto de herramientas de código abierto que ayuda a los desarrolladores a diseñar, construir, documentar y consumir APIs (Interfaces de Programación de Aplicaciones). Es parte del ecosistema OpenAPI, que es un estándar de especificación para describir APIs RESTful.
-Para utilizarlo se partió creando el archivo swagger.config dentro de la carpeta config. 
+- [Variables de Entorno](#variables-de-entorno) 
 
-Se realizó la importación de 'fileURLToPath' y 'dirname' para manejar rutas de archivos y directorios. Por otro lado 'resolve' para obtener la ruta absoluta de los archivos a utilizar.
-Tambien se importaron 'swaggerJSDoc' y 'swaggerUiExpress' los cuales sirven para generar la especificacion de OpenAPI en formato JSON a partir de las opciones que se le pasan y proporcionr middleware para servir la UI de Swagger en una aplicación con Express, como es esta.
+- [Dependencias](#dependencias) 
 
-Se comienza por configurar swagger, donde se define la version de OpenAPI y se proporciona información como el titulo y la descripcion.
-![configuracion swagger](image.png)
+- [Contribuciones](#contribuciones) 
 
-Posteriormente se crea la especificacion Swagger donde se genera un objeto JSON
-![especificacion swagger](image-1.png)
+- [Licencia](#licencia) 
 
-Finalmente se configuraron las rutas donde se muestra la documentación
-![rutas de swagger](image-2.png)
+  
 
-Las rutas son:
-- /api-docs-users: Para la documentación relacionada con la API de usuarios.
-- /api-docs-products: Para la documentación relacionada con la API de productos.
-- /api-docs-carts: Para la documentación relacionada con la API de carritos.
+## Características 
 
-Finalmente para poder usarlo se importó en app la función con las rutas y se ejecutó para poder utilizarlas
-import { setupSwaggerDocs } from "./config/swagger.config.js";
-setupSwaggerDocs(app)
+- **Autenticación de usuarios** con Passport.js (soporte para estrategias locales y GitHub). 
+
+- **Control de acceso basado en roles**: existen tres tipos de usuarios (`user`, `premium`, `admin`). 
+
+  - `user`: Solo puede comprar productos. 
+
+  - `premium`: Puede agregar, modificar y eliminar productos. Los productos llevan el email del usuario que los publicó. 
+
+  - `admin`: Tiene los mismos permisos que un `premium` y además puede eliminar usuarios o cambiar su rol. 
+
+- **Gestión de productos**: Los usuarios con rol `premium` o `admin` pueden agregar, modificar y eliminar productos. 
+
+- **Gestión de carrito de compras**: Añadir productos, actualizar cantidad, eliminar y proceder a la compra. 
+
+- **Chat en tiempo real**: Al ingresar, si el usuario no está logueado, se le solicita un nombre para poder participar del chat. 
+
+- **Paginación**: Se muestran solo 10 productos por página. Los usuarios no logueados no pueden acceder al detalle de los productos. 
+
+- **Modificación de datos personales**: Todos los usuarios pueden modificar su información personal, pero solo el usuario `user` puede cambiar su rol a `premium` mediante la subida de tres comprobantes. 
+
+- **Documentación de API** con Swagger. 
+
+- **Notificaciones por correo electrónico** con Nodemailer. 
+
+- **Persistencia de sesiones** utilizando MongoDB. 
+
+- **Sistema de logs** con Winston. 
+
+  
+
+## Instalación 
+
+1. Clonar el repositorio: 
+
+    ```bash 
+
+    git clone https://github.com/tu-usuario/ecommerce-petshop.git 
+
+    cd ecommerce-petshop 
+
+    ``` 
+
+2. Instalar dependencias:   
+
+    ```bash 
+
+    npm install 
+
+    ``` 
+
+3. Iniciar la aplicación:   
+
+    ```bash 
+
+    npm run dev 
+
+    ``` 
 
 
+## Uso 
+
+Una vez que la aplicación esté en funcionamiento, abre tu navegador y dirígete a `http://localhost:3000`. Podrás navegar por la tienda de mascotas, ver productos, gestionar tu carrito de compras y, si estás autenticado, interactuar con el chat en tiempo real. 
+
+Además, puedes acceder a la documentación de la API visitando `http://localhost:3000/api-docs`. 
+
+  
+### Tipos de usuarios 
+
+- **user**: Solo puede comprar productos. Puede cambiar su rol a `premium` subiendo tres archivos (comprobantes). 
+
+- **premium**: Puede agregar, modificar y eliminar productos. Los productos publicados por un usuario premium llevan su correo electrónico como referencia. No puede cambiar su rol. 
+
+- **admin**: Tiene los mismos permisos que el `premium`, pero además puede eliminar usuarios o cambiar su rol. No puede cambiar su propio rol. 
+
+  
+
+## Arquitectura
+
+El proyecto sigue una **arquitectura por capas**, separando el código en distintas capas para mejorar la mantenibilidad y escalabilidad: 
 
 
+- **Capa de Modelo**: Define los esquemas y estructuras de datos con Mongoose (por ejemplo, `products.model.js`, `user.model.js`). 
+
+- **Capa de Servicio**: Contiene la lógica de negocio e interactúa con los modelos (por ejemplo, `products.service.js`, `user.service.js`). 
+
+- **Capa de Controladores**: Maneja las solicitudes HTTP entrantes, procesa los datos a través de los servicios y devuelve respuestas (por ejemplo, `products.controller.js`, `user.controller.js`). 
+
+- **Capa de Rutas**: Define las rutas de la API y las vincula con los controladores correspondientes (por ejemplo, `products.router.js`, `users.router.js`). 
+
+  
+
+## Rutas 
+
+### Rutas de la API: 
+
+- `GET /api/products`: Obtiene todos los productos (paginados, 10 productos por página). 
+
+- `GET /api/products/:id`: Obtiene un producto por su ID. 
+
+- `POST /api/products`: Crea un nuevo producto (requiere rol `premium` o `admin`). 
+
+- `PUT /api/products/:id`: Actualiza un producto por su ID. 
+
+- `DELETE /api/products/:id`: Elimina un producto por su ID. 
+
+  
+
+- `POST /api/users`: Registra un nuevo usuario. 
+
+- `POST /api/users/login`: Inicia sesión. 
+
+  
+
+- `POST /api/carts`: Crea un nuevo carrito de compras. 
+
+- `GET /api/carts/:id`: Obtiene un carrito por su ID. 
+
+- `POST /api/carts/:id/products`: Añade un producto al carrito. 
+
+- `DELETE /api/carts/:id`: Vacía el carrito de compras. 
+
+  
+
+- `POST /api/mail`: Envía detalles de la compra por correo. 
+
+  
+
+### Rutas de Vistas: 
+
+- `/`: Página principal. 
+
+- `/products`: Ver todos los productos. 
+
+- `/profile`: Perfil de usuario y gestión de rol. 
+
+- `/cart`: Visualizar y gestionar el carrito de compras. 
+
+  
+
+## Tecnologías Utilizadas 
+
+- **Node.js**: Entorno de ejecución para JavaScript. 
+
+- **Express.js**: Framework web para Node.js. 
+
+- **MongoDB**: Base de datos NoSQL para almacenar datos. 
+
+- **Mongoose**: ODM para MongoDB. 
+
+- **Passport.js**: Middleware de autenticación. 
+
+- **Socket.io**: Comunicación en tiempo real para el chat. 
+
+- **Handlebars.js**: Motor de plantillas para la renderización de vistas. 
+
+- **Swagger**: Herramienta para la documentación de API. 
+
+- **Nodemailer**: Servicio para el envío de correos electrónicos. 
+
+- **Multer**: Middleware para la subida de archivos. 
+
+- **Winston**: Registro de eventos del sistema. 
+
+  
+
+## Variables de Entorno 
+
+Para ejecutar este proyecto, necesitarás configurar las siguientes variables de entorno en un archivo `.env`: 
+
+- `PORT`: El puerto en el que se ejecutará el servidor (por defecto: 8080). 
+
+- `MONGO_URL`: Cadena de conexión a MongoDB. 
+
+- `MONGO_URL_SESSION`: Cadena de conexión a MongoDB.
+
+- `SESSION_SECRET`: Secreto para la gestión de sesiones. 
+
+- `PERSISTANCE`: Elección del modelo de persistencia
+
+- `EMAIL_SERVICE`: Servicio para envío de correo, en este caso Gmail. 
+
+- `EMAIL_USER`: Email de usuario. 
+
+- `EMAIL_PASS`: Password para poder operar.
+
+- `BASE_URL`: Para el reseteo de password. 
+
+- `MONGO_URL_TEST`: Para testing.
+
+  
+
+## Dependencias 
+
+A continuación se listan las principales dependencias utilizadas en este proyecto, como se especifica en `package.json`: 
+
+- **bcryptjs**: ^2.4.3 
+
+- **body-parser**: ^1.20.2 
+
+- **bootstrap**: ^5.3.3 
+
+- **chai**: ^5.1.1 
+
+- **connect-mongo**: ^5.1.0 
+
+- **cookie-parser**: ^1.4.6 
+
+- **dotenv**: ^16.4.5 
+
+- **express**: ^4.19.2 
+
+- **express-handlebars**: ^7.1.2 
+
+- **express-session**: ^1.18.0 
+
+- **mocha**: ^10.7.3 
+
+- **mongodb**: ^6.6.2 
+
+- **mongoose**: ^8.4.0 
+
+- **mongoose-paginate-v2**: ^1.8.1 
+
+- **multer**: ^1.4.5-lts.1 
+
+- **nodemailer**: ^6.9.14 
+
+- **nodemon**: ^3.1.4 
+
+- **passport**: ^0.7.0 
+
+- **passport-github2**: ^0.1.12 
+
+- **passport-local**: ^1.0.0 
+
+- **session-file-store**: ^1.5.0 
+
+- **socket.io**: ^4.7.5 
+
+- **supertest**: ^7.0.0 
+
+- **swagger-jsdoc**: ^6.2.8 
+
+- **swagger-ui-express**: ^5.0.1 
+
+- **sweetalert2**: ^11.11.0 
+
+- **uuid**: ^9.0.1 
+
+- **winston**: ^3.13.1 
+
+  
+
+## Scripts 
+
+Puedes utilizar los siguientes scripts de npm para ejecutar el proyecto: 
+
+- `npm start`: Iniciar la aplicación. 
+
+- `npm run dev`: Inicia la aplicación en modo desarrollo.   
+
+- `npm test`: Ejecuta las pruebas con Mocha y Chai.  
+
+
+## Contribuciones  
+
+¡Las contribuciones son bienvenidas! Si tienes alguna mejora o encuentras errores, no dudes en enviar un pull request.  
+
+
+## Licencia Este proyecto está bajo la Licencia MIT. 
