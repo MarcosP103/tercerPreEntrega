@@ -36,7 +36,7 @@ async function deleteUser(uid) {
     deleteButtons.forEach(button => {
       const userId = button.getAttribute('data-user-id');
 
-      
+
   
       button.addEventListener('click', (event) => {
         event.preventDefault();
@@ -44,15 +44,30 @@ async function deleteUser(uid) {
         const clickedUserId = clickedButton.getAttribute('data-user-id');
         
         if (clickedUserId) {
-          if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-            deleteUser(clickedUserId);
-          }
-        } else {
-          alert('Error: ID del usuario no encontrado');
-        }
-      });
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás recuperar este usuario después de eliminarlo!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminarlo!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteUser(clickedUserId);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error: ID del usuario no encontrado'
+                });
+            }
+        });
     });
-  });
+});
 
   //Cambio rol
   document.addEventListener('DOMContentLoaded', () => {

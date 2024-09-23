@@ -66,13 +66,14 @@ const nextLink = hasNextPage
 
     res.render("products", { 
       user, 
-      userName, 
+      userName,
       products: result.docs, 
       prevLink, 
       nextLink,
       currentPage: result.page,
       totalPages: result.totalPages,
-      query: query
+      query: query,
+      sort
      });
   } catch (error) {
     console.error("No se pudieron obtener los productos", error);
