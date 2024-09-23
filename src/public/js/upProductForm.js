@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         code: document.getElementById("code").value,
         stock: parseInt(document.getElementById("stock").value),
         status: document.getElementById("status").value === "true", 
+        owner: document.getElementById("owner").value
       };
   
       try {

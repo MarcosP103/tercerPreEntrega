@@ -9,9 +9,9 @@ const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
   passport.use("github", new GitHubStrategy({
-        clientID: "Iv23liSYHTwwlrcbPS9c",
-        clientSecret: "8ed53d3b958654e51a1a38e29199f257400ce30f",
-        callbackURL: "http://localhost:8080/api/users/githubcallback",
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: process.env.CALLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

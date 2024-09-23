@@ -252,17 +252,16 @@ export const RenderDeleteProduct = async (req, res) => {
 
 export const DeleteProduct = async (req, res) => {
   const { pid } = req.params;
+  const user = req.user
   try {
-    const productDeleted = await deleteProduct(pid);
-    if (!productDeleted) {
-      return res.status(404).json({ message: "Producto no encontrado" });
+    const result = await deleteProduct(pid, user.email);
+    if (!result.success) {
+      return res.status(result.status).json({ message: result.message });
     }
-    return res
-      .status(200)
-      .json({
-        status: "success",
+    return res.status(200).json({ 
+        status: "success", 
         message: "Producto eliminado correctamente",
-        product: productDeleted,
+        product: result.product,
       });
   } catch (error) {
     console.error(error);

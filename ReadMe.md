@@ -218,6 +218,12 @@ Para ejecutar este proyecto, necesitarás configurar las siguientes variables de
 
 - `MONGO_URL_TEST`: Para testing.
 
+- `CLIENT_ID`: Id del cliente Github.
+
+- `CLIENT_SECRET`: Contraseña del cliente.
+
+- `CALLBACK_URL`: Callback.
+
   
 
 ## Dependencias 

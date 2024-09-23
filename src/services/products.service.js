@@ -1,6 +1,8 @@
 import productModel from '../dao/models/products.model.js';
 import ProductManagerMongoose from '../dao/managerMongo/productManagerMongo.js';
 import mongoose from 'mongoose';
+import { sendProductDeletedEmail } from '../services/mail.service.js'
+import userModel from '../dao/models/user.model.js';
 
 const productManager = new ProductManagerMongoose();
 
@@ -59,7 +61,19 @@ export const addProduct = async (title, description, code, price, status, stock,
 };
 
 export const updateProduct = async (id, productMod) => {
-  try{
+  try {
+    if (productMod.owner) {
+      const user = await userModel.findOne({ email: productMod.owner });
+
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+
+      productMod.owner = user._id;
+
+      delete productMod.owner;
+    }
+
     return await productManager.modProduct(id, productMod);
   } catch (error) {
     console.error('Error al modificar el producto:', error);
@@ -67,6 +81,30 @@ export const updateProduct = async (id, productMod) => {
   } 
 };
 
-export const deleteProduct = async (pid) => {
-  return await productManager.delProduct(pid);
+export const deleteProduct = async (pid, userEmail) => {
+  try {
+    const product = await getProductById(pid)
+    if(!product) {
+      return { success: false, status: 404, message: "Producto no encontrado."}
+    }
+
+    if (product.owner && product.owner !== userEmail) {
+      try {
+        await sendProductDeletedEmail(product.owner, product.title, userEmail);
+      } catch (emailError) {
+        console.error("Error al enviar el correo: ", emailError);
+      }
+    }
+
+    const productDeleted = await productManager.delProduct(pid);
+    if (!productDeleted) {
+      return { success: false, status: 500, message: "Error al eliminar el producto." };
+    }
+
+    return { success: true, product: productDeleted };
+    
+  } catch (error) {
+    console.error("Error al eliminar el producto: ", error);
+    return { success: false, status: 500, message: "Error al eliminar el producto." };
+  }
 };
