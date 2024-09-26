@@ -21,14 +21,10 @@ import loggerRoutes from "./routes/api/loggerW.routes.js";
 import chatRouter from "./routes/chat.router.js"
 import { setupSwaggerDocs } from "./config/swagger.config.js";
 import { eq, getProperty, isAdmin, or } from "./utils/helpers.js"
-/* import FileStore from 'session-file-store' */
 
 //Cargar variables de entorno y conectar a MongoDB
 dotenv.config()
 connectDB()
-
-//FileStore
-/* const FileStoreInstance = FileStore(session) */
 
 const app = express();
 const PORT = process.env.PORT || 8080
@@ -56,7 +52,6 @@ app.use((req, res, next) => {
 
 //Configuracion de la sesion
 app.use(session({
-  //store: new FileStoreInstance({path: './session', ttl: 100, retries: 0}),
   store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL_SESSION,
       ttl: 10800

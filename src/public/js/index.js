@@ -1,12 +1,6 @@
 const socket = io();
 
-/* socket.emit("message", "Comunicación desde Web Socket");
-socket.on("ind", (data) => {
-  console.log(data);
-}); */
-
 //Chat
-
 let user;
 let chatBox = document.getElementById("chatBox");
 let sendBtn = document.getElementById("sendBtn");
